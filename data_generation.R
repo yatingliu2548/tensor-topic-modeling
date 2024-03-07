@@ -147,3 +147,4 @@ synthetic_dataset_creation <- function(Q1, Q2,R, K1,K2,K3, alpha_dirichlet = 1,
 
 
 #  data = synthetic_dataset_creation(Q1,Q2,R, K1,K2,K3, alpha_dirichlet=0.5, n_max_zipf=50000, a_zipf=1,n_anchors=2, delta_anchor=0.3, M=100, seed=123,offset_zipf=2.7,vary_by_topic=FALSE, sparsity = FALSE)
+
