@@ -66,6 +66,7 @@ tensorization<-function(M,mode,Q1,Q2,Q3){
 
     tensor_back <- aperm(reshaped_tensor, c(3, 2, 1))
   }
+  tensor_back=as.tensor(tensor_back)
   return(tensor_back)
 }
 synthetic_dataset_creation <- function(Q1, Q2,R, K1,K2,K3, alpha_dirichlet = 1,
@@ -138,8 +139,9 @@ synthetic_dataset_creation <- function(Q1, Q2,R, K1,K2,K3, alpha_dirichlet = 1,
   vocab =which(apply(Y3,1, sum) >0 )
   D=tensorization(D3,mode=3,Q1,Q2,length(vocab))
   Y=tensorization(Y3,mode=3,Q1,Q2,length(vocab))
+  
 
-  return(list(Y=Y,A1=A1,A2=A2,A3=A3, vocab=vocab, D=D))
+  return(list(Y=Y,A1=A1,A2=A2,A3=A3, vocab=vocab, D=D,G=G))
 }
 
 
