@@ -196,8 +196,12 @@ matrix_lp_distance <- function(A, B, lp=2){
   }else{
     error <- l1_error(A, B_permuted)
   }
-  
-  return(error)
+  # Construct the permutation matrix based on the assignment
+  permutation_matrix <- matrix(0, nrow = ncol(A), ncol = ncol(A))
+  for (i in 1:length(permutation)) {
+    permutation_matrix[i, permutation[i]] <- 1
+  }
+  return(list(error=error,permutation=permutation_matrix))
 }
 l2_error <- function(A, B) {
   sqrt(sum((A - B)^2))

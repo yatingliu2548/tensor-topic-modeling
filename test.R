@@ -1,43 +1,31 @@
-Q1list=c(100,250,300,500,1000)
-Q2=10
-Rlist=c(100,250,500)
+library(tidyverse)
+theme_set(theme_bw(base_size = 12))
+Rlist=c(1000,5000,10000)
+Q2=5
+Mlist=c(100,500,1000,2500,5000,6000,7000,8000,9000,10000)
 K1=3
 K2=3
 K3=3
-M=100
+Q1=1000
 result_Q=c()
-replications=1000
-error_update <- function(hatA,A,mode,K,Q1,Q2,R){
-  error_temp <- data.frame(error=matrix_lp_distance(hatA,A, lp=1),
+replications=50
+error_update <- function(error,K,Q1,R,Q2,M=M,mode,method=NULL,time=NULL){
+  error_temp <- data.frame(error=error,
                            K = K,
                            Q1=Q1,
                            R=R,
                            Q2=Q2,
-                           mode=mode)
+                           M=M,
+                           mode=mode,method=method,time=time)
   return(error_temp)
 }
+error_tmp=c()
 for (rep in 1: replications){
-for (i in 1:length(Q1list)){
+for (i in 1:length(Mlist)){
   for (j in 1:length(Rlist)){
-    data = synthetic_dataset_creation(Q1list[i],Q2,Rlist[j], K1,K2,K3, alpha_dirichlet=0.5, n_max_zipf=50000, a_zipf=1,n_anchors=2, delta_anchor=0.1, M=M, seed=123,offset_zipf=2.7,vary_by_topic=FALSE, sparsity = TRUE)
-    tmp_1=score(matrization_tensor(data$D,1),K=K1,normalize = "C1",as.sparse = TRUE)
-    tmp_2=score(matrization_tensor(data$D,2),K=K2,normalize = "C1")
-    tmp_3=score(matrization_tensor(data$D,3),K=K3,normalize = "C2")
-    #errorl1_1=error1_A(data$A1,tmp_1$A_hat)
-    #errorl1_2=error1_A(data$A2,tmp_2$A_hat)
-    #errorl1_3=error1_A(data$A3,tmp_3$A_hat)
-    hat_G=core_recovery(data$D,tmp_1$Xi,tmp_2$Xi,tmp_3$Xi,tmp_1$V,tmp_2$V,tmp_3$V,tmp_3$A_star)$G
-    hatG3=matrization_tensor(hat_G,3)
-    G3=matrization_tensor(data$G,3)
-    #errorl1_core=error1_A(matrization_tensor(data$G,3),matrization_tensor(hat_G,3))
-    result_Q=rbind(result_Q,
-                   error_update(hatA=tmp_1$A_hat,A=data$A1,mode="A1",K=K1,Q1=Q1list[i],R=R[j],Q2=Q2))
-    result_Q=rbind(result_Q,
-                   error_update(hatA=tmp_2$A_hat,A=data$A2,mode="A2",K=K2,Q1=Q1list[i],R=R[j],Q2=Q2))
-    result_Q=rbind(result_Q,
-                   error_update(hatA=tmp_3$A_hat,A=data$A3,mode="A3",K=K3,Q1=Q1list[i],R=R[j],Q2=Q2))
-    result_Q=rbind(result_Q,
-                   error_update(hatA=hatG3,A=G3,mode="A2",K=K3,Q1=Q1list[i],R=R[j],Q2=Q2))
+    data = synthetic_dataset_creation(Q1,Q2,Rlist[j], K1,K2,K3, alpha_dirichlet=0.1, n_max_zipf=50000, a_zipf=1,n_anchors=2, delta_anchor=0.1, M=Mlist[i], seed=123,offset_zipf=2.7,vary_by_topic=FALSE, sparsity = TRUE)
+    error_tmp=run_experiment(data=data,K1=K1,K2=K2,K3=K3,M=Mlist[i],error=error_tmp)
+  
   }
 }
 }
@@ -53,16 +41,57 @@ for (i in 1:length(Q1list)){
 # errorl1_core=error1_A(matrization_tensor(data$G,3),matrization_tensor(G,3))
 # errorl1_core
 
-res<-  pivot_longer(result_Q, 
-                              cols = c(l1_A1_1, l1_A2_1,l1_A3_1,l1_core_1), 
-                              names_to = "Method_1", 
-                              values_to = "error_1")
-res<-  pivot_longer(res, 
-                    cols = c(l1_A1_2, l1_A2_2,l1_A3_2,l1_core_2), 
-                    names_to = "Method_2", 
-                    values_to = "error_2")
+write.csv(result_Q,file='tensor_Q2_5_K_3_Q1_1000.csv', row.names=FALSE)
+result_Q=error_tmp
+res = result_Q %>% 
+  filter( mode %in% c("A1","A2","A3","core")) %>%
+  group_by(mode, R, Q1, Q2,method,M) %>%
+  summarise(l1_error_mean = mean(error),
+            l1_A_q50 = quantile(error, 0.5),
+            l1_A_q25 = quantile(error, 0.75),
+            l1_A_q75 = quantile(error, 0.25)
+            
+  )
 
-ggplot(res, 
-       aes(x=Q1, y=log(error_1), color=Method_1)) +
-  geom_line()+
-  geom_point() + facet_grid(.~R, scales="free") 
+labels=as_labeller(c(`100` = "Q2(Time Factors)=5,R(Vocabulary size) = 100",
+                     `A1`="A1",
+                     `A2`="A2",
+                     `A3`="A3",
+                     `core`="core"
+))
+legend_order <-  c( "HOOI", "Tracy",  "Olga","Tracy_Olga","LDA","NTD")#, "AWR", "LDA")
+my_colors <-  c( "dodgerblue",  "red","red","red","chartreuse2","pink")
+labels_n <- c( "HOOI", "Tracy",  "Olga","Tracy_Olga","LDA","NTD")
+ggplot(res%>% 
+         filter(mode %in% c("A1","A2","A3","core"),
+                R %in% c(100,1000)
+                ,method %in% c("Tracy","Olga","Tracy_Olga","NTD","HOOI")#,"Tracy","Olga","Tracy_Olga"
+                ),
+       aes(x=Q1, y=(l1_error_mean),color=method)) +
+  geom_line(linewidth=0.5) +# 
+  geom_point(size=1.1)+
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  #scale_y_log10() +
+  scale_x_log10() +
+  geom_errorbar(aes(ymin = l1_A_q25, ymax = l1_A_q75), width = 0.1, alpha=0.4) +
+  geom_point() + facet_grid(mode~R, scales="free",labeller=as_labeller(labels))+
+  xlab("Q1 (Number of Documents)") +  labs(colour="Method") + 
+  ylab("l1_error")
+
+
+ggplot(result_Q%>% 
+         filter(mode %in% c("A2","A3","core"),
+                R %in% c(100)
+                ,method %in% c("LDA","NTD","Ours")),
+       aes(x=Q1, y=(time),color=method)) +
+  geom_line(linewidth=1) +# 
+  geom_point(size=1.2)+
+  #scale_y_log10() +
+  scale_x_log10() +
+  #geom_errorbar(aes(ymin = l1_A_q25, ymax = l1_A_q75), width = 0.1, alpha=0.4) +
+  #geom_point() + facet_grid(mode~R, scales="free") 
+  facet_grid(.~R, scales="free",labeller=as_labeller(labels))+
+  xlab("Q1 (Number of Documents)") +  labs(colour="Method") + 
+  ylab("Execution Time \n(Seconds)")
+# 

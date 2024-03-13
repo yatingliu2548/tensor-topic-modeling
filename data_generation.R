@@ -135,6 +135,7 @@ synthetic_dataset_creation <- function(Q1, Q2,R, K1,K2,K3, alpha_dirichlet = 1,
   #D0 = A %*% W
   Y3 <- sapply(1:(Q1*Q2), function(i){rmultinom(1, M, D3[,i])})
   D3=D3[which(apply(Y3,1, sum) >0 ),]
+  Y3=Y3[which(apply(Y3,1, sum) >0 ),]
   A3= A3[which(apply(Y3,1, sum) >0 ),]%*% diag(1/apply(A3[which(apply(Y3,1, sum) >0 ),], 2, sum))
   vocab =which(apply(Y3,1, sum) >0 )
   D=tensorization(D3,mode=3,Q1,Q2,length(vocab))
