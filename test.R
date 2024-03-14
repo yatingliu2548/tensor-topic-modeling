@@ -9,16 +9,7 @@ K3=3
 Q1=1000
 result_Q=c()
 replications=50
-error_update <- function(error,K,Q1,R,Q2,M=M,mode,method=NULL,time=NULL){
-  error_temp <- data.frame(error=error,
-                           K = K,
-                           Q1=Q1,
-                           R=R,
-                           Q2=Q2,
-                           M=M,
-                           mode=mode,method=method,time=time)
-  return(error_temp)
-}
+
 error_tmp=c()
 for (rep in 1: replications){
 for (i in 1:length(Mlist)){
