@@ -30,21 +30,21 @@ successiveProj <- function(R, K){
     l2Norms <- apply(Y,1,function(x) sqrt(sum(x^2)))
     #### check if they are in the same document
     index <- which(l2Norms == max(l2Norms))
-    
+   
     if (length(index) >1){
       r = rankMatrix(R[valid_indices[index], ])[1]
       if (r < length(index)){
         ### only select 1
-        chosen = sample(index,  r)
+        chosen = sample(index,  1)
         u <- Y[chosen,] / sqrt(sum(Y[chosen,]^2))
         indexSet <- c(indexSet, valid_indices[chosen])
         Y <- Y[-setdiff(index, c(chosen)), ]
         valid_indices <- setdiff(valid_indices, valid_indices[setdiff(index, c(chosen))])
-        Y <- t(apply(Y, 1, function(x) x-sum(x%*%(u))%*%t(u)))
+        Y <- t(apply(Y, 1, function(x) x-(x%*%t(u))%*%(u)))
       }else{
         u <- Y[index,] / sqrt(sum(Y[index,]^2))
         indexSet <- c(indexSet, valid_indices[index])
-        Y <- t(apply(Y, 1, function(x) x-sum(x%*%(u))%*%t(u)))
+        Y <- t(apply(Y, 1, function(x) x-(x%*%t(u))%*%(u)))
       }
     }else{
       indexSet <- c(indexSet, valid_indices[index])

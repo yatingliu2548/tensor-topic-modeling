@@ -92,7 +92,7 @@ run_experiment<- function(data,K1,K2,K3,M,error){
       NTD(D,rank=c(K1,K2,K3),algorithm="HALS",init="NMF",num.iter=2),
       error = function(err) {
         # Code to handle the error (e.g., print an error message, log the error, etc.)
-        paste0("Error occurred while running NTD ", alpha, " :", conditionMessage(err), "\n")
+        paste0("Error occurred while running NTD ", R, " :", conditionMessage(err), "\n")
         # Return a default value or NULL to continue with the rest of the code
         return(NULL)
       }
@@ -132,7 +132,7 @@ run_experiment<- function(data,K1,K2,K3,M,error){
         score(data$Y/M,normalize="Ours",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
-          paste0("Error occurred while running Ours ", alpha, " :", conditionMessage(err), "\n")
+          paste0("Error occurred while running Ours ", R, " :", conditionMessage(err), "\n")
           # Return a default value or NULL to continue with the rest of the code
           return(NULL)}
       )
@@ -150,7 +150,7 @@ run_experiment<- function(data,K1,K2,K3,M,error){
         score(data$Y/M,normalize="HOSVD",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
-          paste0("Error occurred while running HOSVD ", alpha, " :", conditionMessage(err), "\n")
+          paste0("Error occurred while running HOSVD ", R, " :", conditionMessage(err), "\n")
           # Return a default value or NULL to continue with the rest of the code
           return(NULL)}
       )
@@ -168,7 +168,7 @@ run_experiment<- function(data,K1,K2,K3,M,error){
         score(data$Y/M,normalize="HOOI",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
-          paste0("Error occurred while running HOOI ", alpha, " :", conditionMessage(err), "\n")
+          paste0("Error occurred while running HOOI ", R, " :", conditionMessage(err), "\n")
           # Return a default value or NULL to continue with the rest of the code
           return(NULL)}
       )
@@ -187,7 +187,7 @@ run_experiment<- function(data,K1,K2,K3,M,error){
         score(data$Y/M,normalize="Tracy",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
-          paste0("Error occurred while running Tracy ", alpha, " :", conditionMessage(err), "\n")
+          paste0("Error occurred while running Tracy ", R, " :", conditionMessage(err), "\n")
           # Return a default value or NULL to continue with the rest of the code
           return(NULL)}
       )
@@ -344,3 +344,13 @@ get_hat_core<- function(Y,A1,A2,A3){
   X
 }
 
+error_update <- function(error,K,Q1,R,Q2,M=M,mode,method=NULL,time=NULL){
+  error_temp <- data.frame(error=error,
+                           K = K,
+                           Q1=Q1,
+                           R=R,
+                           Q2=Q2,
+                           M=M,
+                           mode=mode,method=method,time=time)
+  return(error_temp)
+}

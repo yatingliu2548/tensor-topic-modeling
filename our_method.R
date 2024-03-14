@@ -4,7 +4,7 @@ library(roxygen2)
 library(quadprog)
 
 source("VH_algo.R")
-source("core_recovery.R")
+source("run_experiments.R")
 library(Matrix)
 library(rTensor)
 library(tensr)
@@ -178,6 +178,7 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
     if(normalize=="C2"){
       H <- apply(as.matrix(Xi[, 2:K]),2, function(x) x/ Xi[,1])
       H[is.na(H)]<-0
+      
     }else{
       H=Xi
     }
@@ -199,6 +200,8 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
       i2 = which.min(H)
       V <- as.matrix(H[c(i1, i2),], ncol=ncol(H))
     }else{
+     
+      write_csv(as.data.frame(H), paste0(getwd(), paste0("/synthetic/results/","H")))
       vertices_est_obj <- successiveProj(H, K)
       V <- as.matrix(vertices_est_obj$V, ncol=ncol(H))
     }
