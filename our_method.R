@@ -3,8 +3,9 @@ library('rARPACK')
 library(roxygen2)
 library(quadprog)
 
-source("VH_algo.R")
-source("run_experiments.R")
+source("tensor-topic-modeling/VH_algo.R")
+source("tensor-topic-modeling/run_experiments.R")
+source("tensor-topic-modeling/data_generation.R")
 library(Matrix)
 library(rTensor)
 library(tensr)
@@ -201,7 +202,7 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
       V <- as.matrix(H[c(i1, i2),], ncol=ncol(H))
     }else{
      
-      write_csv(as.data.frame(H), paste0(getwd(), paste0("/synthetic/results/","H")))
+      #write_csv(as.data.frame(H), paste0(getwd(), paste0("/synthetic/results/","H")))
       vertices_est_obj <- successiveProj(H, K)
       V <- as.matrix(vertices_est_obj$V, ncol=ncol(H))
     }
