@@ -1,14 +1,59 @@
 library(tidyverse)
 theme_set(theme_bw(base_size = 12))
-Rlist=c(1000,5000,10000)
-Q2=5
-Mlist=c(100,500,1000,2500,5000,6000,7000,8000,9000,10000)
-K1=3
-K2=3
-K3=3
-Q1=1000
-result_Q=c()
-replications=50
+
+
+folder_path <- "tensor-topic-modeling/synthetic/results/"
+# Get a list of filenames starting with "7547" in the folder.
+file_list <- list.files(folder_path, pattern = "^372", full.names = TRUE)
+#file_list <- c(file_list, list.files(folder_path, pattern = "^759", full.names = TRUE))
+# Read all the files into a single data frame using map_dfr.
+data <- map_dfr(file_list, read_csv)  # Assuming your files are CSV files. Adjust the function
+data_new=data
+write=data[,"R"]
+data_new[,"R"]=sapply(as.integer(unlist(write)), find_closest_target)
+data_new[,"method"]=sapply((unlist(data[,"method"])), tracy)
+
+
+res = data_new %>% 
+  filter( mode %in% c("A1","A2","A3","core")) %>%
+  group_by(mode, R, Q1, Q2,method,M) %>%
+  summarise(l1_error_mean = mean(error),
+            l1_A_q50 = quantile(error, 0.5),
+            l1_A_q25 = quantile(error, 0.75),
+            l1_A_q75 = quantile(error, 0.25)
+            
+  )
+
+labels=as_labeller(c(`1000` = "R=1000",
+                     `5000` = "R=5000",
+                     `10000` = "R=10000",
+                     `A1`="A1",
+                     `A2`="A2",
+                     `A3`="A3",
+                     `core`="core"
+)) 
+legend_order <-  c( "HOOI", "Tracy_Olga","NTD")#, "AWR", "LDA")"LDA",
+my_colors <-  c( "dodgerblue", "red","pink")#"chartreuse2"
+labels_n <- c( "HOOI","Tracy_Olga","NTD")
+ggplot(res%>% 
+         filter(mode %in% c("A1","A2","A3","core"),
+                R %in% c(1000,5000,10000)
+                
+                ,method %in% c("Tracy","Olga","Tracy_Olga","NTD","HOOI")#,"Tracy","Olga","Tracy_Olga"
+         ),
+       aes(x=M, y=(l1_error_mean),color=method)) +
+  geom_line(linewidth=0.5) +# 
+  geom_point(size=1.1)+
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  scale_y_log10() +
+  scale_x_log10() +
+  geom_errorbar(aes(ymin = l1_A_q25, ymax = l1_A_q75), width = 0.1, alpha=0.4) +
+  geom_point() + facet_grid(mode~R, scales="free",labeller=as_labeller(labels))+
+  xlab("M (Number of Words per Document)\n Q2(Time Factors)=5 \n Q1(Number of Documents) = 100") +  labs(colour="Method") + 
+  ylab("l1_error")
+
+
 
 error_tmp=c()
 for (rep in 1: replications){
@@ -34,44 +79,10 @@ for (i in 1:length(Mlist)){
 
 write.csv(result_Q,file='tensor_Q2_5_K_3_Q1_1000.csv', row.names=FALSE)
 result_Q=error_tmp
-res = result_Q %>% 
-  filter( mode %in% c("A1","A2","A3","core")) %>%
-  group_by(mode, R, Q1, Q2,method,M) %>%
-  summarise(l1_error_mean = mean(error),
-            l1_A_q50 = quantile(error, 0.5),
-            l1_A_q25 = quantile(error, 0.75),
-            l1_A_q75 = quantile(error, 0.25)
-            
-  )
 
-labels=as_labeller(c(`100` = "Q2(Time Factors)=5,R(Vocabulary size) = 100",
-                     `A1`="A1",
-                     `A2`="A2",
-                     `A3`="A3",
-                     `core`="core"
-))
-legend_order <-  c( "HOOI", "Tracy",  "Olga","Tracy_Olga","LDA","NTD")#, "AWR", "LDA")
-my_colors <-  c( "dodgerblue",  "red","red","red","chartreuse2","pink")
-labels_n <- c( "HOOI", "Tracy",  "Olga","Tracy_Olga","LDA","NTD")
+
+
 ggplot(res%>% 
-         filter(mode %in% c("A1","A2","A3","core"),
-                R %in% c(100,1000)
-                ,method %in% c("Tracy","Olga","Tracy_Olga","NTD","HOOI")#,"Tracy","Olga","Tracy_Olga"
-                ),
-       aes(x=Q1, y=(l1_error_mean),color=method)) +
-  geom_line(linewidth=0.5) +# 
-  geom_point(size=1.1)+
-  scale_color_manual(values = my_colors, breaks = legend_order,
-                     labels = labels_n) +
-  #scale_y_log10() +
-  scale_x_log10() +
-  geom_errorbar(aes(ymin = l1_A_q25, ymax = l1_A_q75), width = 0.1, alpha=0.4) +
-  geom_point() + facet_grid(mode~R, scales="free",labeller=as_labeller(labels))+
-  xlab("Q1 (Number of Documents)") +  labs(colour="Method") + 
-  ylab("l1_error")
-
-
-ggplot(result_Q%>% 
          filter(mode %in% c("A2","A3","core"),
                 R %in% c(100)
                 ,method %in% c("LDA","NTD","Ours")),
@@ -86,3 +97,27 @@ ggplot(result_Q%>%
   xlab("Q1 (Number of Documents)") +  labs(colour="Method") + 
   ylab("Execution Time \n(Seconds)")
 # 
+
+find_closest_target <- function(x) {
+  # Calculate the absolute difference between x and each target value
+  targets=c(100,500,1000,2500,5000,6000,7000,8000,9000,10000)
+  differences <- abs(x - targets)
+  # Find the index of the smallest difference
+  index_of_min <- which.min(differences)
+  #print(index_of_min)
+  # Return the target value that is closest to x
+  closest_target <- targets[index_of_min]
+  return(closest_target)
+}
+tracy <- function(x) {
+  # Calculate the absolute difference between x and each target value
+  if (x=="Tracy"){
+    x="Tracy_Olga"
+  }
+  if(x=="Olga"){
+    x="Tracy_Olga"
+  }
+  return(x)
+  
+  
+}
