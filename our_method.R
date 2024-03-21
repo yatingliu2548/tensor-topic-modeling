@@ -46,18 +46,25 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   #' @export
   #'
   #'
-  
+  #'
+  #'
+ 
   Q1=dim(D@data)[1]
   Q2=dim(D@data)[2]
   R=dim(D@data)[3]
   n=R
   if (normalize =="Ours"){
     D3=matrization_tensor(D,3)
-    tildeM <- as.numeric(rowMeans(D3))
+    X=t(D3)
+    active_train = which(apply(X[1:nrow(X),], 2, sum)>0)
+    x_train = t(diag(1/ apply(X[1:nrow(X), active_train],1, sum)) %*% X[1:nrow(X), active_train])
     
+    D=tensorization(as.matrix(x_train),3,Q1,Q2,dim(x_train)[1])
+    tildeM <- as.numeric(rowMeans(x_train))
+    n=dim(x_train)[1]
     normM=n/M * diag(tildeM)
     #tensorM=tensorization(normM,mode=3,Q1=Q1,Q2=Q2,R=R)
-    newD =  D3 %*% t(D3)  - n/M * normM
+    newD =  x_train %*% t(x_train)  - n/M * normM
   }
   if (normalize=="Tracy"){
     D3=matrization_tensor(D,3)
@@ -156,7 +163,9 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   est2<- steps_procedure( Xi=Xi2, normalize="C1",K=K2,K0=K0,VHMethod=VHMethod)
   est3<- steps_procedure( Xi=Xi3, normalize="C2",K=K3,K0=K0,VHMethod=VHMethod)
   
+  
   S_hat=tensor_create(D,t(Xi1),t(Xi2),t(Xi3))
+  
   a_0=colSums(abs(est3$A_star))
   check_V3=a_0 *est3$V
   G=tensor_create(S_hat,est1$V,est2$V,check_V3)
@@ -166,8 +175,15 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   G3 <- apply(G3,1,function(x) x/temp)
   G3[is.na(G3)] <- 0
   Gnew=tensorization(G3,3,dim(G)[1],dim(G)[2],dim(G)[3])
+  if (normalize=="Ours"){
+    hatA3_new=matrix(0,R,K3)
+    hatA3_new[active_train,]=est3$A_hat
+    hatA3=hatA3_new
+  }else{
+    hatA3=est3$A_hat
+  }
 
-  return(list(hatA1=est1$A_hat,hatA2=est2$A_hat,hatA3=est3$A_hat,hatcore=Gnew))
+  return(list(hatA1=est1$A_hat,hatA2=est2$A_hat,hatA3=hatA3,hatcore=Gnew))
 }
 
 steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
@@ -197,8 +213,9 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
     theta <- vertices_est_obj$theta
   } else if (VHMethod == 'SP' || (VHMethod == "AA" & K<3)){
     if (K<3){
-      i1 = which.max(H)
-      i2 = which.min(H)
+      i1 = which.max(H[,1])
+      i2 = which.min(H[,1])
+      
       V <- as.matrix(H[c(i1, i2),], ncol=ncol(H))
     }else{
      
@@ -229,7 +246,7 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
   #Step 4: Topic matrix estimation
   print("Start Step 4")
   if (K == 1){
-    Pi = R %*% diag(1/V)
+    Pi = H %*% diag(1/V)
   }else{
     if (normalize=="C2"){
       if(rankMatrix(cbind(V,rep(1,nrow(V))))[1]<K || min(dim(V)) < max(dim(V))){
@@ -239,6 +256,7 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
       }
     }else{
       if(rankMatrix(V)[1]<K || min(dim(V)) < max(dim(V))){
+      #print(V)
         Pi <- H %*% MASS::ginv(V)
       }else{
         Pi <- H %*% solve(V)
@@ -252,9 +270,14 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
   Pi <- apply(Pi,2,function(x) x/temp)
   
   #Step 5
+  
   if (normalize=="C2"){
     A_star <- Xi[,1] * Pi
-    V=cbind(rep(1,K),V)
+    if (K==1){
+      V=as.matrix(V[1.1],1,1)
+    }else{
+      V=cbind(rep(1,K),V)
+    }
     #Step  5b: normalize each column to have a unit l1 norm
     A_star=replace(A_star, is.na(A_star), 0)
     temp <- colSums(A_star)
@@ -270,6 +293,37 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
   
 }
 
+
+
+run_topic_models <- function(X, train_index,K1,K2,Q1,Q2, #test_index, 
+                             list_params=1:9, 
+                             normalize="Ours"){
+  ####
+  active_train = which(apply(X[train_index,], 2, sum)>0)
+  x_train = t(diag(1/ apply(X[train_index, active_train],1, sum)) %*% X[train_index, active_train])
+  print(dim(x_train))
+  topic_models <- vector("list", length(list_params))  
+  tensor_data=tensorization(as.matrix(x_train),3,Q1,Q2,dim(x_train)[1])
+  it = 1
+  for (k in list_params){
+    
+    tm <- score(tensor_data, K1=K1,K2=K2,K3=k,M=median(apply(X, 1, sum)), normalize=normalize)
+    A_hat = matrix(0, ncol(X), k)
+    W_hat=matrization_tensor(tm$hatcore,3)%*%kronecker(t(tm$hatA1),t(tm$hatA2))
+    
+    
+    A_hat[active_train, ] = tm$hatA3
+    topic_models[[it]] <- list(
+      beta = log(t(A_hat)) %>% magrittr::set_colnames(colnames(X)),
+      gamma =  t(W_hat) %>% magrittr::set_rownames(rownames(X)[train_index])
+    )
+    it <- it + 1
+  }
+  names(topic_models) <- sapply(list_params, function(x){paste0("k", x)})
+  #names(topic_models_test) <- sapply(list_params,function(x){paste0("k",x)})
+  return(topic_models)
+  
+}
 
 
 
