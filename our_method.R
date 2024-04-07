@@ -3,9 +3,9 @@ library('rARPACK')
 library(roxygen2)
 library(quadprog)
 
-source("tensor-topic-modeling/VH_algo.R")
-source("tensor-topic-modeling/run_experiments.R")
-source("tensor-topic-modeling/data_generation.R")
+source("C:/Users/yichugang/Desktop/CODE/tensor-topic-modeling/VH_algo.R")
+source("C:/Users/yichugang/Desktop/CODE/tensor-topic-modeling/run_experiments.R")
+source("C:/Users/yichugang/Desktop/CODE/tensor-topic-modeling/data_generation.R")
 library(Matrix)
 library(rTensor)
 library(tensr)
@@ -165,6 +165,7 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   
   
   S_hat=tensor_create(D,t(Xi1),t(Xi2),t(Xi3))
+  print(dim(est2$V))
   
   a_0=colSums(abs(est3$A_star))
   check_V3=a_0 *est3$V
@@ -274,7 +275,7 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
   if (normalize=="C2"){
     A_star <- Xi[,1] * Pi
     if (K==1){
-      V=as.matrix(V[1.1],1,1)
+      V=as.matrix(max(V),1,1)
     }else{
       V=cbind(rep(1,K),V)
     }
@@ -284,6 +285,9 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
     A_hat <- t(apply(A_star,1,function(x) x/temp))
     
   }else{
+    if (K==1){
+      V=as.matrix(max(V),1,1)
+    }
     A_star= Pi
     A_hat=Pi
   }
@@ -304,18 +308,25 @@ run_topic_models <- function(X, train_index,K1,K2,Q1,Q2, #test_index,
   print(dim(x_train))
   topic_models <- vector("list", length(list_params))  
   tensor_data=tensorization(as.matrix(x_train),3,Q1,Q2,dim(x_train)[1])
+  D3=colnames(matrization_tensor(tensor_data,3))
   it = 1
   for (k in list_params){
     
     tm <- score(tensor_data, K1=K1,K2=K2,K3=k,M=median(apply(X, 1, sum)), normalize=normalize)
     A_hat = matrix(0, ncol(X), k)
-    W_hat=matrization_tensor(tm$hatcore,3)%*%kronecker(t(tm$hatA1),t(tm$hatA2))
+    G=tm$hatcore
+    tensordata=G@data
+    W_hat=aperm(tensordata, c(3, 2, 1))
     
+    # Reshape the permuted tensor into a matrix
+    W_hat <- matrix(W_hat, nrow = dim(tensordata)[3], byrow = FALSE)
+    print(dim(W_hat))
+    W_hat=W_hat%*% kronecker(t(tm$hatA1),t(tm$hatA2))
     
     A_hat[active_train, ] = tm$hatA3
     topic_models[[it]] <- list(
       beta = log(t(A_hat)) %>% magrittr::set_colnames(colnames(X)),
-      gamma =  t(W_hat) %>% magrittr::set_rownames(rownames(X)[train_index])
+      gamma =  t(W_hat) %>% magrittr::set_rownames(D3)
     )
     it <- it + 1
   }
