@@ -2,6 +2,13 @@ library('rARPACK')
 #library('Matrix')
 library(roxygen2)
 library(quadprog)
+<<<<<<< HEAD
+=======
+
+source("D:/yatingliu/CODE/tensor-topic-modeling/VH_algo.R")
+source("D:/yatingliu/CODE/tensor-topic-modeling/run_experiments.R")
+source("D:/yatingliu/CODE/tensor-topic-modeling/data_generation.R")
+>>>>>>> aaaa398b7cb152441e376cf54234979b02ca5712
 library(Matrix)
 library(rTensor)
 library(tensr)

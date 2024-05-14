@@ -2,14 +2,14 @@ library(reshape2)
 library(reshape) 
 library(dplyr)
 
-mae <- readRDS("C:/Users/yichugang/Downloads/VMRC-subcommunities-analyses-20230725/results/mae_for_analyses.Rds")
+mae <- readRDS("D:/yatingliu/VMRC-subcommunities-analyses-20230725/results/mae_for_analyses.Rds")
 # 
-source("C:/Users/yichugang/Downloads/VMRC-subcommunities-analyses-20230725/analyses/00_setup.R")
-load("C:/Users/yichugang/Downloads/VMRC-subcommunities-analyses-20230725/results/gammas.Rdata")
+source("D:/yatingliu/VMRC-subcommunities-analyses-20230725/analyses/00_setup.R")
+load("D:/yatingliu/VMRC-subcommunities-analyses-20230725/results/gammas.Rdata")
 count_assay <- "VM16S_combined"
 counts <- assay(mae, count_assay) %>% t()
 
-source("C:/Users/yichugang/Desktop/CODE/tensor-topic-modeling/our_method.R")
+source("D:/yatingliu/CODE/tensor-topic-modeling/our_method.R")
 
 
 ## data cleaning
@@ -88,7 +88,7 @@ Q1=length(unique(selected_nonpreg$Subject_m))
 print(Q1)
 Q2=11
 K1=3
-K2=4
+K2=3
 K3=5
 M_it=rowSums(counts_select)
 tensor_counts=tensorization(t(counts_select/M_it),3,Q1=Q1,Q2=11,Q3=dim(counts_select)[2])
@@ -115,31 +115,28 @@ library (DirichletReg)
 
 
 ##A1
-hatA1_df=as.data.frame(hatA1)
-hatA1_df$Subject_m=rownames(hatA1)
-selected_nonpreg_subject_m=selected_nonpreg%>%
-  mutate(Race_group=ifelse(Race %in% c("White","Hispanic/Latino"), "Other", Race)%>%factor(.,levels =c("Other","Black")),
-         Age_status=case_when(Age<30 ~"Young",
-                           Age>=30 & Age <40 ~"Middle",
-                           Age>40 ~"Old")%>%factor(.,levels =c("Young","Middle","Old")),
-         cycle_nb_m=as.factor(cycle_nb_m))
+hatLDA_model_K3=lda_models_full[[K3]]
+hatA1_lda=hatLDA_model_K3$gamma
+hatA1_lda_df=as.data.frame(hatA1_lda)
+hatA1_lda_df$SampleID=rownames(hatA1)
 selected_nonpreg_subject_m=selected_nonpreg_subject_m%>%
-                left_join(., hatA1_df,by="Subject_m")
+  left_join(., hatA1_lda_df,by="SampleID")
 
-dr_data=DR_data(selected_nonpreg_subject_m[,23:(23+K1-1)])
+dr_data=DR_data(selected_nonpreg_subject_m[,23:(23+K3-1)])
 
-dirichlet_model_1 <- DirichReg(dr_data ~ as.factor(Race) + cycle_nb_m + Age_status, data = selected_nonpreg_subject_m)
+dirichlet_model_1 <- DirichReg(dr_data ~ as.factor(Race)  + Age_status+as.factor(mense_status), data = selected_nonpreg_subject_m)
+dirichlet_model_1 %>% summary()
 dirichlet_model_1 %>% summary()
 dms <- dirichlet_model_1 %>% summary()
 dms <- dms$coef.mat %>% as.data.frame()
-K <- nrow(dms)/7
+K <- nrow(dms)/8
 dms <- 
   dms %>% 
   setNames(c("Estimate","Standard_error","z_value","p_value")) %>% 
   mutate(
-    var_group = rep(c("","Race","Race","cycle","cycle","Age","Age"), K),
-    variable = rep(c("Intercept","Hispanic/Latino\n(vs. Black)","White\n(vs. Black)","2\n(vs. 1)","3\n(vs. 1)","30s\n(vs. 20s)","40s\n(vs. 20s)"), K),
-    k = rep(paste0("v",1:K1), each = 7),
+    var_group = rep(c("","Race","Race","Age","Age","menstrual status","menstrual status","menstrual status"), K),
+    variable = rep(c("Intercept","Hispanic/Latino\n(vs. Black)","White\n(vs. Black)","30s\n(vs. 20s)","40s\n(vs. 20s)","luteal\n(vs. follicular)","menses\n(vs. follicular)","peri-ovulatory\n(vs. follicular)"), K),
+    k = rep(paste0("v",1:K2), each = 8),
     sign_level = get_sign_levels(p_value)
   ) %>% 
   as_tibble() 
@@ -159,6 +156,53 @@ ggplot(dms %>% filter(var_group != ""),
   ) +
   xlab("Dirichlet regression coefficient ± sd. error") 
 
+##ours
+hatA1_df=as.data.frame(hatA1)
+hatA1_df$Subject_m=rownames(hatA1)
+selected_nonpreg_subject_m=selected_nonpreg%>%
+  mutate(Race_group=ifelse(Race %in% c("White","Hispanic/Latino"), "Other", Race)%>%factor(.,levels =c("Other","Black")),
+         Age_status=case_when(Age<30 ~"Young",
+                           Age>=30 & Age <40 ~"Middle",
+                           Age>40 ~"Old")%>%factor(.,levels =c("Young","Middle","Old")),
+         cycle_nb_m=as.factor(cycle_nb_m))
+
+selected_nonpreg_subject_m=selected_nonpreg_subject_m%>%
+                left_join(., hatA1_df,by="Subject_m")
+
+dr_data=DR_data(selected_nonpreg_subject_m[,23:(23+K1-1)])
+
+dirichlet_model_1 <- DirichReg(dr_data ~ as.factor(Race)  + Age_status, data = selected_nonpreg_subject_m)
+dirichlet_model_1 %>% summary()
+dms <- dirichlet_model_1 %>% summary()
+dms <- dms$coef.mat %>% as.data.frame()
+
+
+K <- nrow(dms)/5
+dms <- 
+  dms %>% 
+  setNames(c("Estimate","Standard_error","z_value","p_value")) %>% 
+  mutate(
+    var_group = rep(c("","Race","Race","Age","Age"), K),
+    variable = rep(c("Intercept","Hispanic/Latino\n(vs. Black)","White\n(vs. Black)","30s\n(vs. 20s)","40s\n(vs. 20s)"), K),
+    k = rep(paste0("v",1:K1), each = 5),
+    sign_level = get_sign_levels(p_value)
+  ) %>% 
+  as_tibble() 
+
+
+ggplot(dms %>% filter(var_group != ""),
+       aes(x = Estimate, y = variable, col = sign_level)) +
+  geom_vline(xintercept = 0, col = "gray") +
+  geom_segment(aes(x = Estimate - Standard_error, xend = Estimate + Standard_error,
+                   yend = variable)) +
+  geom_point() +
+  facet_grid(var_group ~ k, scales = "free_y", space = "free_y") +
+  scale_color_manual("p-value", breaks = p_val_labels, values = p_val_cols) +
+  ylab("") +
+  theme(strip.text.y = element_text(angle = 0, hjust = 0),
+        strip.background = element_rect(fill = "gray80", color = NA)
+  ) +
+  xlab("Dirichlet regression coefficient ± sd. error") 
 
                             
 ##A2
@@ -259,19 +303,21 @@ plot(aligned_topics_transport_comp, add_leaves = TRUE, label_topics = TRUE)
 
 
 ###hatA3
+
 colnames(hatA3)=paste0("Topic","_", 1:K3)
 plot_words_per_group(hatA3,words=5) # running function at the end of this file before running this
 #VS LDA
 LDA_model_K3=lda_models_full[[K3]]
 hatA3_lda=exp(t(LDA_model_K3$beta))
-colnames(hatA3_lda)=paste0("Topic","_LDA_", 1:9)
+colnames(hatA3_lda)=paste0("Topic","_LDA_", 1:K3)
 plot_words_per_group(hatA3_lda,words=5) # returning top-5 words from hatA3
 
 
 
 ##hatcore
 hatcore_3=matrization_tensor(hatcore,3)
-library(rgl)
+plot_slice(hatcore@data,2)
+# library(rgl)
 library(plotly)
 core_tensor=hatcore@data
 expand.grid(x = 1:dim(core_tensor)[1], 
@@ -355,21 +401,20 @@ res_df <- function(res,match_permuted,k,method,group){
 
 group_list=c("mense1","luteal2","luteal1","follicular1")
 res=c()
-for (group in 1:25){
-  train_index = sample(unique(selected_nonpreg$Subject_m),12)
-  #test_index = unique(selected_nonpreg$Subject_m)[-c(train_index)]#sample(unique(selected_nonpreg$Subject_m)[-c(train_index)], 12)
-  train_data=selected_nonpreg[selected_nonpreg$Subject_m %in%train_index,]$SampleID
-  test_data = selected_nonpreg[!selected_nonpreg$Subject_m %in% train_index,]$SampleID
+for (group in group_list){
+  #train_index = sample(unique(selected_nonpreg$Subject_m),12)
+  #train_data=selected_nonpreg[selected_nonpreg$Subject_m %in%train_index,]$SampleID
+  #test_data = selected_nonpreg[!selected_nonpreg$Subject_m %in% train_index,]$SampleID
   
-#train_data=selected_nonpreg[selected_nonpreg$expected_status==group,]$SampleID
-#test_data = selected_nonpreg[!selected_nonpreg$expected_status==group,]$SampleID
+train_data=selected_nonpreg[selected_nonpreg$expected_status==group,]$SampleID
+test_data = selected_nonpreg[!selected_nonpreg$expected_status==group,]$SampleID
 
-Q11=12
-Q12=12
-Q21=11
-Q22=11
-topic_models_ours_full_train <- run_topic_models(as.matrix(counts_select),train_data,K1=K1,K2=4,Q1=Q11,Q2=Q21,list_params=1:Best_K,normalize="Ours")
-topic_models_ours_full_test <- run_topic_models(as.matrix(counts_select),test_data,K1=K1,K2=4,Q1=Q12,Q2=Q22,list_params=1:Best_K,normalize="Ours")
+Q11=24
+Q12=24
+Q21=2
+Q22=9
+topic_models_ours_full_train <- run_topic_models(as.matrix(counts_select),train_data,K1=K1,K2=1,Q1=Q11,Q2=Q21,list_params=1:Best_K,normalize="Ours")
+topic_models_ours_full_test <- run_topic_models(as.matrix(counts_select),test_data,K1=K1,K2=3,Q1=Q12,Q2=Q22,list_params=1:Best_K,normalize="Ours")
 
 
 
@@ -406,7 +451,7 @@ for (k in 3:Best_K){
 }
 }
 
-write_csv(as.data.frame(res), "C:/Users/yichugang/Desktop/CODE/tensor-topic-modeling/real_data/vaginal_permute_subject.csv")
+#write_csv(as.data.frame(res), "C:/Users/yichugang/Desktop/CODE/tensor-topic-modeling/real_data/vaginal_permute_subject.csv")
 res_fi=as.data.frame(res) %>%
   group_by(method, k) %>%
   summarise(min=median(min),
@@ -496,3 +541,4 @@ align_topics<- function(A, B, dist="cosine", do.plot=TRUE){
   return(list("B_permuted"=B_permuted,
               "match" = match_permuted))
 }
+
