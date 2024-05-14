@@ -2,10 +2,6 @@ library('rARPACK')
 #library('Matrix')
 library(roxygen2)
 library(quadprog)
-
-source("C:/Users/yichugang/Desktop/CODE/tensor-topic-modeling/VH_algo.R")
-source("C:/Users/yichugang/Desktop/CODE/tensor-topic-modeling/run_experiments.R")
-source("C:/Users/yichugang/Desktop/CODE/tensor-topic-modeling/data_generation.R")
 library(Matrix)
 library(rTensor)
 library(tensr)
@@ -13,7 +9,7 @@ library(tensr)
 
 score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, threshold=FALSE,
                   Mquantile=0.00, VHMethod = 'SP', normalize="none",
-                  alpha=0.5, max_K=150, returnW=FALSE, estimateK=FALSE,
+                  alpha=0.005, max_K=150, returnW=FALSE, estimateK=FALSE,
                   as.sparse = FALSE){
   #' This function computes the estimates for the A and W matrix based on the algorithm proposed in Ke and Wang's work: https://arxiv.org/pdf/1704.07016.pdf
   #'
@@ -25,7 +21,7 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   #' @param normalize Normalization method used on the topic document matrix. Choices include "none" (no normalization), "norm" (row-wise mean normalization),
   #'                  and "norm_score_N" (mean/N).
   #'
-  #' @param N the document length. Only necessary for the prenormalization option "norm_score_N" and
+  #' @param M the document length. Only necessary for the prenormalization option "norm_score_N" and
   #' @param threshold boolean. Should the words in the dictionary be thresholded or not (corresponds to a sparsity assumption on A)
   #' @param VHMethod vertex hunting method. Choice between SVS (sketched vertex search), SP (successive projections) and SVS-SP.
   #'         Note that the paper by Tracy Ke recommends using SVS, as it tends to be more robust to noise and outliers. SVS requires additional parameters K0 and m.
@@ -60,11 +56,32 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
     x_train = t(diag(1/ apply(X[1:nrow(X), active_train],1, sum)) %*% X[1:nrow(X), active_train])
     
     D=tensorization(as.matrix(x_train),3,Q1,Q2,dim(x_train)[1])
-    tildeM <- as.numeric(rowMeans(x_train))
     n=dim(x_train)[1]
+    tildeM <- as.numeric(rowMeans(x_train))
+    p=Q1*Q2
+    if (threshold){
+      threshold_J = alpha * sqrt(log(max(p,n))/(M *n))
+      print(sprintf("Threshold for alpha = %f  is %f ", alpha, threshold_J))
+      setJ = which(tildeM > threshold_J)
+      print(sprintf("Nb of elected words = %i  ( %f percent) ", length(setJ), 100 * length(setJ)/p))
+      if (length(setJ) < 0.1 * length(tildeM)){
+        setJ = sort(tildeM, decreasing=TRUE, index.return=TRUE)$ix[1:ceiling( 0.1 * length(tildeM))]
+      }
+      newD3 = x_train[setJ,]
+      tildeM = tildeM[setJ]
+      print(paste0(p-length(setJ), " words were thresholded (", (p-length(setJ))/p * 100, "%)"))
+      print(paste0(length(setJ), " words remain"))
+      new_p <- length(setJ)
+    
+    }else{
+      new_p = p
+      newD3 = x_train
+      setJ = 1:length(tildeM)
+    }
     normM=n/M * diag(tildeM)
     #tensorM=tensorization(normM,mode=3,Q1=Q1,Q2=Q2,R=R)
-    newD =  x_train %*% t(x_train)  - n/M * normM
+    newD =  newD3 %*% t(newD3)  - n/M * normM
+    D=tensorization(as.matrix(newD3),3,Q1,Q2,dim(newD3)[1])
   }
   if (normalize=="Tracy"){
     D3=matrization_tensor(D,3)
@@ -173,13 +190,22 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   G3=matrization_tensor(G,3)
   G3 <- pmax(G3,matrix(0,dim(G3)[1],dim(G3)[2])) ### sets negative entries to 0
   temp <- colSums(G3)
-  G3 <- apply(G3,1,function(x) x/temp)
+  G3 <- t(apply(G3,1,function(x) x/temp))
   G3[is.na(G3)] <- 0
   Gnew=tensorization(G3,3,dim(G)[1],dim(G)[2],dim(G)[3])
   if (normalize=="Ours"){
     hatA3_new=matrix(0,R,K3)
-    hatA3_new[active_train,]=est3$A_hat
-    hatA3=hatA3_new
+    A_temp=matrix(0,length(active_train),K3)
+    #A_temp=hatA3_new[active_train,]
+    #setJ_2=A_temp[setJ,]
+    if(threshold){
+      A_temp[setJ, ] = est3$A_hat
+      hatA3_new[active_train,]=A_temp
+      hatA3=hatA3_new
+    }else{
+      hatA3_new[active_train,]=est3$A_hat
+      hatA3=hatA3_new
+    }
   }else{
     hatA3=est3$A_hat
   }

@@ -2,7 +2,7 @@
 library(nnTensor)
 ## run LDA
 
-run_experiment<- function(data,K1,K2,K3,M,error){
+run_experiment<- function(data,R,K1,K2,K3,M,error){
   A1=data$A1
   A2=data$A2
   A3=data$A3
@@ -11,6 +11,7 @@ run_experiment<- function(data,K1,K2,K3,M,error){
   Y=data$Y
   Q1=dim(A1)[1]
   Q2=dim(A2)[1]
+  R_old=R
   R=dim(A3)[1]
   D=data$Y/M
   D3=matrization_tensor(Y,3)
@@ -81,7 +82,7 @@ run_experiment<- function(data,K1,K2,K3,M,error){
   #       hatcore=NULL
   #     }
   #   })["elapsed"]
-  #   error <- update_error(hatA1=hatA1,hatA2=hatA2,hatcore=hatcore,hatA3=hatA3,time=elapsed_timeLDA,method="LDA",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R,M=M,error=error)
+  #   error <- update_error(hatA1=hatA1,hatA2=hatA2,hatcore=hatcore,hatA3=hatA3,time=elapsed_timeLDA,method="LDA",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
   # 
   # print("finish LDA")
   #   
@@ -123,7 +124,7 @@ run_experiment<- function(data,K1,K2,K3,M,error){
       G3[is.na(G3)] <- 0
       hatcore=tensorization(G3,3,dim(hatcore)[1],dim(hatcore)[2],dim(hatcore)[3])
 
-    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeNTD,method="NTD",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R,M=M,error=error)
+    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeNTD,method="NTD",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
     }
     print("finish NTD")
   #}else if (method =="Ours"){
@@ -142,7 +143,7 @@ run_experiment<- function(data,K1,K2,K3,M,error){
       hatA2=tmp$hatA2
       hatA3=tmp$hatA3
       hatcore=tmp$hatcore
-      error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeOurs,method="Ours",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R,M=M,error=error)
+      error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeOurs,method="Ours",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
     }
     print("finish OURS")
     elapsed_timeHOSVD <- system.time({
@@ -160,7 +161,7 @@ run_experiment<- function(data,K1,K2,K3,M,error){
       hatA2=tmp$hatA2
       hatA3=tmp$hatA3
       hatcore=tmp$hatcore
-    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeHOSVD,method="HOSVD",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R,M=M,error=error)
+    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeHOSVD,method="HOSVD",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
     }
     print("finish HOSVD")
     elapsed_timeHOOI <- system.time({
@@ -178,7 +179,7 @@ run_experiment<- function(data,K1,K2,K3,M,error){
       hatA2=tmp$hatA2
       hatA3=tmp$hatA3
       hatcore=tmp$hatcore
-    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeHOOI,method="HOOI",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R,M=M,error=error)
+    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeHOOI,method="HOOI",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
     }
     print("finish HOOI")
   #}else if(method=="Tracy"){
@@ -197,7 +198,7 @@ run_experiment<- function(data,K1,K2,K3,M,error){
       hatA2=tmp$hatA2
       hatA3=tmp$hatA3
       hatcore=tmp$hatcore
-    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore = hatcore,time=elapsed_timeTracy,method="Tracy",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R,M=M,error=error)
+    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore = hatcore,time=elapsed_timeTracy,method="Tracy",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
     }
     print("finish Tracy")
     
