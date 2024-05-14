@@ -90,14 +90,14 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
   #else if (method =="NTD"){
     elapsed_timeNTD <- system.time({
       ntd_res<-tryCatch(
-      NTD(D,rank=c(K1,K2,K3),algorithm="HALS",init="NMF",num.iter=2),
+      NTD(D,rank=c(K1,K2,K3),algorithm="KL",init="NMF",num.iter=2),
       error = function(err) {
         # Code to handle the error (e.g., print an error message, log the error, etc.)
         paste0("Error occurred while running NTD ", R, " :", conditionMessage(err), "\n")
         # Return a default value or NULL to continue with the rest of the code
         return(NULL)
       }
-      )      #ap_topics <- tidy(lda, matrix = "beta")
+      )     
     })["elapsed"]
     if (is.null(ntd_res)==FALSE){
       hatA_ntd=ntd_res$A
@@ -113,14 +113,14 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
       hatA2=Pi
       Pi=t(hatA_ntd$A3)
       Pi <- pmax(Pi,matrix(0,dim(Pi)[1],dim(Pi)[2])) ### sets negative entries to 0
-      temp <- rowSums(Pi)
-      Pi <- apply(Pi,2,function(x) x/temp)
+      temp <- colSums(Pi)
+      Pi <- t(apply(t(Pi),2,function(x) x/temp))
       hatA3=Pi
       hatcore=ntd_res$S
       G3=matrization_tensor(hatcore,3)
       G3 <- pmax(G3,matrix(0,dim(G3)[1],dim(G3)[2])) ### sets negative entries to 0
       temp <- colSums(G3)
-      G3 <- apply(G3,1,function(x) x/temp)
+      G3 <- t(apply(G3,1,function(x) x/temp))
       G3[is.na(G3)] <- 0
       hatcore=tensorization(G3,3,dim(hatcore)[1],dim(hatcore)[2],dim(hatcore)[3])
 
@@ -182,6 +182,24 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
     error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeHOOI,method="HOOI",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
     }
     print("finish HOOI")
+     elapsed_timeoursthreshold <- system.time({
+      tmp<-tryCatch(
+        score(data$Y/M,normalize="ours",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=TRUE),
+        error = function(err) {
+          # Code to handle the error (e.g., print an error message, log the error, etc.)
+          paste0("Error occurred while running HOOI ", R, " :", conditionMessage(err), "\n")
+          # Return a default value or NULL to continue with the rest of the code
+          return(NULL)}
+      )
+        })["elapsed"]
+    if (is.null(tmp)==FALSE){
+      hatA1=tmp$hatA1
+      hatA2=tmp$hatA2
+      hatA3=tmp$hatA3
+      hatcore=tmp$hatcore
+    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeoursthreshold,method="ours_threshold",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
+    }
+    print("finish ours_threshold")
   #}else if(method=="Tracy"){
     elapsed_timeTracy <- system.time({
       tmp<- tryCatch(
