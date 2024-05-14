@@ -3,9 +3,9 @@ library('rARPACK')
 library(roxygen2)
 library(quadprog)
 
-source("C:/Users/yichugang/Desktop/CODE/tensor-topic-modeling/VH_algo.R")
-source("C:/Users/yichugang/Desktop/CODE/tensor-topic-modeling/run_experiments.R")
-source("C:/Users/yichugang/Desktop/CODE/tensor-topic-modeling/data_generation.R")
+source("D:/yatingliu/CODE/tensor-topic-modeling/VH_algo.R")
+source("D:/yatingliu/CODE/tensor-topic-modeling/run_experiments.R")
+source("D:/yatingliu/CODE/tensor-topic-modeling/data_generation.R")
 library(Matrix)
 library(rTensor)
 library(tensr)
@@ -173,7 +173,7 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   G3=matrization_tensor(G,3)
   G3 <- pmax(G3,matrix(0,dim(G3)[1],dim(G3)[2])) ### sets negative entries to 0
   temp <- colSums(G3)
-  G3 <- apply(G3,1,function(x) x/temp)
+  G3 <- t(apply(G3,1,function(x) x/temp))
   G3[is.na(G3)] <- 0
   Gnew=tensorization(G3,3,dim(G)[1],dim(G)[2],dim(G)[3])
   if (normalize=="Ours"){
