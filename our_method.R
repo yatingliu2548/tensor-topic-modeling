@@ -2,13 +2,7 @@ library('rARPACK')
 #library('Matrix')
 library(roxygen2)
 library(quadprog)
-<<<<<<< HEAD
-=======
 
-source("D:/yatingliu/CODE/tensor-topic-modeling/VH_algo.R")
-source("D:/yatingliu/CODE/tensor-topic-modeling/run_experiments.R")
-source("D:/yatingliu/CODE/tensor-topic-modeling/data_generation.R")
->>>>>>> aaaa398b7cb152441e376cf54234979b02ca5712
 library(Matrix)
 library(rTensor)
 library(tensr)
@@ -55,7 +49,7 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   Q1=dim(D@data)[1]
   Q2=dim(D@data)[2]
   R=dim(D@data)[3]
-  n=R
+  n=Q1*Q2
   if (normalize =="Ours"){
     D3=matrization_tensor(D,3)
     X=t(D3)
@@ -63,9 +57,9 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
     x_train = t(diag(1/ apply(X[1:nrow(X), active_train],1, sum)) %*% X[1:nrow(X), active_train])
     
     D=tensorization(as.matrix(x_train),3,Q1,Q2,dim(x_train)[1])
-    n=dim(x_train)[1]
+    n=Q1*Q2
     tildeM <- as.numeric(rowMeans(x_train))
-    p=Q1*Q2
+    p=dim(x_train)[1]
     if (threshold){
       threshold_J = alpha * sqrt(log(max(p,n))/(M *n))
       print(sprintf("Threshold for alpha = %f  is %f ", alpha, threshold_J))
