@@ -81,7 +81,7 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
     }
     normM=n/M * diag(tildeM)
     #tensorM=tensorization(normM,mode=3,Q1=Q1,Q2=Q2,R=R)
-    newD =  newD3 %*% t(newD3)  - n/M * normM
+    newD =  newD3 %*% t(newD3)  - normM
     D=tensorization(as.matrix(newD3),3,Q1,Q2,dim(newD3)[1])
   }
   if (normalize=="Tracy"){
