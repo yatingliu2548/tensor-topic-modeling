@@ -18,7 +18,7 @@ print(Q2)
 print(Q1)
 print(seed)
 
-Rlist=c(1000,3000,10000)# 
+Rlist=c(1000,3000)# 
 Q1list=c(Q1)
 Mlist=c(100,500,1000,2500,5000,6000,7000,8000,9000,10000)#
 for (k in 1:length(Q1list)){

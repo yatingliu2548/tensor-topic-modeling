@@ -2,13 +2,6 @@ library('rARPACK')
 #library('Matrix')
 library(roxygen2)
 library(quadprog)
-<<<<<<< HEAD
-=======
-
-source("D:/yatingliu/CODE/tensor-topic-modeling/VH_algo.R")
-source("D:/yatingliu/CODE/tensor-topic-modeling/run_experiments.R")
-source("D:/yatingliu/CODE/tensor-topic-modeling/data_generation.R")
->>>>>>> aaaa398b7cb152441e376cf54234979b02ca5712
 library(Matrix)
 library(rTensor)
 library(tensr)
@@ -79,6 +72,7 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
       print(paste0(p-length(setJ), " words were thresholded (", (p-length(setJ))/p * 100, "%)"))
       print(paste0(length(setJ), " words remain"))
       new_p <- length(setJ)
+      print(dim(newD3))
     
     }else{
       new_p = p
