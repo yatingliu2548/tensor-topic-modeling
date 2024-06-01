@@ -29,7 +29,8 @@ source activate ${SCRATCH}/${USER}/.local/share/r-miniconda/envs/r-reticulate
 #source activate ~/.local/share/r-miniconda/envs/r-reticulate
 
 MATLAB_PATH="/software/matlab-2023a-el8-x86_64/bin/matlab"
-result_file="${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}_$1_$2"
+result_file="${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}_$1"
+#result_file="${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}_$1_$2"
 #result_file="${SLURM_ARRAY_JOB_ID}_${1234}_$1"
 echo "result file is ${result_file}"
 cd $SCRATCH/$USER/tensor-topic-modeling/
@@ -37,5 +38,5 @@ cd $SCRATCH/$USER/tensor-topic-modeling/
 working_dir="${SCRATCH}/${USER}/tensor-topic-modeling/"
 #working_dir="topic-modeling/"
 #Rscript synthetic_array.R $1234 $result_file $15 $MATLAB_PATH # 5 topic
-Rscript synthetic_array.R $SLURM_ARRAY_TASK_ID $result_file $1 $MATLAB_PATH $2 
+Rscript synthetic_array.R $SLURM_ARRAY_TASK_ID $result_file $1 $MATLAB_PATH 
 # 5 topic

@@ -182,9 +182,9 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
     error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeHOOI,method="HOOI",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
     }
     print("finish HOOI")
-     elapsed_timeoursthreshold <- system.time({
+    elapsed_timeoursthreshold <- system.time({
       tmp<-tryCatch(
-        score(data$Y/M,normalize="ours",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=TRUE),
+        score(data$Y/M,normalize="Ours",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=TRUE),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
           paste0("Error occurred while running HOOI ", R, " :", conditionMessage(err), "\n")
