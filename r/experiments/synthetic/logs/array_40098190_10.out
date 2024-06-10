@@ -1,1633 +1,0 @@
-My SLURM_ARRAY_TASK_ID:  10
-My SLURM_ARRAY_JOB_ID:  40098190
-result file is 40098190_10_1000
-[1] 10
-[1] 10
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 990  ( 99.000000 percent) "
-[1] "10 words were thresholded (1%)"
-[1] "990 words remain"
-[1]  990 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 990  ( 99.000000 percent) "
-[1] "10 words were thresholded (1%)"
-[1] "990 words remain"
-[1]  990 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 990  ( 99.000000 percent) "
-[1] "10 words were thresholded (1%)"
-[1] "990 words remain"
-[1]  990 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1] 100  10 999
-[1]  999 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1] 100  10 999
-[1]  999 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1] 100  10 999
-[1]  999 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 989  ( 98.998999 percent) "
-[1] "10 words were thresholded (1.001001001001%)"
-[1] "989 words remain"
-[1]  989 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1] 100  10 999
-[1]  999 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 989  ( 98.998999 percent) "
-[1] "10 words were thresholded (1.001001001001%)"
-[1] "989 words remain"
-[1]  989 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1] 100  10 999
-[1]  999 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 989  ( 98.998999 percent) "
-[1] "10 words were thresholded (1.001001001001%)"
-[1] "989 words remain"
-[1]  989 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1] 100  10 999
-[1]  999 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 988  ( 98.800000 percent) "
-[1] "12 words were thresholded (1.2%)"
-[1] "988 words remain"
-[1]  988 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 988  ( 98.800000 percent) "
-[1] "12 words were thresholded (1.2%)"
-[1] "988 words remain"
-[1]  988 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 988  ( 98.800000 percent) "
-[1] "12 words were thresholded (1.2%)"
-[1] "988 words remain"
-[1]  988 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 991  ( 99.100000 percent) "
-[1] "9 words were thresholded (0.9%)"
-[1] "991 words remain"
-[1]  991 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 991  ( 99.100000 percent) "
-[1] "9 words were thresholded (0.9%)"
-[1] "991 words remain"
-[1]  991 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 991  ( 99.100000 percent) "
-[1] "9 words were thresholded (0.9%)"
-[1] "991 words remain"
-[1]  991 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 990  ( 99.000000 percent) "
-[1] "10 words were thresholded (1%)"
-[1] "990 words remain"
-[1]  990 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 990  ( 99.000000 percent) "
-[1] "10 words were thresholded (1%)"
-[1] "990 words remain"
-[1]  990 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 990  ( 99.000000 percent) "
-[1] "10 words were thresholded (1%)"
-[1] "990 words remain"
-[1]  990 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 988  ( 98.800000 percent) "
-[1] "12 words were thresholded (1.2%)"
-[1] "988 words remain"
-[1]  988 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 988  ( 98.800000 percent) "
-[1] "12 words were thresholded (1.2%)"
-[1] "988 words remain"
-[1]  988 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 988  ( 98.800000 percent) "
-[1] "12 words were thresholded (1.2%)"
-[1] "988 words remain"
-[1]  988 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 985  ( 98.500000 percent) "
-[1] "15 words were thresholded (1.5%)"
-[1] "985 words remain"
-[1]  985 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 985  ( 98.500000 percent) "
-[1] "15 words were thresholded (1.5%)"
-[1] "985 words remain"
-[1]  985 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 985  ( 98.500000 percent) "
-[1] "15 words were thresholded (1.5%)"
-[1] "985 words remain"
-[1]  985 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 993  ( 99.300000 percent) "
-[1] "7 words were thresholded (0.7%)"
-[1] "993 words remain"
-[1]  993 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 993  ( 99.300000 percent) "
-[1] "7 words were thresholded (0.7%)"
-[1] "993 words remain"
-[1]  993 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 993  ( 99.300000 percent) "
-[1] "7 words were thresholded (0.7%)"
-[1] "993 words remain"
-[1]  993 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 987  ( 98.700000 percent) "
-[1] "13 words were thresholded (1.3%)"
-[1] "987 words remain"
-[1]  987 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 987  ( 98.700000 percent) "
-[1] "13 words were thresholded (1.3%)"
-[1] "987 words remain"
-[1]  987 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 987  ( 98.700000 percent) "
-[1] "13 words were thresholded (1.3%)"
-[1] "987 words remain"
-[1]  987 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 992  ( 99.200000 percent) "
-[1] "8 words were thresholded (0.8%)"
-[1] "992 words remain"
-[1]  992 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 992  ( 99.200000 percent) "
-[1] "8 words were thresholded (0.8%)"
-[1] "992 words remain"
-[1]  992 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 992  ( 99.200000 percent) "
-[1] "8 words were thresholded (0.8%)"
-[1] "992 words remain"
-[1]  992 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 988  ( 98.800000 percent) "
-[1] "12 words were thresholded (1.2%)"
-[1] "988 words remain"
-[1]  988 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 988  ( 98.800000 percent) "
-[1] "12 words were thresholded (1.2%)"
-[1] "988 words remain"
-[1]  988 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 988  ( 98.800000 percent) "
-[1] "12 words were thresholded (1.2%)"
-[1] "988 words remain"
-[1]  988 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 992  ( 99.200000 percent) "
-[1] "8 words were thresholded (0.8%)"
-[1] "992 words remain"
-[1]  992 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 992  ( 99.200000 percent) "
-[1] "8 words were thresholded (0.8%)"
-[1] "992 words remain"
-[1]  992 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000013 "
-[1] "Nb of elected words = 992  ( 99.200000 percent) "
-[1] "8 words were thresholded (0.8%)"
-[1] "992 words remain"
-[1]  992 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 1000  ( 100.000000 percent) "
-[1] "0 words were thresholded (0%)"
-[1] "1000 words remain"
-[1] 1000 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 1000  ( 100.000000 percent) "
-[1] "0 words were thresholded (0%)"
-[1] "1000 words remain"
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 1000  ( 100.000000 percent) "
-[1] "0 words were thresholded (0%)"
-[1] "1000 words remain"
-[1] 1000 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 998  ( 99.800000 percent) "
-[1] "2 words were thresholded (0.2%)"
-[1] "998 words remain"
-[1]  998 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 998  ( 99.800000 percent) "
-[1] "2 words were thresholded (0.2%)"
-[1] "998 words remain"
-[1]  998 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 998  ( 99.800000 percent) "
-[1] "2 words were thresholded (0.2%)"
-[1] "998 words remain"
-[1]  998 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 996  ( 99.600000 percent) "
-[1] "4 words were thresholded (0.4%)"
-[1] "996 words remain"
-[1]  996 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 996  ( 99.600000 percent) "
-[1] "4 words were thresholded (0.4%)"
-[1] "996 words remain"
-[1]  996 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 996  ( 99.600000 percent) "
-[1] "4 words were thresholded (0.4%)"
-[1] "996 words remain"
-[1]  996 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 998  ( 99.800000 percent) "
-[1] "2 words were thresholded (0.2%)"
-[1] "998 words remain"
-[1]  998 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 998  ( 99.800000 percent) "
-[1] "2 words were thresholded (0.2%)"
-[1] "998 words remain"
-[1]  998 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 998  ( 99.800000 percent) "
-[1] "2 words were thresholded (0.2%)"
-[1] "998 words remain"
-[1]  998 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 998  ( 99.800000 percent) "
-[1] "2 words were thresholded (0.2%)"
-[1] "998 words remain"
-[1]  998 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 998  ( 99.800000 percent) "
-[1] "2 words were thresholded (0.2%)"
-[1] "998 words remain"
-[1]  998 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 998  ( 99.800000 percent) "
-[1] "2 words were thresholded (0.2%)"
-[1] "998 words remain"
-[1]  998 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 1000  ( 100.000000 percent) "
-[1] "0 words were thresholded (0%)"
-[1] "1000 words remain"
-[1] 1000 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 1000  ( 100.000000 percent) "
-[1] "0 words were thresholded (0%)"
-[1] "1000 words remain"
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 1000  ( 100.000000 percent) "
-[1] "0 words were thresholded (0%)"
-[1] "1000 words remain"
-[1] 1000 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 997  ( 99.700000 percent) "
-[1] "3 words were thresholded (0.3%)"
-[1] "997 words remain"
-[1]  997 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 997  ( 99.700000 percent) "
-[1] "3 words were thresholded (0.3%)"
-[1] "997 words remain"
-[1]  997 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 997  ( 99.700000 percent) "
-[1] "3 words were thresholded (0.3%)"
-[1] "997 words remain"
-[1]  997 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 998  ( 99.800000 percent) "
-[1] "2 words were thresholded (0.2%)"
-[1] "998 words remain"
-[1]  998 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 998  ( 99.800000 percent) "
-[1] "2 words were thresholded (0.2%)"
-[1] "998 words remain"
-[1]  998 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 998  ( 99.800000 percent) "
-[1] "2 words were thresholded (0.2%)"
-[1] "998 words remain"
-[1]  998 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 998  ( 99.800000 percent) "
-[1] "2 words were thresholded (0.2%)"
-[1] "998 words remain"
-[1]  998 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 998  ( 99.800000 percent) "
-[1] "2 words were thresholded (0.2%)"
-[1] "998 words remain"
-[1]  998 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 998  ( 99.800000 percent) "
-[1] "2 words were thresholded (0.2%)"
-[1] "998 words remain"
-[1]  998 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
-[1] "finish NTD"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish OURS"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOSVD"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 999  ( 99.900000 percent) "
-[1] "1 words were thresholded (0.1%)"
-[1] "999 words remain"
-[1]  999 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish HOOI"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 999  ( 99.900000 percent) "
-[1] "1 words were thresholded (0.1%)"
-[1] "999 words remain"
-[1]  999 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish ours_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-[1] "Threshold for alpha = 0.005000  is 0.000004 "
-[1] "Nb of elected words = 999  ( 99.900000 percent) "
-[1] "1 words were thresholded (0.1%)"
-[1] "999 words remain"
-[1]  999 1000
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish hooi_threshold"
-[1]  100   10 1000
-[1] 1000 1000
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "finish Tracy"
