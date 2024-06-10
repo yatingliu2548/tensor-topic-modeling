@@ -2,7 +2,7 @@
 library(nnTensor)
 ## run LDA
 
-run_experiment<- function(data,R,K1,K2,K3,M,error){
+run_experiment<- function(data,R,K1,K2,K3,M,error,threshold=FALSE){
   A1=data$A1
   A2=data$A2
   A3=data$A3
@@ -130,7 +130,7 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
   #}else if (method =="Ours"){
     elapsed_timeOurs <- system.time({
       tmp<-tryCatch(
-        score(data$Y/M,normalize="Ours",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE),
+        score(data$Y/M,normalize="Ours",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=threshold),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
           paste0("Error occurred while running Ours ", R, " :", conditionMessage(err), "\n")
@@ -148,7 +148,7 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
     print("finish OURS")
     elapsed_timeHOSVD <- system.time({
       tmp<- tryCatch(
-        score(data$Y/M,normalize="HOSVD",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE),
+        score(data$Y/M,normalize="HOSVD",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=threshold),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
           paste0("Error occurred while running HOSVD ", R, " :", conditionMessage(err), "\n")
@@ -166,7 +166,7 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
     print("finish HOSVD")
     elapsed_timeHOOI <- system.time({
       tmp<-tryCatch(
-        score(data$Y/M,normalize="HOOI",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE),
+        score(data$Y/M,normalize="HOOI",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=TRUE),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
           paste0("Error occurred while running HOOI ", R, " :", conditionMessage(err), "\n")
@@ -187,7 +187,7 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
         score(data$Y/M,normalize="Ours",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=TRUE),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
-          paste0("Error occurred while running HOOI ", R, " :", conditionMessage(err), "\n")
+          paste0("Error occurred while running Ours_thershold ", R, " :", conditionMessage(err), "\n")
           # Return a default value or NULL to continue with the rest of the code
           return(NULL)}
       )
@@ -200,10 +200,28 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
     error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeoursthreshold,method="ours_threshold",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
     }
     print("finish ours_threshold")
+    elapsed_timeHOOIthreshold <- system.time({
+      tmp<-tryCatch(
+        score(data$Y/M,normalize="HOOI",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=TRUE),
+        error = function(err) {
+          # Code to handle the error (e.g., print an error message, log the error, etc.)
+          paste0("Error occurred while running HOOI threshold ", R, " :", conditionMessage(err), "\n")
+          # Return a default value or NULL to continue with the rest of the code
+          return(NULL)}
+      )
+        })["elapsed"]
+    if (is.null(tmp)==FALSE){
+      hatA1=tmp$hatA1
+      hatA2=tmp$hatA2
+      hatA3=tmp$hatA3
+      hatcore=tmp$hatcore
+    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeHOOIthreshold,method="HOOI_threshold",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
+    }
+    print("finish hooi_threshold")
   #}else if(method=="Tracy"){
     elapsed_timeTracy <- system.time({
       tmp<- tryCatch(
-        score(data$Y/M,normalize="Tracy",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE),
+        score(data$Y/M,normalize="Tracy",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=threshold),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
           paste0("Error occurred while running Tracy ", R, " :", conditionMessage(err), "\n")

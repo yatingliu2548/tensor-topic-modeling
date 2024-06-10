@@ -2,10 +2,6 @@ library('rARPACK')
 #library('Matrix')
 library(roxygen2)
 library(quadprog)
-<<<<<<< HEAD
-=======
-
->>>>>>> 089a26023e1fbafc4c11f151e95d51c692bbbc4c
 library(Matrix)
 library(rTensor)
 library(tensr)
@@ -52,19 +48,19 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   Q1=dim(D@data)[1]
   Q2=dim(D@data)[2]
   R=dim(D@data)[3]
+  print(dim(D))
   n=Q1*Q2
-  if (normalize =="Ours"){
-    D3=matrization_tensor(D,3)
-    X=t(D3)
-    active_train = which(apply(X[1:nrow(X),], 2, sum)>0)
-    x_train = t(diag(1/ apply(X[1:nrow(X), active_train],1, sum)) %*% X[1:nrow(X), active_train])
-    print(dim(x_train))
-    D=tensorization(as.matrix(x_train),3,Q1,Q2,dim(x_train)[1])
-    n=Q1*Q2
-    tildeM <- as.numeric(rowMeans(x_train))
-    p=dim(x_train)[1]
-    n=dim(x_train)[2]
-    if (threshold){
+  D3=matrization_tensor(D,3)
+  X=t(D3)
+  active_train = which(apply(X[1:nrow(X),], 2, sum)>0)
+  x_train = t(diag(1/ apply(X[1:nrow(X), active_train],1, sum)) %*% X[1:nrow(X), active_train])
+  print(dim(x_train))
+  D=tensorization(as.matrix(x_train),3,Q1,Q2,dim(x_train)[1])
+  n=Q1*Q2
+  tildeM <- as.numeric(rowMeans(x_train))
+  p=dim(x_train)[1]
+  n=dim(x_train)[2]
+  if (threshold){
       threshold_J = alpha * sqrt(log(max(p,n))/(M *n))
       print(sprintf("Threshold for alpha = %f  is %f ", alpha, threshold_J))
       setJ = which(tildeM > threshold_J)
@@ -84,16 +80,17 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
       newD3 = as.matrix(x_train)
       setJ = 1:length(tildeM)
     }
+  D=tensorization(as.matrix(newD3),3,Q1,Q2,dim(newD3)[1])
+  if (normalize =="Ours"){
     normM=n/M * diag(tildeM)
     #tensorM=tensorization(normM,mode=3,Q1=Q1,Q2=Q2,R=R)
-    newD =  newD3 %*% t(newD3)  - normM
-    D=tensorization(as.matrix(newD3),3,Q1,Q2,dim(newD3)[1])
+    D3_ours =  newD3 %*% t(newD3)  - normM
   }
   if (normalize=="Tracy"){
     D3=matrization_tensor(D,3)
     tildeM <- as.numeric(rowMeans(D3))
     D3_tracy=diag(sqrt(tildeM^(-1))) %*% D3
-    D=tensorization(D3_tracy,mode=3,Q1=Q1,Q2=Q2,Q3=R)
+    D=tensorization(D3_tracy,mode=3,Q1=Q1,Q2=Q2,Q3=dim(newD3)[1])
   }
   
   
@@ -136,12 +133,12 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   ranks=c(K1,K2,K3)
   
   if (normalize=="Ours"){
-    if (K >= min(dim(newD))){
-      K=min(K, min(dim(newD)))
+    if (K >= min(dim(D3_ours))){
+      K=min(K, min(dim(D3_ours)))
       ranks= c(K,K,K)
-      obj3 = svd(newD, K)
+      obj3 = svd(D3_ours, K)
     }else{
-      obj3 = svds(newD, K3)
+      obj3 = svds(D3_ours, K3)
     }
   }
   
@@ -221,7 +218,6 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   
 
   S_hat=tensor_create(D,t(Xi1),t(Xi2),t(Xi3))
-  print(dim(est2$V))
   
   a_0=colSums(abs(est3$A_star))
   check_V3=a_0 *est3$V
@@ -232,12 +228,9 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   G3 <- t(apply(G3,1,function(x) x/temp))
   G3[is.na(G3)] <- 0
   Gnew=tensorization(G3,3,dim(G)[1],dim(G)[2],dim(G)[3])
-  if (normalize=="Ours"){
-    hatA3_new=matrix(0,R,K3)
-    A_temp=matrix(0,length(active_train),K3)
-    #A_temp=hatA3_new[active_train,]
-    #setJ_2=A_temp[setJ,]
-    if(threshold){
+  hatA3_new=matrix(0,R,K3)
+  A_temp=matrix(0,length(active_train),K3)
+   if(threshold){
       A_temp[setJ, ] = est3$A_hat
       hatA3_new[active_train,]=A_temp
       hatA3=hatA3_new
@@ -245,9 +238,6 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
       hatA3_new[active_train,]=est3$A_hat
       hatA3=hatA3_new
     }
-  }else{
-    hatA3=est3$A_hat
-  }
 
   return(list(hatA1=est1$A_hat,hatA2=est2$A_hat,hatA3=hatA3,hatcore=Gnew))
 }
