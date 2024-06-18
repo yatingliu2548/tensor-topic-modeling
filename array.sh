@@ -5,10 +5,11 @@
 #SBATCH --error=r/experiments/synthetic/logs/array_%A_%a.err
 #SBATCH --array=1-50
 #SBATCH --time=35:00:00
-#SBATCH --partition=broadwl
+#SBATCH --partition=cdonnat
 #SBATCH --ntasks=1
 #SBATCH --mem=15G
 #SBATCH --account=pi-cdonnat
+#SBATCH --qos=cdonnat
 
 # Print the task id.
 echo "My SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID
