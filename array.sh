@@ -1,14 +1,17 @@
 #!/bin/bash
 
 #SBATCH --job-name=array
-#SBATCH --output=r/experiments/synthetic/logs/array_%A_%a.out
-#SBATCH --error=r/experiments/synthetic/logs/array_%A_%a.err
-#SBATCH --array=1-50
-#SBATCH --time=35:00:00
-#SBATCH --partition=broadwl
+#SBATCH --output=experiments/synthetic/logs/array_%A_%a.out
+#SBATCH --error=experiments/synthetic/logs/array_%A_%a.err
+#SBATCH --array=1-1
+#SBATCH --time=40:00:00
+#SBATCH --partition=cdonnat
 #SBATCH --ntasks=1
-#SBATCH --mem=15G
+#SBATCH --mem=6G
 #SBATCH --account=pi-cdonnat
+#SBATCH --qos=cdonnat
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=yatingliu@rcc.uchicago.edu
 
 # Print the task id.
 echo "My SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID
