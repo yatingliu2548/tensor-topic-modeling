@@ -130,7 +130,8 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
   #}else if (method =="Ours"){
     elapsed_timeOurs <- system.time({
       tmp<-tryCatch(
-        score(data$Y/M,normalize="Ours",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE),
+        score(data$Y/M, normalize="Ours", K1=K1, K2=K2, K3=K3, M=M,
+              as.sparse = FALSE),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
           paste0("Error occurred while running Ours ", R, " :", conditionMessage(err), "\n")

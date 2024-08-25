@@ -2,13 +2,7 @@ library('rARPACK')
 #library('Matrix')
 library(roxygen2)
 library(quadprog)
-<<<<<<< HEAD
-=======
-
-source("D:/yatingliu/CODE/tensor-topic-modeling/VH_algo.R")
-source("D:/yatingliu/CODE/tensor-topic-modeling/run_experiments.R")
-source("D:/yatingliu/CODE/tensor-topic-modeling/data_generation.R")
->>>>>>> aaaa398b7cb152441e376cf54234979b02ca5712
+source("VH_algo.R")
 library(Matrix)
 library(rTensor)
 library(tensr)
@@ -52,12 +46,14 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   #'
   #'
  
-  Q1=dim(D@data)[1]
-  Q2=dim(D@data)[2]
-  R=dim(D@data)[3]
-  n=R
-  if (normalize =="Ours"){
-    D3=matrization_tensor(D,3)
+  n <- dim(D@data)[1]
+  t <- dim(D@data)[2]
+  p <- dim(D@data)[3]
+
+  D3 <- matrization_tensor(D, 3)
+
+  if (normalize == "Ours"){
+    
     X=t(D3)
     active_train = which(apply(X[1:nrow(X),], 2, sum)>0)
     x_train = t(diag(1/ apply(X[1:nrow(X), active_train],1, sum)) %*% X[1:nrow(X), active_train])
@@ -85,8 +81,8 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
       newD3 = x_train
       setJ = 1:length(tildeM)
     }
+
     normM=n/M * diag(tildeM)
-    #tensorM=tensorization(normM,mode=3,Q1=Q1,Q2=Q2,R=R)
     newD =  newD3 %*% t(newD3)  - n/M * normM
     D=tensorization(as.matrix(newD3),3,Q1,Q2,dim(newD3)[1])
   }
@@ -96,42 +92,6 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
     D3_tracy=diag(sqrt(tildeM^(-1))) %*% D3
     D=tensorization(D3_tracy,mode=3,Q1=Q1,Q2=Q2,Q3=R)
   }
-  
-  
- 
-  
-  #'
-  # if(typeof(D) != "sparseMatrix" & as.sparse){
-  #   D <- as(D, "sparseMatrix")
-  # }
-  # p <- dim(D)[1]
-  # n <- dim(D)[2]
-  # print(c(n, p, K, M))
-  # 
-  # 
-  # newD=D
-  # new_p=p
-  # M <- as.numeric(rowMeans(D)) #### average frequency at which each word appears in each document
-  # #transpose_newD=  t(newD)
-  # 
-  # #Step 1: SVD
-  # if (as.sparse){
-  #   newD <- switch(normalize,
-  #                  #"norm" = Diagonal(x=sqrt(M_trunk^(-1))) %*% newD,
-  #                  #"norm_score_N" = Diagonal(x=sqrt(M2^(-1)))%*% newD,
-  #                  "C2" = newD %*% t(newD)  - n/M * Diagonal(x=M),
-  #                  "C1" = newD %*% t(newD),
-  #                  "none" = newD)
-  # }else{
-  #   newD <- switch(normalize,
-  #                  #"norm" = diag(sqrt(M_trunk^(-1))) %*% newD,
-  #                  #"norm_score_N" = diag(sqrt(M2^(-1)))%*% newD,
-  #                  "C2" = newD %*% t(newD)  - n/M * diag(M),
-  #                  "C1" = newD %*% t(newD),
-  #                  "none" = newD)
-  # }
-  # 
-  # 
 
   K=min(K1,K2,K3)
   ranks=c(K1,K2,K3)
@@ -148,8 +108,8 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   
   
   obj12 <-switch(normalize,
-                "Ours" = rTensor::hosvd(D,ranks=ranks),
-                "HOOI" =  hooi(D@data,r=ranks,itermax = 50),
+                "Ours" = rTensor::hosvd(D, ranks=ranks),
+                "HOOI" =  hooi(D@data,r=ranks, itermax = 50),
                 "HOSVD" =  rTensor::hosvd(D,ranks=ranks),
                 "Tracy"=rTensor::hosvd(D,ranks=ranks))
 
@@ -329,46 +289,4 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
   
   
 }
-
-
-
-run_topic_models <- function(X, train_index,K1,K2,Q1,Q2, #test_index, 
-                             list_params=1:9, 
-                             normalize="Ours"){
-  ####
-  active_train = which(apply(X[train_index,], 2, sum)>0)
-  x_train = t(diag(1/ apply(X[train_index, active_train],1, sum)) %*% X[train_index, active_train])
-  print(dim(x_train))
-  topic_models <- vector("list", length(list_params))  
-  tensor_data=tensorization(as.matrix(x_train),3,Q1,Q2,dim(x_train)[1])
-  D3=colnames(matrization_tensor(tensor_data,3))
-  it = 1
-  for (k in list_params){
-    
-    tm <- score(tensor_data, K1=K1,K2=K2,K3=k,M=median(apply(X, 1, sum)), normalize=normalize)
-    A_hat = matrix(0, ncol(X), k)
-    G=tm$hatcore
-    tensordata=G@data
-    W_hat=aperm(tensordata, c(3, 2, 1))
-    
-    # Reshape the permuted tensor into a matrix
-    W_hat <- matrix(W_hat, nrow = dim(tensordata)[3], byrow = FALSE)
-    print(dim(W_hat))
-    W_hat=W_hat%*% kronecker(t(tm$hatA1),t(tm$hatA2))
-    
-    A_hat[active_train, ] = tm$hatA3
-    topic_models[[it]] <- list(
-      beta = log(t(A_hat)) %>% magrittr::set_colnames(colnames(X)),
-      gamma =  t(W_hat) %>% magrittr::set_rownames(D3)
-    )
-    it <- it + 1
-  }
-  names(topic_models) <- sapply(list_params, function(x){paste0("k", x)})
-  #names(topic_models_test) <- sapply(list_params,function(x){paste0("k",x)})
-  return(topic_models)
-  
-}
-
-
-
 

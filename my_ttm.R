@@ -1,5 +1,6 @@
 ##### Synthetic experiments
 library(VGAM)
+library("nnTensor")
 setwd("~/Documents/tensor-topic-modeling/")
 set.seed(1234)
 
@@ -14,88 +15,84 @@ K_n = 3  #### nb of reviewer "personae"
 D= t(rdiric(K,rep(0.8, p)))
 
 #### Generate the data matrix
-#### We are generating a matrix such that there are K topics
+core =  array(0, dim = c(K_n, K_T, K))
+core  = rdiric(n=K_n* K_T, shape = rep(1, K), dimension=K)
+core = array(core, dim = c(K_n, K_T, K))
 
-data = matrix(0, 50, 300)
-data[,1:15] = matrix(rep(D[,1],times=15),nrow=50)
-data[,16:30] = matrix(rep(D[,2],times=15),nrow=50)
-data[,31:60] = data[,1:30]
-data[,61:90] = data[,1:30]
-data[,91:120] = data[,1:30]
-data[,121:150] = data[,1:30]
+A1 = rdiric(n=n, shape = rep(1, K_n), dimension=K_n)
+A2 = rdiric(n=T, shape = rep(1, K_T), dimension=K_T)
+A3 = t(rdiric(n=K, shape = rep(1, p), dimension=p))
 
-data[,151:300] = data[,1:150]
+library(einsum)
+library(rTensor)
+library(tidyverse)
+data = einsum("ni, ijk -> njk", A1,core)
+data = einsum("Tj, njk -> nTk", A2,data)
+data = einsum("Rk, nTk -> nTR", A3,data)
+#### Have to make sure that the resulting matrix has the right properties
+apply(data, 1, sum)
+apply(data, 2, sum)
 
-before=rdiric(1,rep(0.8,50)) 
-before2=rdiric(1,rep(0.5,25))*sum(data[1:25,16])
-
-
-data[,16:30]=matrix(rep(before,times=15),nrow=50)
-data[,31:60]=data[,1:30]
-data[,61:90]=data[,1:30]
-data[,91:120]=data[,1:30]
-data[,121:150]=data[,1:30]
-data1=data
-tensor1=array(t(data1),dim=c(30,10,50))
-plot_slice(tensor1,2)
-
-data[,11:20]=data[,1:10]*0.5+data[,21:30]*0.5
-data[,31:60]=data[,1:30]
-data[,61:90]=data[,1:30]
-data[,91:120]=data[,1:30]
-data[,121:150]=data[,1:30]
-
-data[,161:170]=data[,151:160]*0.5+data[,171:180]*0.5
-data[,181:210]=data[,151:180]
-data[,211:240]=data[,151:180]
-data[,241:270]=data[,151:180]
-data[,271:300]=data[,151:180]
+D0 = as.tensor(data)
 
 
-tensor_true=array(t(data),dim=c(30,10,50))
-Y_true=as.tensor(tensor_true)
-plot_slice(tensor_true,2,"Mode 1","Mode 3")
+matrization_tensor <- function(G, mode){
+  tensordata = G@data
+  if (mode == 1){
+    matrix_G = aperm(tensordata, c(1, 3, 2)) %>% 
+      as.vector() %>% 
+      matrix(nrow = dim(G)[1], 
+             byrow = FALSE)
+    
+  }
+  if (mode == 2){
+    matrix_G = aperm(tensordata, c(2, 3, 1)) %>% 
+      as.vector() %>% 
+      matrix(nrow = dim(G)[2],
+             byrow = FALSE)
+    
+  }
+  if (mode == 3){
+    matrix_G = aperm(tensordata, c(3, 2, 1)) %>% 
+      as.vector() %>% 
+      matrix(nrow = dim(G)[3], 
+             byrow = FALSE)
+    
+  }
+  return(matrix_G)
+}
 
-D0=as.tensor(tensor_true)
+
+nb_words_per_doc = 100
 D3=matrization_tensor(D0,3)
-D_true=D0@data
-#D0 = A %*% W
-Q1=30
-Q2=10
-M=100
-Y3 <- sapply(1:(Q1*Q2), function(i){rmultinom(1, M, D3[,i])})
-D3=D3[which(apply(Y3,1, sum) >0 ),]
-Y3=Y3[which(apply(Y3,1, sum) >0 ),]
-#A3= A3[which(apply(Y3,1, sum) >0 ),]%*% diag(1/apply(A3[which(apply(Y3,1, sum) >0 ),], 2, sum))
-vocab =which(apply(Y3,1, sum) >0 )
-tensor=tensorization(D3,mode=3,Q1,Q2,length(vocab))
-Y=tensorization(Y3,mode=3,Q1,Q2,length(vocab))
-tensor=Y@data
+Y =array(0, dim= c(n, T, p))
+for (i in 1:n){
+  for (j in 1:T){
+    Y[i,j,] = rmultinom(size=nb_words_per_doc, n=1, prob = D0@data[i,j,])
+  }
+}
 
-
-#noise <- abs(matrix(rnorm(50*300,sd=0.05),50,300) )# Generate random numbers
-#datanoise=data+noise
-#datanoise=datanoise/colSums(datanoise)
-
-#tensor=array(t(datanoise),dim=c(30,10,50))
-plot_slice(tensor,2)
-Y=as.tensor(tensor)
-Y3=matrization_tensor(Y,3) # first 10 is dim2* first from dim 1
-
-heatmap_matrix(t(Y3))
 ##nonnegative Tucker decomposition
-NTD_result=NTD(Y/M,rank=c(2,2,4),algorithm="KL",nmf.algorithm = "KL")
+
+
+NTD_result=NTD(as.tensor(Y)/nb_words_per_doc,rank=c(K_n,K_T,K),algorithm="KL",nmf.algorithm = "KL")
 
 NTD_A1=t(NTD_result$A$A1)
 NTD_A1=NTD_A1/rowSums(NTD_A1)
 heatmap_matrix(NTD_A1,"Groups","Mode 1")
+heatmap_matrix(A1,"Groups","Mode 1")
 
 NTD_A2=t(NTD_result$A$A2)
 NTD_A2=NTD_A2/rowSums(NTD_A2)
-heatmap_matrix2(NTD_A2,"Classes","Mode 2")
+heatmap_matrix(NTD_A2,"Classes","Mode 2")
+heatmap_matrix(A2,"Claire","Mode 2")
 
 NTD_A3=t(NTD_result$A$A3)
 NTD_A3=NTD_A3/colSums(NTD_A3)
+
+
+compute_error_stats
+
 heatmap_matrix(NTD_A3,"Topics","Mode 3")
 
 NTD_G=NTD_result$S
@@ -174,7 +171,7 @@ for (i in 1:30){
   lda_A=exp(t(LDA_results@beta))
   lda_W=t(LDA_results@gamma)
   hatY=lda_A%*%lda_W
- 
+  
   errors=rbind(errors,error_sim(D0@data,tensorization(hatY,3,30,10,50)@data,"LDA"))
   ours_results=score(Y/M,K1=2,K2=2,K3=4,M=M,normalize="Ours")
   our_D=tensor_create(ours_results$hatcore,ours_results$hatA1,ours_results$hatA2,ours_results$hatA3)
@@ -252,8 +249,8 @@ heatmap_matrix<- function(matrix_data,xlab,ylab){
     #scale_y_continuous(breaks=seq(0,max(as.numeric(df$Row)),by=5))+
     theme_minimal() +  # Use a minimal theme
     theme(#axis.text.x = element_text(angle = 45, hjust = 1), # Improve x-axis label readability
-          strip.background = element_rect(fill = "lightblue"), # Customize facet label background
-          strip.text = element_text(face = "bold"))  # Bold facet labels
+      strip.background = element_rect(fill = "lightblue"), # Customize facet label background
+      strip.text = element_text(face = "bold"))  # Bold facet labels
   
   
   print(g)
@@ -284,19 +281,45 @@ heatmap_matrix2<- function(matrix_data,xlab,ylab){
 error_sim <- function(D,hatD,method=NULL,i){
   error_temp <- data.frame(l1=l1_error(D,hatD),
                            l2=l2_error(D,hatD),
-                          method=method,i=i)
+                           method=method,i=i)
   return(error_temp)
 }
 
 get_cp=function(A,B,C,core_values){
- 
+  
   tensor_dims <- c(nrow(A), nrow(B), nrow(C))
   cp_tensor <- array(0, dim = tensor_dims)
- 
+  
   for (r in 1:length(core_values)) {
     rank_one_tensor <- outer(A[, r], B[, r])
     rank_one_tensor <- array(apply(rank_one_tensor, 1:2, function(x) outer(x, C[, r])), dim = tensor_dims)
     cp_tensor <- cp_tensor + 1* rank_one_tensor
   }
   return(cp_tensor)
+}
+
+
+
+
+heatmap_matrix<- function(matrix_data,xlab,ylab){
+  # Convert matrix to data frame in long format
+  df <- as.data.frame(matrix_data) %>%
+    rownames_to_column("Row") %>%
+    pivot_longer(cols = -Row, names_to = "Column", values_to = "Value") %>%
+    mutate(Row = as.numeric(Row), Column = as.numeric(gsub("V", "", Column))) # Convert Row and Column to numeric
+  
+  # Create heatmap
+  g=ggplot(df, aes(x = as.factor(Column), y =( Row), fill = Value)) +
+    geom_tile() +
+    scale_fill_viridis_c(limits=c(0,1),option="H",trans="sqrt") +  # Use a color scale that's visually appealing for heatmaps
+    # scale_fill_viridis_c() +  # Us
+    labs(x = xlab, y = ylab, fill = "") +
+    #scale_y_continuous(breaks=seq(0,max(as.numeric(df$Row)),by=5))+
+    theme_minimal() +  # Use a minimal theme
+    theme(#axis.text.x = element_text(angle = 45, hjust = 1), # Improve x-axis label readability
+      strip.background = element_rect(fill = "lightblue"), # Customize facet label background
+      strip.text = element_text(face = "bold"))  # Bold facet labels
+  
+  
+  print(g)
 }

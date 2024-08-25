@@ -2,6 +2,9 @@ library(reshape2)
 library(reshape) 
 library(dplyr)
 
+setwd("~/Documents/tensor-topic-modeling/")
+source("our_method.R")
+
 mae <- readRDS("D:/yatingliu/VMRC-subcommunities-analyses-20230725/results/mae_for_analyses.Rds")
 # 
 source("D:/yatingliu/VMRC-subcommunities-analyses-20230725/analyses/00_setup.R")
@@ -9,7 +12,7 @@ load("D:/yatingliu/VMRC-subcommunities-analyses-20230725/results/gammas.Rdata")
 count_assay <- "VM16S_combined"
 counts <- assay(mae, count_assay) %>% t()
 
-source("D:/yatingliu/CODE/tensor-topic-modeling/our_method.R")
+
 
 
 ## data cleaning
