@@ -14,11 +14,11 @@ run_experiment<- function(data,R,K1,K2,K3,M,error,threshold=FALSE){
   R_old=R
   R=dim(A3)[1]
   D=data$Y/M
-  D3=matrization_tensor(Y,3)
+  Y3=matrization_tensor(Y,3)
   #if(method == "lda"){
     #D1=matrization_tensor(D,1)
     #D2=matrization_tensor(D,2)
-   
+
     #lda1 <- LDA(t(D1), k = K1, control = list(seed = 1234), method = 'VEM')
     #lda2 <- LDA(D2, k = K2, control = list(seed = 1234), method = 'VEM')
     #lda3 <- LDA(t(D3), k = K3, control = list(seed = 1234), method = 'VEM')
@@ -28,24 +28,33 @@ run_experiment<- function(data,R,K1,K2,K3,M,error,threshold=FALSE){
     #ap_topics2 <- tidy(lda2, matrix = "beta")
     #hatA2 = lda2@gamma
     #ap_topics3 <- tidy(lda3, matrix = "beta")
-    
-  #   elapsed_timeLDA <- system.time({
-  #     hatcore_es=1
-  #     lda<- tryCatch(
-  #     LDA(t(D3), k = K3, control = list(seed = 1234),  method = "VEM"),
-  #     error = function(err) {
-  #       # Code to handle the error (e.g., print an error message, log the error, etc.)
-  #       cat("Error occurred while running lda:", conditionMessage(err), "\n")
-  #       # Return a default value or NULL to continue with the rest of the code
-  #       return(NULL)
-  #     })
-  #     if (is.null(lda)==FALSE){
-  #       hatA3 <- exp(t(lda@beta))
-  #     }else{
-  #       hatA3=NULL
-  #       hatcore_es=NULL
-  #     }
-  #     
+
+    elapsed_timeLDA <- system.time({
+      lda<- tryCatch(
+        LDA(t(Y3), k = K3, control = list(seed = 1234),  method = "VEM"),
+        error = function(err) {
+        # Code to handle the error (e.g., print an error message, log the error, etc.)
+        cat("Error occurred while running lda:", conditionMessage(err), "\n")
+        # Return a default value or NULL to continue with the rest of the code
+        return(NULL)
+      })
+      if (is.null(lda)==FALSE){
+        hatA3 <- exp(t(lda@beta))
+        lda_W <-t(lda@gamma)
+        W1_LDA=matrization_tensor(tensorization(lda_W,3,Q1,Q2,dim(lda_W)[1]),1)
+        A1_LDA=spectral_clustering(W1_LDA %*% t(W1_LDA),K=K1,mix=T)
+        W2_LDA=matrization_tensor(tensorization((lda_W),3,Q1,Q2,dim(lda_W)[1]),2)
+        A2_LDA=spectral_clustering(W2_LDA %*% t(W2_LDA),K=K2,mix=T)
+        G_LDA=compute_G_from_WA(kronecker(A1_LDA,A2_LDA),t(lda_W))
+        hatA1=A1_LDA
+        hatA2=A2_LDA
+        hatcore_es=tensorization(t(G_LDA),3,K1,K2,dim(G_LDA)[2])
+      }
+    })["elapsed"]
+    if(is.null(lda)==FALSE){
+      error <- update_error(hatA1=hatA1,hatA2=hatA2,hatcore=hatcore_es,hatA3=hatA3,time=elapsed_timeLDA,method="LDA",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
+    }
+   print("finish LDA")
   #     lda<- tryCatch(
   #       LDA(matrization_tensor(Y,1), k = K1, control = list(seed = 1234),  method = "VEM"),
   #       error = function(err) {
@@ -83,10 +92,46 @@ run_experiment<- function(data,R,K1,K2,K3,M,error,threshold=FALSE){
   #     }
   #   })["elapsed"]
   #   error <- update_error(hatA1=hatA1,hatA2=hatA2,hatcore=hatcore,hatA3=hatA3,time=elapsed_timeLDA,method="LDA",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
-  # 
+  #
   # print("finish LDA")
-  #   
+  #
   #}
+   elapsed_timeSLDA <- system.time({
+     #note Y3 is R\times N1N2
+     r1 <- rep(paste0("v",1:Q1), each = Q2)
+     # Create the time vector
+     t2 <- rep(paste0("g",1:Q1), times=Q2)
+     # Combine into a data frame
+     df <- data.frame(race = r1, time = t2)
+     slda<- tryCatch(
+       stm(documents = Matrix(as.matrix(as.data.frame(t(Y3))), sparse = TRUE),
+                   K = K3, prevalence =~ race*time,
+                   max.em.its = 5,
+                   data = df,
+                   init.type = "Spectral"),
+       error = function(err) {
+         # Code to handle the error (e.g., print an error message, log the error, etc.)
+         cat("Error occurred while running lda:", conditionMessage(err), "\n")
+         # Return a default value or NULL to continue with the rest of the code
+         return(NULL)
+       })
+     if (is.null(slda)==FALSE){
+       hatA3 <- t(exp(slda$beta$logbeta[[1]]))
+       slda_W <-slda$theta
+       W1_LDA=matrization_tensor(tensorization(t(slda_W),3,Q1,Q2,dim(lda_W)[2]),1)
+       A1_LDA=spectral_clustering(W1_LDA %*% t(W1_LDA),K=K1,mix=T)
+       W2_LDA=matrization_tensor(tensorization(t(slda_W),3,Q1,Q2,dim(lda_W)[2]),2)
+       A2_LDA=spectral_clustering(W2_LDA %*% t(W2_LDA),K=K2,mix=T)
+       G_LDA=compute_G_from_WA(kronecker(A1_LDA,A2_LDA),slda_W)
+       hatA1=A1_LDA
+       hatA2=A2_LDA
+       hatcore_es=tensorization(t(G_LDA),3,K1,K2,dim(G_LDA)[2])
+     }
+   })["elapsed"]
+   if(is.null(lda)==FALSE){
+     error <- update_error(hatA1=hatA1,hatA2=hatA2,hatcore=hatcore_es,hatA3=hatA3,time=elapsed_timeSLDA,method="SLDA",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
+   }
+   print("finish SLDA")
   #else if (method =="NTD"){
     elapsed_timeNTD <- system.time({
       ntd_res<-tryCatch(
@@ -97,7 +142,7 @@ run_experiment<- function(data,R,K1,K2,K3,M,error,threshold=FALSE){
         # Return a default value or NULL to continue with the rest of the code
         return(NULL)
       }
-      )     
+      )
     })["elapsed"]
     if (is.null(ntd_res)==FALSE){
       hatA_ntd=ntd_res$A
@@ -237,7 +282,7 @@ run_experiment<- function(data,R,K1,K2,K3,M,error,threshold=FALSE){
     error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore = hatcore,time=elapsed_timeTracy,method="Tracy",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
     }
     print("finish Tracy")
-    
+
     # elapsed_timeOurs_iter <- system.time({
     #   Y_iter=D
     #   for(i in 1:10){
@@ -251,8 +296,8 @@ run_experiment<- function(data,R,K1,K2,K3,M,error,threshold=FALSE){
     # })["elapsed"]
     # error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeOurs_iter,method="Ours_iter_10",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R,M=M,error=error)
     # print("finish Ours iter")
-    
-    
+
+
   #}
     return(error)
 }
@@ -260,10 +305,10 @@ run_experiment<- function(data,R,K1,K2,K3,M,error,threshold=FALSE){
 
 
 update_error<- function(hatA1=NULL,A1,hatA2=NULL,A2,hatA3=NULL,A3,hatcore=NULL,core,K1,K2,K3,Q1,Q2,R,M,time,method,error){
- 
+
   core_est=1
   if (is.null(hatA1)){
-  
+
     errorl1_1=NA
     core_est=NULL
   }else{
@@ -272,10 +317,10 @@ update_error<- function(hatA1=NULL,A1,hatA2=NULL,A2,hatA3=NULL,A3,hatcore=NULL,c
     perm1=error_res$permutation
     if (method=="Tracy"){
       error_temp <- error_update(error=errorl1_1,K=K1,Q1=Q1,R=R,Q2=Q2,M=M,mode="A1",method="Olga",time=time)
-      
+
     }else{
       error_temp <- error_update(error=errorl1_1,K=K1,Q1=Q1,R=R,Q2=Q2,M=M,mode="A1",method=method,time=time)
-      
+
     }
     error=rbind(error,error_temp)
   }
@@ -288,10 +333,10 @@ update_error<- function(hatA1=NULL,A1,hatA2=NULL,A2,hatA3=NULL,A3,hatcore=NULL,c
     perm2=error_res$permutation
     if (method=="Tracy"){
       error_temp <- error_update(error=errorl1_2,K=K2,Q1=Q1,R=R,Q2=Q2,M=M,mode="A2",method="Olga",time=time)
-      
+
     }else{
       error_temp <- error_update(error=errorl1_2,K=K2,Q1=Q1,R=R,Q2=Q2,M=M,mode="A2",method=method,time=time)
-      
+
     }
     error=rbind(error,error_temp)
   }
@@ -315,18 +360,18 @@ update_error<- function(hatA1=NULL,A1,hatA2=NULL,A2,hatA3=NULL,A3,hatcore=NULL,c
     error_core=l1_error(G3_PER,hatG3)
     if (method=="Tracy"){
       error_temp <- error_update(error=error_core,K=K3,Q1=Q1,R=R,Q2=Q2,M=M,mode="core",method="Tracy_Olga",time=time)
-      
+
     }else{
       error_temp <- error_update(error=error_core,K=K3,Q1=Q1,R=R,Q2=Q2,M=M,mode="core",method=method,time=time)
     }
     error=rbind(error,error_temp)
   }
-  
- 
+
+
   #ifelse(is.null(What), NA, matrix_lp_distance(What, W, lp=1)),
   #errorl1_2=ifelse(is.null(hatA2), NA, matrix_lp_distance(hatA2, A2, lp=1)),
   #errorl1_3=ifelse(is.null(hatA3), NA, matrix_lp_distance(hatA3, A3, lp=1)),
-  
+
  return(error)
 
 }
@@ -339,9 +384,9 @@ get_hat_core<- function(Y,A1,A2,A3){
   M_NA <- Y
   M_NA@data[] <- 1
   M_NA@data[which(is.na(Y@data))] <- 0
- 
+
     M <- M_NA
-  
+
   pM <- M
   # Pseudo count
   pseudocount=.Machine$double.eps
@@ -351,7 +396,7 @@ get_hat_core<- function(Y,A1,A2,A3){
   X_bar <- recTensor(S=S, A=A, idx=c(1,2,3),reverse=TRUE)
 
   pM <- .pseudocount(M, pseudocount)
-  
+
   numer <- pM * Y * X_bar^(2 - 1)
   denom <- pM * X_bar^2
   for (n in 1:3) {
