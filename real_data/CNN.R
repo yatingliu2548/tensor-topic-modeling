@@ -1,19 +1,20 @@
 library(readr)
-source("D:yatingliu/CODE/tensor-topic-modeling/our_method.R")
-source("C:/Users/yichugang/Desktop/tensor-topic-modeling/VH_algo.R")
-source("C:/Users/yichugang/Desktop/tensor-topic-modeling/run_experiments.R")
-source("C:/Users/yichugang/Desktop/tensor-topic-modeling/data_generation.R")
-source("C:/Users/yichugang/Desktop/tensor-topic-modeling/our_method.R")
-CNN_Articels_clean <- read_csv("D:yatingliu/CNN_Articels_clean.csv/CNN_Articels_clean.csv")
-CNN=CNN_Articels_clean
+
+##clean the data
+CNN_Articles_clean <- read_csv("C:/Users/建新/Desktop/tensor-topic-modeling/tensor-topic-modeling/real_data/CNN_Articels_clean.csv")
+CNN=CNN_Articles_clean
 CNN$date=as.Date(CNN$`Date published`)
 library(stringr)
 CNN$headlinetext <- stringi::stri_replace_first_regex(CNN$`Headline`, "\\(CNN Business\\).*", "")
 
+
+##### extract the news related to covid 19
 library(dplyr)
 covid_related <- grepl("Covid", CNN$`Article text`, ignore.case = TRUE)
 contain_COVID=CNN[covid_related, ]
 table(contain_COVID$Category)
+
+after2021=CNN%>%filter(date>as.Date("2021-01-01"))
 
 
 ###select country
@@ -71,7 +72,7 @@ us_during_covid<- contain_us %>%
   group_by(Category)%>%
   sample_n(size=40,replace = FALSE)%>%
   ungroup()%>% arrange(Category,Section,date)
-  
+
 china_before_covid<- CNN %>%
     filter(
            date <as.Date("2019-12-31"),
@@ -80,7 +81,7 @@ china_before_covid<- CNN %>%
            !Index %in% contain_us_china$Index)%>%
   slice_sample(n=160)%>%
   ungroup()%>% arrange(Category,Section,date)
-  
+
 china_during_covid<- CNN %>%
     filter(
            date >as.Date("2019-12-31"),
@@ -210,7 +211,7 @@ LDA_results=LDA(matrix,k=4,control = list(seed = 1234), method = 'VEM')
 lda_A=exp(t(LDA_results@beta))
 lda_W=t(LDA_results@gamma)
 rownames(lda_A) <-colnames(dtm_matrix)
-plot_words_per_group((lda_A),words=10) 
+plot_words_per_group((lda_A),words=10)
 heatmap_matrix(as.numeric(lda_A),"Groups","Mode 1")
 heatmap_matrix(t(lda_W),"Groups","Mode 1")
 
@@ -241,12 +242,12 @@ plot_words_per_group<- function(matrix,words=10){
   gene_data <- as.data.frame(matrix) %>%
     rownames_to_column(var = "Names") %>%
     pivot_longer(cols = -Names, names_to = "Group", values_to = "Probability")
-  
+
   top_genes <- gene_data  %>%
     group_by(Group)%>%
     top_n(n = words, wt = Probability) %>%
     ungroup()
-  
+
   # Plot
   ggplot(top_genes, aes(x = Group, y = Names, size = Probability)) +
     geom_point(shape = 21, fill = "skyblue",alpha = 0.6) +  # Adjust alpha for transparency, if desired

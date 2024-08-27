@@ -5,6 +5,7 @@ library(quadprog)
 library(Matrix)
 library(rTensor)
 library(tensr)
+library(cluster)
 
 
 score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, threshold=FALSE,
@@ -44,7 +45,7 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   #'
   #'
   #'
- 
+
   Q1=dim(D@data)[1]
   Q2=dim(D@data)[2]
   R=dim(D@data)[3]
@@ -74,7 +75,7 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
       print(paste0(length(setJ), " words remain"))
       new_p <- length(setJ)
       print(dim(newD3))
-    
+
     }else{
       new_p = p
       newD3 = as.matrix(x_train)
@@ -92,10 +93,10 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
     D3_tracy=diag(sqrt(tildeM^(-1))) %*% D3
     D=tensorization(D3_tracy,mode=3,Q1=Q1,Q2=Q2,Q3=dim(newD3)[1])
   }
-  
-  
- 
-  
+
+
+
+
   #'
   # if(typeof(D) != "sparseMatrix" & as.sparse){
   #   D <- as(D, "sparseMatrix")
@@ -103,13 +104,13 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   # p <- dim(D)[1]
   # n <- dim(D)[2]
   # print(c(n, p, K, M))
-  # 
-  # 
+  #
+  #
   # newD=D
   # new_p=p
   # M <- as.numeric(rowMeans(D)) #### average frequency at which each word appears in each document
   # #transpose_newD=  t(newD)
-  # 
+  #
   # #Step 1: SVD
   # if (as.sparse){
   #   newD <- switch(normalize,
@@ -126,12 +127,12 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   #                  "C1" = newD %*% t(newD),
   #                  "none" = newD)
   # }
-  # 
-  # 
+  #
+  #
 
   K=min(K1,K2,K3)
   ranks=c(K1,K2,K3)
-  
+
   if (normalize=="Ours"){
     if (K >= min(dim(D3_ours))){
       K=min(K, min(dim(D3_ours)))
@@ -141,8 +142,8 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
       obj3 = svds(D3_ours, K3)
     }
   }
-  
-  
+
+
   obj12 <-switch(normalize,
                 "Ours" = rTensor::hosvd(D,ranks=ranks),
                 "HOOI" =  hooi(D@data,r=ranks,itermax = 50),
@@ -163,14 +164,14 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   Xi1 <- obj12$U[[1]]
   Xi2 <- obj12$U[[2]]
   #Xi3 <- obj12$U[[3]]
-  
+
   if(normalize=="Ours"){
     Xi3<- obj3$u
   }else{
     Xi3 <- obj12$U[[3]]
   }
-  
-  
+
+
   Xi1[,1] <- abs(Xi1[,1])#
   Xi2[,1] <- abs(Xi2[,1])#
   Xi3[,1] <- abs(Xi3[,1])#
@@ -182,24 +183,24 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   est1<- steps_procedure( Xi=Xi1, normalize="C1",K=K1,K0=K0,VHMethod=VHMethod)
   est2<- steps_procedure( Xi=Xi2, normalize="C1",K=K2,K0=K0,VHMethod=VHMethod)
   est3<- steps_procedure( Xi=Xi3, normalize="C2",K=K3,K0=K0,VHMethod=VHMethod)
-  
+
   if (scatterplot & min(ranks)>2){
     par(mar=c(1,1,1,1))
     #print(ggplot(data.frame(est1$H), aes(x=X1, y=X2))+
     #  geom_point( size=3.5)+
     #  geom_point(data=data.frame(est1$V), colour="red", size=3.5))
-    
+
     #print(ggplot(data.frame(est2$H), aes(x=X1, y=X2))+
     #  geom_point( size=3.5)+
     #  geom_point(data=data.frame(est2$V), colour="red", size=3.5))
-    
+
     #print(ggplot(data.frame(est3$H), aes(x=X1, y=X2))+
     #  geom_point( size=3.5)+
     #  geom_point(data=data.frame(est3$V), colour="red", size=3.5))
     sv1 <-svd(matrization_tensor(D,1), K1)
     sv2=svd(matrization_tensor(D,2), K2)
     sv3=svd(matrization_tensor(D,3), K3)
-  
+
     svd_data <- data.frame(Mode1 = sv1$d[1:min(Q1,Q2,R)],Mode2 = sv2$d[1:min(Q1,Q2,R)],Mode3 = sv3$d[1:min(Q1,Q2,R)])
 
 # Convert data to long format for ggplot
@@ -215,10 +216,10 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
        y = "Singular Values") +
       theme_minimal())
   }
-  
+
 
   S_hat=tensor_create(D,t(Xi1),t(Xi2),t(Xi3))
-  
+
   a_0=colSums(abs(est3$A_star))
   check_V3=a_0 *est3$V
   G=tensor_create(S_hat,est1$V,est2$V,check_V3)
@@ -251,16 +252,16 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
     if(normalize=="C2"){
       H <- apply(as.matrix(Xi[, 2:K]),2, function(x) x/ Xi[,1])
       H[is.na(H)]<-0
-      
+
     }else{
       H=Xi
     }
   }
-  
-  
-  
-  
-  
+
+
+
+
+
   #step 3 VH algorithm
   print("Start VH")
   if (VHMethod == 'SVS'){
@@ -271,10 +272,10 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
     if (K<3){
       i1 = which.max(H[,1])
       i2 = which.min(H[,1])
-      
+
       V <- as.matrix(H[c(i1, i2),], ncol=ncol(H))
     }else{
-     
+
       #write_csv(as.data.frame(H), paste0(getwd(), paste0("/synthetic/results/","H")))
       vertices_est_obj <- successiveProj(H, K)
       V <- as.matrix(vertices_est_obj$V, ncol=ncol(H))
@@ -288,17 +289,17 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
     vertices_est_obj <- ArchetypeA(r_to_py(H), as.integer(K))
     V<-vertices_est_obj$V
     theta<-NULL
-    
+
   }
-  
+
   # if (scatterplot & K>2){
   #   par(mar=c(1,1,1,1))
   #   ggplot(data.frame(R), aes(x=X1, y=X2))+
   #     geom_point( size=3.5)+
   #     geom_point(data=data.frame(V), colour="red", size=3.5)
   # }
-  
-  
+
+
   #Step 4: Topic matrix estimation
   print("Start Step 4")
   if (K == 1){
@@ -319,14 +320,14 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
       }
     }
   }
-  
-  
+
+
   Pi <- pmax(Pi,matrix(0,dim(Pi)[1],dim(Pi)[2])) ### sets negative entries to 0
   temp <- rowSums(Pi)
   Pi <- apply(Pi,2,function(x) x/temp)
-  
+
   #Step 5
-  
+
   if (normalize=="C2"){
     A_star <- Xi[,1] * Pi
     if (K==1){
@@ -338,7 +339,7 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
     A_star=replace(A_star, is.na(A_star), 0)
     temp <- colSums(A_star)
     A_hat <- t(apply(A_star,1,function(x) x/temp))
-    
+
   }else{
     if (K==1){
       V=as.matrix(max(V),1,1)
@@ -346,38 +347,38 @@ steps_procedure <- function(Xi,K,normalize,K0,VHMethod){
     A_star= Pi
     A_hat=Pi
   }
-  
+
   return(list(A_hat=A_hat,A_star=A_star, H=H,V=V, Pi=Pi, theta=theta,Xi=Xi))
-  
-  
+
+
 }
 
 
 
-run_topic_models <- function(X, train_index,K1,K2,Q1,Q2, #test_index, 
-                             list_params=1:9, 
+run_topic_models <- function(X, train_index,K1,K2,Q1,Q2, #test_index,
+                             list_params=1:9,
                              normalize="Ours"){
   ####
   active_train = which(apply(X[train_index,], 2, sum)>0)
   x_train = t(diag(1/ apply(X[train_index, active_train],1, sum)) %*% X[train_index, active_train])
   print(dim(x_train))
-  topic_models <- vector("list", length(list_params))  
+  topic_models <- vector("list", length(list_params))
   tensor_data=tensorization(as.matrix(x_train),3,Q1,Q2,dim(x_train)[1])
   D3=colnames(matrization_tensor(tensor_data,3))
   it = 1
   for (k in list_params){
-    
+
     tm <- score(tensor_data, K1=K1,K2=K2,K3=k,M=median(apply(X, 1, sum)), normalize=normalize)
     A_hat = matrix(0, ncol(X), k)
     G=tm$hatcore
     tensordata=G@data
     W_hat=aperm(tensordata, c(3, 2, 1))
-    
+
     # Reshape the permuted tensor into a matrix
     W_hat <- matrix(W_hat, nrow = dim(tensordata)[3], byrow = FALSE)
     print(dim(W_hat))
     W_hat=W_hat%*% kronecker(t(tm$hatA1),t(tm$hatA2))
-    
+
     A_hat[active_train, ] = tm$hatA3
     topic_models[[it]] <- list(
       beta = log(t(A_hat)) %>% magrittr::set_colnames(colnames(X)),
@@ -388,7 +389,90 @@ run_topic_models <- function(X, train_index,K1,K2,Q1,Q2, #test_index,
   names(topic_models) <- sapply(list_params, function(x){paste0("k", x)})
   #names(topic_models_test) <- sapply(list_params,function(x){paste0("k",x)})
   return(topic_models)
-  
+
+}
+
+
+
+spectral_clustering <- function(A, K,max_iter=100,tol=1e-6,mix=T) {
+  #matrix is N1 times N1 matrix = W1\times t(W1)
+  # Step 1: Calculate U (leading K eigenvectors of A)
+  eig <- svds(A, K) # nv = number of eigenvectors
+  U <- eig$u  # Leading K eigenvectors
+  A1=matrix(0,nrow=nrow(U),ncol=K)
+
+  # Step 2: Perform approximate k-means on U
+  # Use kmeans function with a fixed number of iterations or other stopping criteria
+  if(mix){
+    U[,1] <- abs(U[,1])
+    Theta=steps_procedure(Xi=U, normalize="C1",K=K,K0=10,VHMethod="SP")
+    A1=Theta$A_hat
+    A1[is.na(A1)]=A1
+  }else{
+    print(mix)
+    kmeans_result <- kmeans(U, centers = K, nstart = 25)
+    Theta <- matrix(0, nrow = nrow(U), ncol = K)
+    for (i in 1:nrow(U)) {
+      Theta[i, kmeans_result$cluster[i]] <- 1
+    }
+
+    for (iter in 1:max_iter) {
+
+      # Step 2: Solve for X given Theta
+      X <- solve(t(Theta) %*% Theta) %*% t(Theta) %*% U
+
+      # Step 3: Update Theta given X
+      Theta_new <- matrix(0, nrow = nrow(U), ncol = K)
+      for (i in 1:nrow(U)) {
+        best_cluster <- which.min(colSums((t(X) - U[i, ])^2))
+        Theta_new[i, best_cluster] <- 1
+      }
+
+      # Check for convergence
+      if (norm(Theta_new - Theta, "F") < tol) {
+        return(Theta)
+        break
+      }
+
+      Theta<- Theta_new
+      A1=Theta
+      return(Theta)
+    }
+  }
+  return(A1)
+}
+
+
+compute_G_from_WA <- function(A_hat, D){
+
+  K <-dim(A_hat)[2]
+  n <- dim(D)[2]
+
+  W_hat <- matrix(0, K, n)
+  M <- rbind(diag(K-1), rep(-1,K-1))
+  bM <- diag(K)[,K]
+  Dmat <- 2*t(A_hat %*% M) %*% (A_hat %*% M)
+  Amat <- t(M)
+  bvec <- -bM
+
+  AM <- A_hat %*% M
+  AbM <- A_hat %*% bM
+  for (i in 1:n){
+    dvec <- 2*t(D[,i]-AbM) %*% AM
+    # Dmat <- matrix(nearPD(Dmat)$mat, nrow(Dmat), ncol(Dmat))
+    # Dmat <- nearPD(Dmat)
+    qp_sol <- solve.QP(Dmat, dvec, Amat, bvec)$solution
+    W_hat[,i] <- c(qp_sol, 1-sum(qp_sol))
+  }
+  W_hat <- pmax(W_hat,0)
+  ### sets negative entries to 0
+  G=t(W_hat)
+  #hatcore_es=tensorization(t(G_LDA),3,K1,K2,dim(G_LDA)[2])
+  temp <- colSums(G)
+  G <- t(apply(G,1,function(x) x/temp))
+  G[is.na(G)] <- 0
+  W_hat=t(G)
+  return(W_hat)
 }
 
 
