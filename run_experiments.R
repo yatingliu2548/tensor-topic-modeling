@@ -1,34 +1,79 @@
 ## other methods
 library(nnTensor)
+library(tidyverse)
+library(topicmodels)
+library(tidytext)
+
+
+
 ## run LDA
 
-run_experiment<- function(data,R,K1,K2,K3,M,error){
-  A1=data$A1
-  A2=data$A2
-  A3=data$A3
-  core=data$G
+run_experiment<- function(data, K1, K2, K3, M, error, threshold=FALSE){
+  A1 <- data$A1
+  A2 <- data$A2
+  A3 <- data$A3
+  core <- data$G
 
-  Y=data$Y
-  Q1=dim(A1)[1]
-  Q2=dim(A2)[1]
-  R_old=R
-  R=dim(A3)[1]
-  D=data$Y/M
-  D3=matrization_tensor(Y,3)
-  #if(method == "lda"){
-    #D1=matrization_tensor(D,1)
-    #D2=matrization_tensor(D,2)
-   
-    #lda1 <- LDA(t(D1), k = K1, control = list(seed = 1234), method = 'VEM')
-    #lda2 <- LDA(D2, k = K2, control = list(seed = 1234), method = 'VEM')
-    #lda3 <- LDA(t(D3), k = K3, control = list(seed = 1234), method = 'VEM')
-    #ldacore <- LDA(t(as.vector(D1)), k = K1*K2*K3, control = list(seed = 1234), method = 'VEM')
-    #ap_topics1 <- tidy(lda1, matrix = "beta")
-    #hatA1 = exp(t(lda1@beta))
-    #ap_topics2 <- tidy(lda2, matrix = "beta")
-    #hatA2 = lda2@gamma
-    #ap_topics3 <- tidy(lda3, matrix = "beta")
+  Y <- data$Y
+  Q1 <- dim(A1)[1]
+  Q2 <- dim(A2)[1]
+  #R_old = R
+  R <- dim(A3)[1]
+  D <- data$Y/ M
+  D3  <- matricization(Y, 3)
+  if(method == "lda"){
+    D1=matrization_tensor(D,1)
+    D2=matrization_tensor(D,2)
+
+    lda3 <- LDA(t(D3), k = K3, control = list(seed = 1234), method = 'VEM')
+    ap_topics3 <- tidy(lda3, matrix = "beta")
+    W3 = tidy(lda3, matrix = "gamma")
+    W3 <- pivot_wider(W3, id_cols = "document", 
+                      names_from = "topic",
+                      values_from = "gamma")
+    ##### sum across k_3
+    #W3_modified <- W3 %>% 
+    #  group_by(document) %>%
+    #  summarise(gamma = sum(gamma))
+    W3_modified = W3
+    W3_modified["dim1"] = unlist(lapply(1:Q1, function(x){rep(x, Q2)}))
+    W3_modified["dim2"] = unlist(lapply(1:Q1, function(x){1:Q2}))
+    W3_modified = W3_modified %>% 
+      group_by(dim1) %>%
+      summarise(`1` = sum(`1`),
+                `2` = sum(`2`),
+                `3` = sum(`3`),
+                `4` = sum(`4`))
+    #### Apply SPOC
+    A1_hat <- fit_SPOC(W3_modified/ Q2, K1)
     
+    W3_modified_bis = W3
+    W3_modified_bis["dim1"] = unlist(lapply(1:Q1, function(x){rep(x, Q2)}))
+    W3_modified_bis["dim2"] = unlist(lapply(1:Q1, function(x){1:Q2}))
+    W3_modified_bis = W3_modified_bis %>% 
+      group_by(dim2) %>%
+      summarise(`1` = sum(`1`),
+                `2` = sum(`2`),
+                `3` = sum(`3`),
+                `4` = sum(`4`))
+    
+    #### Apply SPOC
+    A2_hat <- fit_SPOC(W3_modified_bis/ Q1, K2)
+    ##### Estimate the core through regression
+    outer_product <- vec_A %o% vec_B
+    
+    outer_product = A2_h
+  
+    
+    
+    
+    
+    
+    
+    
+
+    
+
   #   elapsed_timeLDA <- system.time({
   #     hatcore_es=1
   #     lda<- tryCatch(
@@ -45,7 +90,7 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
   #       hatA3=NULL
   #       hatcore_es=NULL
   #     }
-  #     
+  #
   #     lda<- tryCatch(
   #       LDA(matrization_tensor(Y,1), k = K1, control = list(seed = 1234),  method = "VEM"),
   #       error = function(err) {
@@ -83,9 +128,9 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
   #     }
   #   })["elapsed"]
   #   error <- update_error(hatA1=hatA1,hatA2=hatA2,hatcore=hatcore,hatA3=hatA3,time=elapsed_timeLDA,method="LDA",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
-  # 
+  #
   # print("finish LDA")
-  #   
+  #
   #}
   #else if (method =="NTD"){
     elapsed_timeNTD <- system.time({
@@ -130,8 +175,12 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
   #}else if (method =="Ours"){
     elapsed_timeOurs <- system.time({
       tmp<-tryCatch(
+<<<<<<< HEAD
         score(data$Y/M, normalize="Ours", K1=K1, K2=K2, K3=K3, M=M,
               as.sparse = FALSE),
+=======
+        score(data$Y/M,normalize="Ours",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=threshold),
+>>>>>>> 3e3a26d99d8e0fcb594f22825d30626058bd0e2d
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
           paste0("Error occurred while running Ours ", R, " :", conditionMessage(err), "\n")
@@ -149,7 +198,7 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
     print("finish OURS")
     elapsed_timeHOSVD <- system.time({
       tmp<- tryCatch(
-        score(data$Y/M,normalize="HOSVD",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE),
+        score(data$Y/M,normalize="HOSVD",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=threshold),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
           paste0("Error occurred while running HOSVD ", R, " :", conditionMessage(err), "\n")
@@ -167,7 +216,7 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
     print("finish HOSVD")
     elapsed_timeHOOI <- system.time({
       tmp<-tryCatch(
-        score(data$Y/M,normalize="HOOI",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE),
+        score(data$Y/M,normalize="HOOI",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=TRUE),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
           paste0("Error occurred while running HOOI ", R, " :", conditionMessage(err), "\n")
@@ -183,12 +232,12 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
     error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeHOOI,method="HOOI",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
     }
     print("finish HOOI")
-     elapsed_timeoursthreshold <- system.time({
+    elapsed_timeoursthreshold <- system.time({
       tmp<-tryCatch(
-        score(data$Y/M,normalize="ours",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=TRUE),
+        score(data$Y/M,normalize="Ours",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=TRUE),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
-          paste0("Error occurred while running HOOI ", R, " :", conditionMessage(err), "\n")
+          paste0("Error occurred while running Ours_thershold ", R, " :", conditionMessage(err), "\n")
           # Return a default value or NULL to continue with the rest of the code
           return(NULL)}
       )
@@ -201,10 +250,28 @@ run_experiment<- function(data,R,K1,K2,K3,M,error){
     error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeoursthreshold,method="ours_threshold",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
     }
     print("finish ours_threshold")
+    elapsed_timeHOOIthreshold <- system.time({
+      tmp<-tryCatch(
+        score(data$Y/M,normalize="HOOI",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=TRUE),
+        error = function(err) {
+          # Code to handle the error (e.g., print an error message, log the error, etc.)
+          paste0("Error occurred while running HOOI threshold ", R, " :", conditionMessage(err), "\n")
+          # Return a default value or NULL to continue with the rest of the code
+          return(NULL)}
+      )
+        })["elapsed"]
+    if (is.null(tmp)==FALSE){
+      hatA1=tmp$hatA1
+      hatA2=tmp$hatA2
+      hatA3=tmp$hatA3
+      hatcore=tmp$hatcore
+    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeHOOIthreshold,method="HOOI_threshold",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
+    }
+    print("finish hooi_threshold")
   #}else if(method=="Tracy"){
     elapsed_timeTracy <- system.time({
       tmp<- tryCatch(
-        score(data$Y/M,normalize="Tracy",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE),
+        score(data$Y/M,normalize="Tracy",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=threshold),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
           paste0("Error occurred while running Tracy ", R, " :", conditionMessage(err), "\n")

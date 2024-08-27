@@ -1,17 +1,14 @@
 #!/bin/bash
 
 #SBATCH --job-name=array
-#SBATCH --output=experiments/synthetic/logs/array_%A_%a.out
-#SBATCH --error=experiments/synthetic/logs/array_%A_%a.err
-#SBATCH --array=1-1
-#SBATCH --time=40:00:00
-#SBATCH --partition=cdonnat
+#SBATCH --output=r/experiments/synthetic/logs/array_%A_%a.out
+#SBATCH --error=r/experiments/synthetic/logs/array_%A_%a.err
+#SBATCH --array=1-50
+#SBATCH --time=35:00:00
+#SBATCH --partition=broadwl
 #SBATCH --ntasks=1
-#SBATCH --mem=6G
+#SBATCH --mem=15G
 #SBATCH --account=pi-cdonnat
-#SBATCH --qos=cdonnat
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=yatingliu@rcc.uchicago.edu
 
 # Print the task id.
 echo "My SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID
@@ -41,5 +38,5 @@ cd $SCRATCH/$USER/tensor-topic-modeling/
 working_dir="${SCRATCH}/${USER}/tensor-topic-modeling/"
 #working_dir="topic-modeling/"
 #Rscript synthetic_array.R $1234 $result_file $15 $MATLAB_PATH # 5 topic
-Rscript synthetic_array.R $SLURM_ARRAY_TASK_ID $result_file $1 $MATLAB_PATH 
+Rscript synthetic_array_K.R $SLURM_ARRAY_TASK_ID $result_file $1 $MATLAB_PATH 
 # 5 topic

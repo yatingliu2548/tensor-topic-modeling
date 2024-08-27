@@ -1,18 +1,16 @@
 library(nnTensor)
 
-tensor_create <- function(G, A1, A2, A3){
+create_tensor <- function(G, A1, A2, A3){
   # First, multiply G by A along the first mode
   T1 <- ttm(G, A1, 1)
-
   # Then, multiply the result by B along the second mode
   T2 <- ttm(T1, A2, 2)
-
   # Finally, multiply by C along the third mode
   reconstructed_tensor <- ttm(T2, A3, 3)
   return(reconstructed_tensor)
 }
 
-matrization_tensor <- function(G, mode){
+matricization <- function(G, mode){
   tensordata = G@data
   if (mode == 1){
     matrix_G = aperm(tensordata, c(1, 3, 2)) %>% 
