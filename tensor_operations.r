@@ -11,7 +11,12 @@ create_tensor <- function(G, A1, A2, A3){
 }
 
 matricization <- function(G, mode){
-  tensordata = G@data
+  if(class(G) == "Tensor"){
+    tensordata = G@data
+  }else{
+    tensordata = G
+  }
+  
   if (mode == 1){
     matrix_G = aperm(tensordata, c(1, 3, 2)) %>% 
                     as.vector() %>% 

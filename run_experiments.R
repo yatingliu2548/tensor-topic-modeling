@@ -4,138 +4,163 @@ library(tidyverse)
 library(topicmodels)
 library(tidytext)
 
+source("algorithm.R")
+source("bayesian.R")
+source("NTD.R")
 
 
-## run LDA
-
-run_experiment<- function(data, K1, K2, K3, M, error, threshold=FALSE){
+run_experiment<- function(data, K1, K2, K3, M, method, threshold=FALSE){
   A1 <- data$A1
   A2 <- data$A2
   A3 <- data$A3
   core <- data$G
 
-  Y <- data$Y
+  Y <- data$D
   Q1 <- dim(A1)[1]
   Q2 <- dim(A2)[1]
   #R_old = R
   R <- dim(A3)[1]
-  D <- data$Y/ M
-  D3  <- matricization(Y, 3)
-  if(method == "lda"){
-    D1=matrization_tensor(D,1)
-    D2=matrization_tensor(D,2)
-
-    lda3 <- LDA(t(D3), k = K3, control = list(seed = 1234), method = 'VEM')
-    ap_topics3 <- tidy(lda3, matrix = "beta")
-    W3 = tidy(lda3, matrix = "gamma")
-    W3 <- pivot_wider(W3, id_cols = "document", 
-                      names_from = "topic",
-                      values_from = "gamma")
-    ##### sum across k_3
-    #W3_modified <- W3 %>% 
-    #  group_by(document) %>%
-    #  summarise(gamma = sum(gamma))
-    W3_modified = W3
-    W3_modified["dim1"] = unlist(lapply(1:Q1, function(x){rep(x, Q2)}))
-    W3_modified["dim2"] = unlist(lapply(1:Q1, function(x){1:Q2}))
-    W3_modified = W3_modified %>% 
-      group_by(dim1) %>%
-      summarise(`1` = sum(`1`),
-                `2` = sum(`2`),
-                `3` = sum(`3`),
-                `4` = sum(`4`))
-    #### Apply SPOC
-    A1_hat <- fit_SPOC(W3_modified/ Q2, K1)
-    
-    W3_modified_bis = W3
-    W3_modified_bis["dim1"] = unlist(lapply(1:Q1, function(x){rep(x, Q2)}))
-    W3_modified_bis["dim2"] = unlist(lapply(1:Q1, function(x){1:Q2}))
-    W3_modified_bis = W3_modified_bis %>% 
-      group_by(dim2) %>%
-      summarise(`1` = sum(`1`),
-                `2` = sum(`2`),
-                `3` = sum(`3`),
-                `4` = sum(`4`))
-    
-    #### Apply SPOC
-    A2_hat <- fit_SPOC(W3_modified_bis/ Q1, K2)
-    ##### Estimate the core through regression
-    outer_product <- vec_A %o% vec_B
-    
-    outer_product = A2_h
   
+  if (method == "bayesian"){
+    elapsed_time_bayes <- system.time({
+      bayesian_res <- tryCatch(
+        fit_bayesian_model(data$D, K1, K2, K3,
+                           use_vb = TRUE),
+        error = function(err) {
+          # Code to handle the error (e.g., print an error message, log the error, etc.)
+          paste0("Error occurred while running the Bayesian method ", R, " :", conditionMessage(err), "\n")
+          # Return a default value or NULL to continue with the rest of the code
+          return(NULL)
+        }
+      )     
+    })["elapsed"]
+    if (is.null(bayesian_res)==FALSE){
+      A1_hat_df = bayesian_res$A1
+      A2_hat_df = bayesian_res$A2
+      A3_hat_df = bayesian_res$A3
+      core_hat_df = bayesian_res$core
+      time = elapsed_time_bayes
+      
+      #### convert into matrices
+      
+      A1_hat = A1_hat_df %>%
+        pivot_wider(id_cols = "Id1", names_from = "Cluster1", values_from = "Probability")
+      A1_hat = as.matrix(A1_hat[, 2:ncol(A1_hat)])
+      A2_hat = A2_hat_df %>%
+        pivot_wider(id_cols = "Id2", names_from = "Cluster2", values_from = "Probability")
+      A2_hat = as.matrix(A2_hat[, 2:ncol(A2_hat)])
+      A3_hat = A3_hat_df %>%
+        pivot_wider(id_cols = "word", names_from = "Topic", values_from = "Probability")
+      A3_hat = as.matrix(A3_hat[, 2:ncol(A3_hat)])
+      core_hat = array(rep(0, K1 * K2 *K3),
+                       dim=c(K1,K2,K3))
+      for (k1 in 1:K1){
+        for (k2 in 1:K2){
+          for (k3 in 1:K3){
+            core_hat[k1,k2,k3] = core_hat_df$Probability[which((core_hat_df$cluster1 == k1) & (core_hat_df$cluster2 == k2) & (core_hat_df$Topic == paste0("Topic ", k3)))]
+          }
+        }
+      }
+      
+    }else{
+      A1_hat = NULL
+      A2_hat = NULL
+      A3_hat = NULL
+      core_hat = NULL
+      time = elapsed_time_bayes
+      A1_hat_df = NULL
+      A2_hat_df = NULL
+      A3_hat_df = NULL
+      core_hat_df = NULL
+    }
+    return(list(A1 = A1_hat,
+                A2 = A2_hat,
+                A3 = A3_hat,
+                core = core_hat,
+                A1_df = A1_hat_df,
+                A2_df = A2_hat_df,
+                A3_df = A3_hat_df,
+                core_hat_df = core_hat_df,
+                time = time))
+  }
+  
+  if (method == "LDA"){
+    elapsed_time_lda <- system.time({
+      lda_res <- tryCatch(
+        fit_LDA(data$D, K1, K2, K3),
+        error = function(err) {
+          # Code to handle the error (e.g., print an error message, log the error, etc.)
+          paste0("Error occurred while running the LDA method ", R, " :", conditionMessage(err), "\n")
+          # Return a default value or NULL to continue with the rest of the code
+          return(NULL)
+        }
+      )     
+    })["elapsed"]
     
-    
-    
-    
-    
-    
-    
-
-    
-
-  #   elapsed_timeLDA <- system.time({
-  #     hatcore_es=1
-  #     lda<- tryCatch(
-  #     LDA(t(D3), k = K3, control = list(seed = 1234),  method = "VEM"),
-  #     error = function(err) {
-  #       # Code to handle the error (e.g., print an error message, log the error, etc.)
-  #       cat("Error occurred while running lda:", conditionMessage(err), "\n")
-  #       # Return a default value or NULL to continue with the rest of the code
-  #       return(NULL)
-  #     })
-  #     if (is.null(lda)==FALSE){
-  #       hatA3 <- exp(t(lda@beta))
-  #     }else{
-  #       hatA3=NULL
-  #       hatcore_es=NULL
-  #     }
-  #
-  #     lda<- tryCatch(
-  #       LDA(matrization_tensor(Y,1), k = K1, control = list(seed = 1234),  method = "VEM"),
-  #       error = function(err) {
-  #         # Code to handle the error (e.g., print an error message, log the error, etc.)
-  #         cat("Error occurred while running lda:", conditionMessage(err), "\n")
-  #         # Return a default value or NULL to continue with the rest of the code
-  #         return(NULL)
-  #       })
-  #     if (is.null(lda)==FALSE){
-  #         hatA1 <-  lda@gamma
-  #     }else{
-  #       hatA1 =NULL
-  #       hatcore_es=NULL
-  #     }
-  #     lda<- tryCatch(
-  #       LDA(matrization_tensor(Y,2), k = K2, control = list(seed = 1234),  method = "VEM"),
-  #       error = function(err) {
-  #         # Code to handle the error (e.g., print an error message, log the error, etc.)
-  #         cat("Error occurred while running lda:", conditionMessage(err), "\n")
-  #         # Return a default value or NULL to continue with the rest of the code
-  #         return(NULL)
-  #       })
-  #     if (is.null(lda)==FALSE){
-  #       hatA2 <-  lda@gamma
-  #     }else{
-  #       hatA2 =NULL
-  #       hatcore_es=NULL
-  #     }
-  #     #ap_topics <- tidy(lda, matrix = "beta")
-  #     if (is.null(hatcore_es)==FALSE){
-  #     hatA=list(hatA1,hatA2,hatA3)
-  #     hatcore <- get_hat_core(Y=Y,A1=hatA1,A2=hatA2,A3=hatA3)
-  #     }else{
-  #       hatcore=NULL
-  #     }
-  #   })["elapsed"]
-  #   error <- update_error(hatA1=hatA1,hatA2=hatA2,hatcore=hatcore,hatA3=hatA3,time=elapsed_timeLDA,method="LDA",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
-  #
-  # print("finish LDA")
-  #
-  #}
-  #else if (method =="NTD"){
+    if (is.null(lda_res)==FALSE){
+      A1_hat_df = data.frame(lda_res$A1$What)
+      colnames(A1_hat_df) = 1:K1
+      A1_hat_df["Id1"] = 1:Q1
+      A1_hat_df = A1_hat_df %>% pivot_longer(cols = -c('Id1'))
+      colnames(A1_hat_df) = c("Id1", "Cluster1", "Probability")
+      A2_hat_df = data.frame(lda_res$A2$What)
+      colnames(A2_hat_df) = 1:K2
+      A2_hat_df["Id2"] = 1:Q2
+      A2_hat_df = A2_hat_df %>% pivot_longer(cols = -c('Id2'))
+      colnames(A2_hat_df) = c("Id2", "Cluster2", "Probability")
+      A3_hat_df = lda_res$A3 %>% pivot_longer(cols=-c("word"))
+      colnames(A3_hat_df) = c("word", "Topic", "Probability")
+      core_hat_df = data.frame(lda_res$core)
+      colnames(core_hat_df) = 1:K3
+      core_hat_df["cluster1"] = unlist(lapply(1:K1, function(x){rep(x, K2)}))
+      core_hat_df["cluster2"] = unlist(lapply(1:K1, function(x){1:K2}))
+      core_hat_df = core_hat_df %>% 
+        pivot_longer(cols = -c("cluster1", "cluster2"))
+      colnames(core_hat_df) = c("cluster1", "cluster2", "Topic", "Probability")
+      time = elapsed_time_lda
+      
+      #### convert into matrices
+      
+      A1_hat = lda_res$A1$What
+      A2_hat = lda_res$A2$What
+      A3_hat = as.matrix(lda_res$A3[,2:ncol(lda_res$A3)])
+      core_hat = array(rep(0, K1 * K2 *K3),
+                       dim=c(K1,K2,K3))
+      for (k1 in 1:K1){
+        for (k2 in 1:K2){
+          for (k3 in 1:K3){
+            core_hat[k1,k2,k3] = lda_res$core[(k1 - 1) * K2 + k2, k3]
+          }
+        }
+      }
+      
+    }else{
+      A1_hat = NULL
+      A2_hat = NULL
+      A3_hat = NULL
+      core_hat = NULL
+      time = elapsed_time_lda
+      A1_hat_df = NULL
+      A2_hat_df = NULL
+      A3_hat_df = NULL
+      core_hat_df = NULL
+    }
+    return(list(A1 = A1_hat,
+                A2 = A2_hat,
+                A3 = A3_hat,
+                core = core_hat,
+                A1_df = A1_hat_df,
+                A2_df = A2_hat_df,
+                A3_df = A3_hat_df,
+                core_hat_df = core_hat_df,
+                time = time))
+  }
+  
+  
+  if (method =="NTD"){
     elapsed_timeNTD <- system.time({
-      ntd_res<-tryCatch(
-      NTD(D,rank=c(K1,K2,K3),algorithm="KL",init="NMF",num.iter=2),
+      ntd_res <- tryCatch(
+        fit_NTD(data$D, num.iter=10),
       error = function(err) {
         # Code to handle the error (e.g., print an error message, log the error, etc.)
         paste0("Error occurred while running NTD ", R, " :", conditionMessage(err), "\n")
@@ -145,42 +170,48 @@ run_experiment<- function(data, K1, K2, K3, M, error, threshold=FALSE){
       )     
     })["elapsed"]
     if (is.null(ntd_res)==FALSE){
-      hatA_ntd=ntd_res$A
-      Pi=t(hatA_ntd$A1)
-      Pi <- pmax(Pi,matrix(0,dim(Pi)[1],dim(Pi)[2])) ### sets negative entries to 0
-      temp <- rowSums(Pi)
-      Pi <- apply(Pi,2,function(x) x/temp)
-      hatA1=Pi
-      Pi=t(hatA_ntd$A2)
-      Pi <- pmax(Pi,matrix(0,dim(Pi)[1],dim(Pi)[2])) ### sets negative entries to 0
-      temp <- rowSums(Pi)
-      Pi <- apply(Pi,2,function(x) x/temp)
-      hatA2=Pi
-      Pi=t(hatA_ntd$A3)
-      Pi <- pmax(Pi,matrix(0,dim(Pi)[1],dim(Pi)[2])) ### sets negative entries to 0
-      temp <- colSums(Pi)
-      Pi <- t(apply(t(Pi),2,function(x) x/temp))
-      hatA3=Pi
-      hatcore=ntd_res$S
-      G3=matrization_tensor(hatcore,3)
-      G3 <- pmax(G3,matrix(0,dim(G3)[1],dim(G3)[2])) ### sets negative entries to 0
-      temp <- colSums(G3)
-      G3 <- t(apply(G3,1,function(x) x/temp))
-      G3[is.na(G3)] <- 0
-      hatcore=tensorization(G3,3,dim(hatcore)[1],dim(hatcore)[2],dim(hatcore)[3])
-
-    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeNTD,method="NTD",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
+      print("finish NTD")
+      A1_hat = ntd_res$A1
+      A2_hat = ntd_res$A2
+      A3_hat = ntd_res$A3
+      
+      A1_hat_df = NULL
+      A2_hat_df = NULL
+      A3_hat_df = NULL
+      core_hat_df = NULL
+      
+      core_hat = ntd_res$core
+      time = elapsed_timeNTD
+      
+    }else{
+      A1_hat = NULL
+      A2_hat = NULL
+      A3_hat = NULL
+      core_hat = NULL
+      time = elapsed_timeNTD
+      A1_hat_df = NULL
+      A2_hat_df = NULL
+      A3_hat_df = NULL
+      core_hat_df = NULL
+      
     }
-    print("finish NTD")
-  #}else if (method =="Ours"){
+    return(list(A1 = A1_hat,
+                A2 = A2_hat,
+                A3 = A3_hat,
+                core = core_hat,
+                A1_df = A1_hat_df,
+                A2_df = A2_hat_df,
+                A3_df = A3_hat_df,
+                core_hat_df = core_hat_df,
+                time = time))
+    
+  } 
+    
+   if (method =="TTM-HOSVD"){
     elapsed_timeOurs <- system.time({
       tmp<-tryCatch(
-<<<<<<< HEAD
-        score(data$Y/M, normalize="Ours", K1=K1, K2=K2, K3=K3, M=M,
+        score(data$D/M, normalization="TTM", method = "HOSVD", K1=K1, K2=K2, K3=K3, M=M,
               as.sparse = FALSE),
-=======
-        score(data$Y/M,normalize="Ours",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=threshold),
->>>>>>> 3e3a26d99d8e0fcb594f22825d30626058bd0e2d
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
           paste0("Error occurred while running Ours ", R, " :", conditionMessage(err), "\n")
@@ -189,162 +220,133 @@ run_experiment<- function(data, K1, K2, K3, M, error, threshold=FALSE){
       )
     })["elapsed"]
     if (is.null(tmp)==FALSE){
-      hatA1=tmp$hatA1
-      hatA2=tmp$hatA2
-      hatA3=tmp$hatA3
-      hatcore=tmp$hatcore
-      error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeOurs,method="Ours",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
+      A1_hat = tmp$hatA1
+      A2_hat = tmp$hatA2
+      A3_hat = tmp$hatA3
+      core_hat=tmp$hatcore
+    }else{
+      A1_hat = NULL
+      A2_hat = NULL
+      core_hat=NULL
     }
-    print("finish OURS")
-    elapsed_timeHOSVD <- system.time({
-      tmp<- tryCatch(
-        score(data$Y/M,normalize="HOSVD",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=threshold),
-        error = function(err) {
-          # Code to handle the error (e.g., print an error message, log the error, etc.)
-          paste0("Error occurred while running HOSVD ", R, " :", conditionMessage(err), "\n")
-          # Return a default value or NULL to continue with the rest of the code
-          return(NULL)}
-      )
-        })["elapsed"]
-    if (is.null(tmp)==FALSE){
-      hatA1=tmp$hatA1
-      hatA2=tmp$hatA2
-      hatA3=tmp$hatA3
-      hatcore=tmp$hatcore
-    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeHOSVD,method="HOSVD",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
-    }
-    print("finish HOSVD")
-    elapsed_timeHOOI <- system.time({
+    return(list(A1 = A1_hat,
+                A2 = A2_hat,
+                A3 = A3_hat,
+                core = core_hat,
+                time = elapsed_timeOurs))
+   }
+  
+  if (method =="TTM-HOOI"){
+    elapsed_timeOurs <- system.time({
       tmp<-tryCatch(
-        score(data$Y/M,normalize="HOOI",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=TRUE),
+        score(data$D/M, normalization="TTM", method = "HOOI", 
+              K1=K1, K2=K2, K3=K3, M=M,
+              as.sparse = FALSE),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
-          paste0("Error occurred while running HOOI ", R, " :", conditionMessage(err), "\n")
+          paste0("Error occurred while running Ours ", R, " :", conditionMessage(err), "\n")
           # Return a default value or NULL to continue with the rest of the code
           return(NULL)}
       )
-        })["elapsed"]
+    })["elapsed"]
     if (is.null(tmp)==FALSE){
-      hatA1=tmp$hatA1
-      hatA2=tmp$hatA2
-      hatA3=tmp$hatA3
-      hatcore=tmp$hatcore
-    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeHOOI,method="HOOI",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
+      A1_hat = tmp$hatA1
+      A2_hat = tmp$hatA2
+      A3_hat = tmp$hatA3
+      core_hat=tmp$hatcore
+    }else{
+      A1_hat = NULL
+      A2_hat = NULL
+      A3_hat = NULL
+      core_hat=NULL
     }
-    print("finish HOOI")
-    elapsed_timeoursthreshold <- system.time({
+    return(list(A1 = A1_hat,
+                A2 = A2_hat,
+                A3 = A3_hat,
+                core = core_hat,
+                time = elapsed_timeOurs))
+  }
+  
+  if (method =="TopicScore-HOSVD"){
+    elapsed_timeOurs <- system.time({
       tmp<-tryCatch(
-        score(data$Y/M,normalize="Ours",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=TRUE),
+        score(data$D/M, normalization="TopicScore", method = "HOSVD", K1=K1, K2=K2, K3=K3, M=M,
+              as.sparse = FALSE),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
-          paste0("Error occurred while running Ours_thershold ", R, " :", conditionMessage(err), "\n")
+          paste0("Error occurred while running Ours ", R, " :", conditionMessage(err), "\n")
           # Return a default value or NULL to continue with the rest of the code
           return(NULL)}
       )
-        })["elapsed"]
+    })["elapsed"]
     if (is.null(tmp)==FALSE){
-      hatA1=tmp$hatA1
-      hatA2=tmp$hatA2
-      hatA3=tmp$hatA3
-      hatcore=tmp$hatcore
-    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeoursthreshold,method="ours_threshold",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
+      A1_hat = tmp$hatA1
+      A2_hat = tmp$hatA2
+      A3_hat = tmp$hatA3
+      core_hat=tmp$hatcore
+    }else{
+      A1_hat = NULL
+      A2_hat = NULL
+      A3_hat = NULL
+      core_hat=NULL
     }
-    print("finish ours_threshold")
-    elapsed_timeHOOIthreshold <- system.time({
-      tmp<-tryCatch(
-        score(data$Y/M,normalize="HOOI",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=TRUE),
-        error = function(err) {
-          # Code to handle the error (e.g., print an error message, log the error, etc.)
-          paste0("Error occurred while running HOOI threshold ", R, " :", conditionMessage(err), "\n")
-          # Return a default value or NULL to continue with the rest of the code
-          return(NULL)}
-      )
-        })["elapsed"]
-    if (is.null(tmp)==FALSE){
-      hatA1=tmp$hatA1
-      hatA2=tmp$hatA2
-      hatA3=tmp$hatA3
-      hatcore=tmp$hatcore
-    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeHOOIthreshold,method="HOOI_threshold",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
-    }
-    print("finish hooi_threshold")
-  #}else if(method=="Tracy"){
-    elapsed_timeTracy <- system.time({
-      tmp<- tryCatch(
-        score(data$Y/M,normalize="Tracy",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE,threshold=threshold),
-        error = function(err) {
-          # Code to handle the error (e.g., print an error message, log the error, etc.)
-          paste0("Error occurred while running Tracy ", R, " :", conditionMessage(err), "\n")
-          # Return a default value or NULL to continue with the rest of the code
-          return(NULL)}
-      )
-        })["elapsed"]
-    if (is.null(tmp)==FALSE){
-      hatA1=tmp$hatA1
-      hatA2=tmp$hatA2
-      hatA3=tmp$hatA3
-      hatcore=tmp$hatcore
-    error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore = hatcore,time=elapsed_timeTracy,method="Tracy",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R_old,M=M,error=error)
-    }
-    print("finish Tracy")
-    
-    # elapsed_timeOurs_iter <- system.time({
-    #   Y_iter=D
-    #   for(i in 1:10){
-    #   tmp=score(Y_iter,normalize="Ours",K1=K1,K2=K2,K3=K3,M=M,as.sparse = FALSE)
-    #   hatA1=tmp$hatA1
-    #   hatA2=tmp$hatA2
-    #   hatA3=tmp$hatA3
-    #   hatcore=tmp$hatcore
-    #   Y_iter=tensor_create(hatcore,hatA1,hatA2,hatA3)
-    #   }
-    # })["elapsed"]
-    # error <- update_error(hatA1=hatA1,hatA2=hatA2,hatA3=hatA3,hatcore=hatcore,time=elapsed_timeOurs_iter,method="Ours_iter_10",A1=A1,A2=A2,A3=A3,core=core,K1=K1,K2=K2,K3=K3,Q1=Q1,Q2=Q2,R=R,M=M,error=error)
-    # print("finish Ours iter")
-    
-    
-  #}
-    return(error)
+    return(list(A1 = A1_hat,
+                A2 = A2_hat,
+                A3 = A3_hat,
+                core = core_hat,
+                time = elapsed_timeOurs))
+  }
+  print("Method not implemented")
+  return(NULL)
 }
 
 
 
-update_error<- function(hatA1=NULL,A1,hatA2=NULL,A2,hatA3=NULL,A3,hatcore=NULL,core,K1,K2,K3,Q1,Q2,R,M,time,method,error){
- 
+update_error<- function(hatA1=NULL,A1,hatA2=NULL,A2,hatA3=NULL,A3,hatcore=NULL,
+                        core, K1, K2, K3, Q1, Q2, R, M, time, method, error){
   core_est=1
   if (is.null(hatA1)){
+    errorl1_1 =NA
+    core_est = NULL
+  }else{
+    error_res = matrix_lp_distance(hatA1, A1, lp=1)
+    errorl1_1 = error_res$error
+    perm1 = error_res$permutation
+    if (method=="TopicScore"){
+      error_temp <- error_update(error=errorl1_1, K=K1, Q1=Q1, R=R, 
+                                 Q2=Q2, M=M,
+                                 mode="A1",method="SPOC",time=time)
+      
+    }else{
+      error_temp <- error_update(error=errorl1_1,
+                                 K=K1, Q1=Q1, R=R, Q2=Q2, M=M, 
+                                 mode="A1",method=method,time=time)
+      
+    }
+    error=rbind(error,error_temp)
+  }
   
-    errorl1_1=NA
-    core_est=NULL
-  }else{
-    error_res=matrix_lp_distance(hatA1, A1, lp=1)
-    errorl1_1=error_res$error
-    perm1=error_res$permutation
-    if (method=="Tracy"){
-      error_temp <- error_update(error=errorl1_1,K=K1,Q1=Q1,R=R,Q2=Q2,M=M,mode="A1",method="Olga",time=time)
-      
-    }else{
-      error_temp <- error_update(error=errorl1_1,K=K1,Q1=Q1,R=R,Q2=Q2,M=M,mode="A1",method=method,time=time)
-      
-    }
-    error=rbind(error,error_temp)
-  }
   if (is.null(hatA2)){
-    errorl1_2=NA
-    core_est=NULL
+    errorl1_2 =NA
+    core_est = NULL
   }else{
-    error_res=matrix_lp_distance(hatA2, A2, lp=1)
-    errorl1_2=error_res$error
-    perm2=error_res$permutation
-    if (method=="Tracy"){
-      error_temp <- error_update(error=errorl1_2,K=K2,Q1=Q1,R=R,Q2=Q2,M=M,mode="A2",method="Olga",time=time)
+    error_res = matrix_lp_distance(hatA2, A2, lp=1)
+    errorl1_2 = error_res$error
+    perm2 = error_res$permutation
+    if (method=="TopicScore"){
+      error_temp <- error_update(error=errorl1_2, K=K1, Q1=Q1, R=R, Q2=Q2, M=M,
+                                 mode="A2",method="SPOC",time=time)
       
     }else{
-      error_temp <- error_update(error=errorl1_2,K=K2,Q1=Q1,R=R,Q2=Q2,M=M,mode="A2",method=method,time=time)
+      error_temp <- error_update(error=errorl1_2,
+                                 K=K2, Q1=Q1, R=R, Q2=Q2, M=M, 
+                                 mode="A2",method=method,time=time)
       
     }
     error=rbind(error,error_temp)
   }
+
+
   if (is.null(hatA3)){
     errorl1_3=NA
     core_est=NULL
@@ -352,31 +354,28 @@ update_error<- function(hatA1=NULL,A1,hatA2=NULL,A2,hatA3=NULL,A3,hatcore=NULL,c
     error_res=matrix_lp_distance(hatA3, A3, lp=1)
     errorl1_3=error_res$error
     perm3=error_res$permutation
-    error_temp <- error_update(error=errorl1_3,K=K3,Q1=Q1,R=R,Q2=Q2,M=M,mode="A3",method=method,time=time)
+    error_temp <- error_update(error=errorl1_3,
+                               K=K3,Q1=Q1,R=R,Q2=Q2,M=M,
+                               mode="A3", method=method, time=time)
     error=rbind(error,error_temp)
   }
+
+  
   if (is.null(hatcore)){
     error_core=NA
   }else{
     hat_G=hatcore
-    hatG3=matrization_tensor(hat_G,3)
-    G3=matrization_tensor(core,3)
-    G3_PER=t(perm3)%*% G3%*% kronecker(perm1,perm2)
-    error_core=l1_error(G3_PER,hatG3)
-    if (method=="Tracy"){
-      error_temp <- error_update(error=error_core,K=K3,Q1=Q1,R=R,Q2=Q2,M=M,mode="core",method="Tracy_Olga",time=time)
-      
-    }else{
-      error_temp <- error_update(error=error_core,K=K3,Q1=Q1,R=R,Q2=Q2,M=M,mode="core",method=method,time=time)
-    }
+    print("here")
+    hatG3=matricization(hat_G, 3)
+    print("here")
+    G3=matricization(core, 3)
+    G3_PER=t(perm3)%*% G3%*% kronecker(perm1, perm2)
+    error_core = l1_error(G3_PER, hatG3)
+    error_temp <- error_update(error=error_core,K=K3, Q1=Q1, R=R, Q2=Q2, M=M,
+                               mode="core",
+                               method=method,time=time)
     error=rbind(error,error_temp)
   }
-  
- 
-  #ifelse(is.null(What), NA, matrix_lp_distance(What, W, lp=1)),
-  #errorl1_2=ifelse(is.null(hatA2), NA, matrix_lp_distance(hatA2, A2, lp=1)),
-  #errorl1_3=ifelse(is.null(hatA3), NA, matrix_lp_distance(hatA3, A3, lp=1)),
-  
  return(error)
 
 }
@@ -411,6 +410,8 @@ get_hat_core<- function(Y,A1,A2,A3){
   S <- S * numer/denom
   return(S)
 }
+
+
 .positive <- function(X, thr = .Machine$double.eps){
   if (is(X)[1] == "matrix") {
     X[which(X < thr)] <- thr

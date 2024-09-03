@@ -52,7 +52,6 @@ trunc_svd <- function(X, K) {
 
 
 fit_SPOC <- function(X, K) {
-
   svd_res = trunc_svd(X, K)
   U <- svd_res$U_k
   L <- svd_res$L_k
