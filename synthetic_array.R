@@ -7,13 +7,12 @@ setwd("~/Documents/tensor-topic-modeling/")
 args = commandArgs(trailingOnly=TRUE)
 seed = ceiling(as.numeric(args[1]))
 result_file = args[2]
-Q1 = as.integer(ceiling(as.numeric(args[3])))
-Q2 = 10
-K1 = 2
-K2 = 3
-K3 = 4
+
+Q2 = as.numeric(args[3])
+K1 =  as.numeric(args[4])
+K2 =  as.numeric(args[5])
+K3 =  as.numeric(args[6])
 n_anchors = 2
-matlab_path = args[4]
 error <- c()
 print(Q2)
 print(Q1)
