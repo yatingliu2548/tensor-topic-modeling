@@ -46,8 +46,6 @@ for (Q1 in Q1list){
         print(paste0("Done with method ", method))
         write_csv(error, paste0(getwd(), paste0("/synthetic/results/",result_file)))
       }
-      
-      
     }
   }
 }
