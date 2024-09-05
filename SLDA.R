@@ -1,6 +1,11 @@
 ###Run SLDA
 
-
+#Y3 is R times N1N2
+# SLDA <- stm(documents = Matrix(as.matrix(as.data.frame(t(Y3))), sparse = TRUE),
+#             K = 4, prevalence =~ race*time,
+#             max.em.its = 10,
+#             data = df,
+#             init.type = "Spectral")
 
 convert_dtm_to_stm_format <- function(dtm) {
   # Ensure that the DTM is in a matrix format (it could be sparse or dense)
@@ -43,33 +48,43 @@ run_SLDA_models <- function(X, train_index,data,Q1,Q2,
   data=data[data$SampleID%in%train_index,]
   it = 1
   print(dim(data))
+  list_params_it=rep(0,length(list_params))
   for (k in list_params){
     DD=convert_dtm_to_stm_format(t(matrization_tensor(tensor_data,3)))
 
-    poliblogPrevFit <- stm(documents = Matrix(X[train_index,],sparse=T),
-                           K = k, prevalence =~ mense_status*Age+mense_status*Race,
-                           max.em.its = max_em,
-                           data = data,
-                           init.type = "Spectral")
-    A_hat = matrix(0,ncol(X),k)
+    poliblogPrevFit <-tryCatch(
+        stm(documents = Matrix(X[train_index,],sparse=T),
+            K = k, prevalence =~ mense_status*Age+mense_status*Race,
+            max.em.its = max_em,
+            data = data,
+            init.type = "Spectral"),
+        error = function(err) {
+          # Code to handle the error (e.g., print an error message, log the error, etc.)
+          cat("Error occurred while running lda:", conditionMessage(err), "\n")
+          # Return a default value or NULL to continue with the rest of the code
+          return(NULL)
+        })
+    if (is.null(poliblogPrevFit)==FALSE){
+      A_hat = matrix(0,ncol(X),k)
     #W_SLDA=poliblogPrevFit$theta
     #A_SLDA=exp(poliblogPrevFit$beta$logbeta[[1]])
     #colnames(A_hat)=poliblogPrevFit$vocab
     #G=tm$hatcore
     #tensordata=G@data
-    print(dim(A_hat))
-
-    W_hat=poliblogPrevFit$theta
-    print(dim(W_hat))
-
-    A_hat[active_train, ] =  exp(poliblogPrevFit$beta$logbeta[[1]])
-    topic_models[[it]] <- list(
+      print(dim(A_hat))
+      W_hat=poliblogPrevFit$theta
+      print(dim(W_hat))
+      A_hat[active_train, ] =  exp(poliblogPrevFit$beta$logbeta[[1]])
+      topic_models[[it]] <- list(
       beta = (log(t(A_hat)) %>% magrittr::set_colnames(colnames(X))),
       gamma =  ((W_hat) %>% magrittr::set_rownames(D3))
     )
-    it <- it + 1
+    list_params_it[it]=k
+    it=it+1
+    }
   }
-  names(topic_models) <- sapply(list_params, function(x){paste0("k", x)})
+
+  names(topic_models) <- sapply(list_params_it, function(x){paste0("k", x)})
   #names(topic_models_test) <- sapply(list_params,function(x){paste0("k",x)})
   return(topic_models)
 

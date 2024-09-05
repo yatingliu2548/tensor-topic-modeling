@@ -149,11 +149,11 @@ aligned_topics_transport_comp <-
   alto::align_topics(
     models = lda_models_full[3:Best_K],
     method = "transport")
-plot(aligned_topics_transport_comp, add_leaves = TRUE, label_topics = TRUE)
+plot(aligned_topics_transport_comp, add_leaves = TRUE, label_topics = TRUE,min_feature_prop=0.1)
 
 
 #SLDA
-SLDA_full <- run_SLDA_models(as.matrix(counts_select),1:nrow(counts_select),data=selected_nonpreg,Q1=Q1,Q2=Q2,list_params=3:9,max_em=20)
+SLDA_full <- run_SLDA_models(as.matrix(counts_select),1:nrow(counts_select),data=selected_nonpreg,Q1=Q1,Q2=Q2,list_params=2:9,max_em=20)
 aligned_topics_transport_SLDA<-
   alto::align_topics(
     models = SLDA_full,
@@ -245,10 +245,14 @@ plot_words_per_group<- function(matrix,words=10){
          size = "Probability")
 }
 
-
+topic_corre<- function(data,W,mode=1){
+  df_onehot
+}
 
 ##LDA
 K3=9
+Q1=24
+Q2=11
 model=lda_models_full[[K3]]
 W_lda=model$gamma
 plot_dirichlet(W_lda,Topic_K=K3,word="v")
@@ -645,9 +649,13 @@ res_df <- function(res,match_permuted,k,method,group){
 }
 
 group_list=c("mense1","luteal2","luteal1","follicular1")
-group_list=seq(1:10)
+group_list=seq(1:25)
 res=c()
-Best_K=8
+Best_K=16
+lda_varying_params_lists <-  list()
+for (k in 1:Best_K) {
+  lda_varying_params_lists[[paste0("k",k)]] <- list(k = k)
+}
 for (group in group_list){
   train_index = sample(unique(selected_nonpreg$Subject_m),12)
   train_data=selected_nonpreg[selected_nonpreg$Subject_m %in%train_index,]$SampleID
@@ -666,7 +674,7 @@ topic_models_ours_full_test <- run_topic_models(as.matrix(counts_select),test_da
 SLDA_full_train <- run_SLDA_models(as.matrix(counts_select),train_data,data=selected_nonpreg,Q1=Q1,Q2=Q2,list_params=3:Best_K)
 SLDA_full_test <- run_SLDA_models(as.matrix(counts_select),test_data,data=selected_nonpreg,Q1=Q1,Q2=Q2,list_params=3:Best_K)
 
-lda_models_full_train  <-
+lda_models_full_train  <-tryCatch(
   alto::run_lda_models(
     data = counts_select[train_data,],
     lda_varying_params_lists = lda_varying_params_lists,
@@ -674,8 +682,15 @@ lda_models_full_train  <-
     dir = "metagenomics_lda_models_full/",
     reset = TRUE,
     verbose = TRUE
-  )
-lda_models_full_train_test  <-
+  ),
+  error = function(err) {
+    # Code to handle the error (e.g., print an error message, log the error, etc.)
+    cat("Error occurred while running lda:", conditionMessage(err), "\n")
+    # Return a default value or NULL to continue with the rest of the code
+    return(NULL)
+  })
+
+lda_models_full_train_test  <-tryCatch(
   alto::run_lda_models(
     data = counts_select[test_data,],
     lda_varying_params_lists = lda_varying_params_lists,
@@ -683,7 +698,14 @@ lda_models_full_train_test  <-
     dir = "metagenomics_lda_models_full/",
     reset = TRUE,
     verbose = TRUE
-  )
+  ),
+  error = function(err) {
+    # Code to handle the error (e.g., print an error message, log the error, etc.)
+    cat("Error occurred while running lda:", conditionMessage(err), "\n")
+    # Return a default value or NULL to continue with the rest of the code
+    return(NULL)
+  })
+
 
 for (k in 3:Best_K){
   it = 1
@@ -697,15 +719,18 @@ for (k in 3:Best_K){
                             dist="cosine", do.plot=FALSE)
   match_permuted <- alignment$match
   res=res_df(res,match_permuted,k,"LDA",group)
-  alignment <- align_topics(exp(SLDA_full_train[[paste0("k",k)]]$beta),
-                            exp(SLDA_full_test[[paste0("k",k)]]$beta),
-                            dist="cosine", do.plot=FALSE)
-  match_permuted <- alignment$match
-  res=res_df(res,match_permuted,k,"SLDA",group)
+  if(paste0("k",k)%in% names(SLDA_full_train) & paste0("k",k) %in% names(SLDA_full_test)){
+    alignment <- align_topics(exp(SLDA_full_train[[paste0("k",k)]]$beta),
+                              exp(SLDA_full_test[[paste0("k",k)]]$beta),
+                              dist="cosine", do.plot=FALSE)
+    match_permuted <- alignment$match
+    res=res_df(res,match_permuted,k,"SLDA",group)
+  }
+
 }
 }
 
-#write_csv(as.data.frame(res), "C:/Users/yichugang/Desktop/CODE/tensor-topic-modeling/real_data/vaginal_permute_subject.csv")
+write_csv(as.data.frame(res), "C:/Users/建新/Desktop/tensor-topic-modeling/tensor-topic-modeling/real_data/vaginal_permute_subject_1_10.csv")
 res_fi=as.data.frame(res) %>%
   group_by(method, k) %>%
   summarise(min=median(min),
