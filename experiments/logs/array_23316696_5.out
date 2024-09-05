@@ -2276,3 +2276,18 @@ elapsed113 5.0035400 2 10 10000 10 100   A2        TTM-HOSVD   0.708
 elapsed114 4.7440898 4 10 10000 10 100   A3        TTM-HOSVD   0.708
 elapsed115 3.8600629 4 10 10000 10 100 core        TTM-HOSVD   0.708
 [1] "R = 20000 Q1 = 10 Q2=10 K1 = 2 K2 = 2 K3= 4 M= 100 seed = 5"
+Chain 1: ------------------------------------------------------------
+Chain 1: EXPERIMENTAL ALGORITHM:
+Chain 1:   This procedure has not been thoroughly tested and may be unstable
+Chain 1:   or buggy. The interface is subject to change.
+Chain 1: ------------------------------------------------------------
+Chain 1: 
+Chain 1: 
+Chain 1: 
+Chain 1: Gradient evaluation took 0.253536 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2535.36 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Begin eta adaptation.
+Chain 1: Iteration:   1 / 250 [  0%]  (Adaptation)

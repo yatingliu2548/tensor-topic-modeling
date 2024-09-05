@@ -95,3 +95,6 @@ Warning: Pareto k diagnostic value is 9.97. Resampling is disabled. Decreasing t
 Warning: Pareto k diagnostic value is 15.61. Resampling is disabled. Decreasing tol_rel_obj may help if variational algorithm has terminated prematurely. Otherwise consider using sampling instead.
 Warning: Pareto k diagnostic value is 38.15. Resampling is disabled. Decreasing tol_rel_obj may help if variational algorithm has terminated prematurely. Otherwise consider using sampling instead.
 Warning: Pareto k diagnostic value is 37.42. Resampling is disabled. Decreasing tol_rel_obj may help if variational algorithm has terminated prematurely. Otherwise consider using sampling instead.
+Error in run_experiment(data = data, K1 = K1, K2 = K2, K3 = K3, M = M,  : 
+  object 'A3_hat' not found
+Execution halted

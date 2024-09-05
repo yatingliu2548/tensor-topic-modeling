@@ -23,3 +23,9 @@ Chain 1: Iteration:   1 / 250 [  0%]  (Adaptation)
 Chain 1: Iteration:  50 / 250 [ 20%]  (Adaptation)
 Chain 1: Iteration: 100 / 250 [ 40%]  (Adaptation)
 Chain 1: Iteration: 150 / 250 [ 60%]  (Adaptation)
+Chain 1: Iteration: 200 / 250 [ 80%]  (Adaptation)
+Chain 1: Success! Found best value [eta = 1] earlier than expected.
+Chain 1: 
+Chain 1: Begin stochastic gradient ascent.
+Chain 1:   iter             ELBO   delta_ELBO_mean   delta_ELBO_med   notes 
+Chain 1:    100      -176607.798             1.000            1.000

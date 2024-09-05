@@ -964,3 +964,8 @@ Chain 1: Success! Found best value [eta = 1] earlier than expected.
 Chain 1: 
 Chain 1: Begin stochastic gradient ascent.
 Chain 1:   iter             ELBO   delta_ELBO_mean   delta_ELBO_med   notes 
+Chain 1:    100       -44961.929             1.000            1.000
+Chain 1:    200       -44538.914             0.505            1.000
+Chain 1:    300       -44465.654             0.337            0.009   MEDIAN ELBO CONVERGED
+Chain 1: 
+Chain 1: Drawing a sample of size 1000 from the approximate posterior... 
