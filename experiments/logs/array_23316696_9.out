@@ -1,0 +1,965 @@
+My SLURM_ARRAY_TASK_ID:  9
+My SLURM_ARRAY_JOB_ID:  23316696
+name experiment is 2-2-4-FALSE-23316696_9
+[1] " result file; "
+[1] "2-2-4-FALSE-23316696_9"
+[1] 9
+[1] "R = 100 Q1 = 10 Q2=10 K1 = 2 K2 = 2 K3= 4 M= 100 seed = 9"
+Chain 1: ------------------------------------------------------------
+Chain 1: EXPERIMENTAL ALGORITHM:
+Chain 1:   This procedure has not been thoroughly tested and may be unstable
+Chain 1:   or buggy. The interface is subject to change.
+Chain 1: ------------------------------------------------------------
+Chain 1: 
+Chain 1: 
+Chain 1: 
+Chain 1: Gradient evaluation took 0.004696 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 46.96 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Begin eta adaptation.
+Chain 1: Iteration:   1 / 250 [  0%]  (Adaptation)
+Chain 1: Iteration:  50 / 250 [ 20%]  (Adaptation)
+Chain 1: Iteration: 100 / 250 [ 40%]  (Adaptation)
+Chain 1: Iteration: 150 / 250 [ 60%]  (Adaptation)
+Chain 1: Iteration: 200 / 250 [ 80%]  (Adaptation)
+Chain 1: Success! Found best value [eta = 1] earlier than expected.
+Chain 1: 
+Chain 1: Begin stochastic gradient ascent.
+Chain 1:   iter             ELBO   delta_ELBO_mean   delta_ELBO_med   notes 
+Chain 1:    100       -12792.194             1.000            1.000
+Chain 1:    200       -12577.760             0.509            1.000
+Chain 1:    300       -12486.226             0.341            0.017
+Chain 1:    400       -12419.143             0.257            0.017
+Chain 1:    500       -12408.274             0.206            0.007   MEDIAN ELBO CONVERGED
+Chain 1: 
+Chain 1: Drawing a sample of size 1000 from the approximate posterior... 
+Chain 1: COMPLETED.
+[1] "here"
+[1] "here"
+[1] "here"
+[1] "Done with method bayesian"
+             error K Q1   R Q2   M mode   method    time
+elapsed  0.6856561 2 10 100 10 100   A1 bayesian 114.503
+elapsed1 0.8976482 2 10 100 10 100   A2 bayesian 114.503
+elapsed2 1.7751116 4 10 100 10 100   A3 bayesian 114.503
+elapsed3 1.5780779 4 10 100 10 100 core bayesian 114.503
+[1] "here"
+[1] "here"
+[1] "Done with method LDA"
+             error K Q1   R Q2   M mode   method    time
+elapsed  0.6856561 2 10 100 10 100   A1 bayesian 114.503
+elapsed1 0.8976482 2 10 100 10 100   A2 bayesian 114.503
+elapsed2 1.7751116 4 10 100 10 100   A3 bayesian 114.503
+elapsed3 1.5780779 4 10 100 10 100 core bayesian 114.503
+elapsed4 5.9427345 2 10 100 10 100   A1      LDA   0.975
+elapsed5 3.6543975 2 10 100 10 100   A2      LDA   0.975
+elapsed6 2.9449393 4 10 100 10 100   A3      LDA   0.975
+elapsed7 3.1801239 4 10 100 10 100 core      LDA   0.975
+[1] "finish NTD"
+[1] "here"
+[1] "here"
+[1] "Done with method NTD"
+              error K Q1   R Q2   M mode   method    time
+elapsed   0.6856561 2 10 100 10 100   A1 bayesian 114.503
+elapsed1  0.8976482 2 10 100 10 100   A2 bayesian 114.503
+elapsed2  1.7751116 4 10 100 10 100   A3 bayesian 114.503
+elapsed3  1.5780779 4 10 100 10 100 core bayesian 114.503
+elapsed4  5.9427345 2 10 100 10 100   A1      LDA   0.975
+elapsed5  3.6543975 2 10 100 10 100   A2      LDA   0.975
+elapsed6  2.9449393 4 10 100 10 100   A3      LDA   0.975
+elapsed7  3.1801239 4 10 100 10 100 core      LDA   0.975
+elapsed8  3.1840523 2 10 100 10 100   A1      NTD   0.889
+elapsed9  2.1268261 2 10 100 10 100   A2      NTD   0.889
+elapsed10 2.6742723 4 10 100 10 100   A3      NTD   0.889
+elapsed11 2.8460922 4 10 100 10 100 core      NTD   0.889
+[1] 100 100  10  10 100
+[1] "Dim voc init: 100"
+  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "here"
+[1] "here"
+[1] "Done with method TopicScore-HOSVD"
+              error K Q1   R Q2   M mode           method    time
+elapsed   0.6856561 2 10 100 10 100   A1         bayesian 114.503
+elapsed1  0.8976482 2 10 100 10 100   A2         bayesian 114.503
+elapsed2  1.7751116 4 10 100 10 100   A3         bayesian 114.503
+elapsed3  1.5780779 4 10 100 10 100 core         bayesian 114.503
+elapsed4  5.9427345 2 10 100 10 100   A1              LDA   0.975
+elapsed5  3.6543975 2 10 100 10 100   A2              LDA   0.975
+elapsed6  2.9449393 4 10 100 10 100   A3              LDA   0.975
+elapsed7  3.1801239 4 10 100 10 100 core              LDA   0.975
+elapsed8  3.1840523 2 10 100 10 100   A1              NTD   0.889
+elapsed9  2.1268261 2 10 100 10 100   A2              NTD   0.889
+elapsed10 2.6742723 4 10 100 10 100   A3              NTD   0.889
+elapsed11 2.8460922 4 10 100 10 100 core              NTD   0.889
+elapsed12 1.4736526 2 10 100 10 100   A1 TopicScore-HOSVD   0.314
+elapsed13 2.1427979 2 10 100 10 100   A2 TopicScore-HOSVD   0.314
+elapsed14 2.8236572 4 10 100 10 100   A3 TopicScore-HOSVD   0.314
+elapsed15 4.0482997 4 10 100 10 100 core TopicScore-HOSVD   0.314
+[1] 100 100  10  10 100
+[1] "Dim voc init: 100"
+[1]  10  10 100
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "here"
+[1] "here"
+[1] "Done with method TTM-HOOI"
+              error K Q1   R Q2   M mode           method    time
+elapsed   0.6856561 2 10 100 10 100   A1         bayesian 114.503
+elapsed1  0.8976482 2 10 100 10 100   A2         bayesian 114.503
+elapsed2  1.7751116 4 10 100 10 100   A3         bayesian 114.503
+elapsed3  1.5780779 4 10 100 10 100 core         bayesian 114.503
+elapsed4  5.9427345 2 10 100 10 100   A1              LDA   0.975
+elapsed5  3.6543975 2 10 100 10 100   A2              LDA   0.975
+elapsed6  2.9449393 4 10 100 10 100   A3              LDA   0.975
+elapsed7  3.1801239 4 10 100 10 100 core              LDA   0.975
+elapsed8  3.1840523 2 10 100 10 100   A1              NTD   0.889
+elapsed9  2.1268261 2 10 100 10 100   A2              NTD   0.889
+elapsed10 2.6742723 4 10 100 10 100   A3              NTD   0.889
+elapsed11 2.8460922 4 10 100 10 100 core              NTD   0.889
+elapsed12 1.4736526 2 10 100 10 100   A1 TopicScore-HOSVD   0.314
+elapsed13 2.1427979 2 10 100 10 100   A2 TopicScore-HOSVD   0.314
+elapsed14 2.8236572 4 10 100 10 100   A3 TopicScore-HOSVD   0.314
+elapsed15 4.0482997 4 10 100 10 100 core TopicScore-HOSVD   0.314
+elapsed16 0.6767472 2 10 100 10 100   A1         TTM-HOOI   0.073
+elapsed17 2.4989751 2 10 100 10 100   A2         TTM-HOOI   0.073
+elapsed18 2.7085699 4 10 100 10 100   A3         TTM-HOOI   0.073
+elapsed19 4.4956447 4 10 100 10 100 core         TTM-HOOI   0.073
+[1] 100 100  10  10 100
+[1] "Dim voc init: 100"
+[1]  10  10 100
+  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "here"
+[1] "here"
+[1] "Done with method TTM-HOSVD"
+              error K Q1   R Q2   M mode           method    time
+elapsed   0.6856561 2 10 100 10 100   A1         bayesian 114.503
+elapsed1  0.8976482 2 10 100 10 100   A2         bayesian 114.503
+elapsed2  1.7751116 4 10 100 10 100   A3         bayesian 114.503
+elapsed3  1.5780779 4 10 100 10 100 core         bayesian 114.503
+elapsed4  5.9427345 2 10 100 10 100   A1              LDA   0.975
+elapsed5  3.6543975 2 10 100 10 100   A2              LDA   0.975
+elapsed6  2.9449393 4 10 100 10 100   A3              LDA   0.975
+elapsed7  3.1801239 4 10 100 10 100 core              LDA   0.975
+elapsed8  3.1840523 2 10 100 10 100   A1              NTD   0.889
+elapsed9  2.1268261 2 10 100 10 100   A2              NTD   0.889
+elapsed10 2.6742723 4 10 100 10 100   A3              NTD   0.889
+elapsed11 2.8460922 4 10 100 10 100 core              NTD   0.889
+elapsed12 1.4736526 2 10 100 10 100   A1 TopicScore-HOSVD   0.314
+elapsed13 2.1427979 2 10 100 10 100   A2 TopicScore-HOSVD   0.314
+elapsed14 2.8236572 4 10 100 10 100   A3 TopicScore-HOSVD   0.314
+elapsed15 4.0482997 4 10 100 10 100 core TopicScore-HOSVD   0.314
+elapsed16 0.6767472 2 10 100 10 100   A1         TTM-HOOI   0.073
+elapsed17 2.4989751 2 10 100 10 100   A2         TTM-HOOI   0.073
+elapsed18 2.7085699 4 10 100 10 100   A3         TTM-HOOI   0.073
+elapsed19 4.4956447 4 10 100 10 100 core         TTM-HOOI   0.073
+elapsed20 1.3797390 2 10 100 10 100   A1        TTM-HOSVD   0.023
+elapsed21 0.7410769 2 10 100 10 100   A2        TTM-HOSVD   0.023
+elapsed22 2.7085699 4 10 100 10 100   A3        TTM-HOSVD   0.023
+elapsed23 4.8179395 4 10 100 10 100 core        TTM-HOSVD   0.023
+[1] "R = 500 Q1 = 10 Q2=10 K1 = 2 K2 = 2 K3= 4 M= 100 seed = 9"
+Chain 1: ------------------------------------------------------------
+Chain 1: EXPERIMENTAL ALGORITHM:
+Chain 1:   This procedure has not been thoroughly tested and may be unstable
+Chain 1:   or buggy. The interface is subject to change.
+Chain 1: ------------------------------------------------------------
+Chain 1: 
+Chain 1: 
+Chain 1: 
+Chain 1: Gradient evaluation took 0.020579 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 205.79 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Begin eta adaptation.
+Chain 1: Iteration:   1 / 250 [  0%]  (Adaptation)
+Chain 1: Iteration:  50 / 250 [ 20%]  (Adaptation)
+Chain 1: Iteration: 100 / 250 [ 40%]  (Adaptation)
+Chain 1: Iteration: 150 / 250 [ 60%]  (Adaptation)
+Chain 1: Iteration: 200 / 250 [ 80%]  (Adaptation)
+Chain 1: Success! Found best value [eta = 1] earlier than expected.
+Chain 1: 
+Chain 1: Begin stochastic gradient ascent.
+Chain 1:   iter             ELBO   delta_ELBO_mean   delta_ELBO_med   notes 
+Chain 1:    100       -25084.073             1.000            1.000
+Chain 1:    200       -24777.704             0.506            1.000
+Chain 1:    300       -24728.474             0.338            0.012
+Chain 1:    400       -24703.129             0.254            0.012
+Chain 1:    500       -24686.509             0.203            0.002   MEDIAN ELBO CONVERGED
+Chain 1: 
+Chain 1: Drawing a sample of size 1000 from the approximate posterior... 
+Chain 1: COMPLETED.
+[1] "here"
+[1] "here"
+[1] "here"
+[1] "Done with method bayesian"
+              error K Q1   R Q2   M mode           method    time
+elapsed   0.6856561 2 10 100 10 100   A1         bayesian 114.503
+elapsed1  0.8976482 2 10 100 10 100   A2         bayesian 114.503
+elapsed2  1.7751116 4 10 100 10 100   A3         bayesian 114.503
+elapsed3  1.5780779 4 10 100 10 100 core         bayesian 114.503
+elapsed4  5.9427345 2 10 100 10 100   A1              LDA   0.975
+elapsed5  3.6543975 2 10 100 10 100   A2              LDA   0.975
+elapsed6  2.9449393 4 10 100 10 100   A3              LDA   0.975
+elapsed7  3.1801239 4 10 100 10 100 core              LDA   0.975
+elapsed8  3.1840523 2 10 100 10 100   A1              NTD   0.889
+elapsed9  2.1268261 2 10 100 10 100   A2              NTD   0.889
+elapsed10 2.6742723 4 10 100 10 100   A3              NTD   0.889
+elapsed11 2.8460922 4 10 100 10 100 core              NTD   0.889
+elapsed12 1.4736526 2 10 100 10 100   A1 TopicScore-HOSVD   0.314
+elapsed13 2.1427979 2 10 100 10 100   A2 TopicScore-HOSVD   0.314
+elapsed14 2.8236572 4 10 100 10 100   A3 TopicScore-HOSVD   0.314
+elapsed15 4.0482997 4 10 100 10 100 core TopicScore-HOSVD   0.314
+elapsed16 0.6767472 2 10 100 10 100   A1         TTM-HOOI   0.073
+elapsed17 2.4989751 2 10 100 10 100   A2         TTM-HOOI   0.073
+elapsed18 2.7085699 4 10 100 10 100   A3         TTM-HOOI   0.073
+elapsed19 4.4956447 4 10 100 10 100 core         TTM-HOOI   0.073
+elapsed20 1.3797390 2 10 100 10 100   A1        TTM-HOSVD   0.023
+elapsed21 0.7410769 2 10 100 10 100   A2        TTM-HOSVD   0.023
+elapsed22 2.7085699 4 10 100 10 100   A3        TTM-HOSVD   0.023
+elapsed23 4.8179395 4 10 100 10 100 core        TTM-HOSVD   0.023
+elapsed24 1.7759127 2 10 500 10 100   A1         bayesian 121.581
+elapsed25 0.9160931 2 10 500 10 100   A2         bayesian 121.581
+elapsed26 2.5456820 4 10 500 10 100   A3         bayesian 121.581
+elapsed27 2.5288099 4 10 500 10 100 core         bayesian 121.581
+[1] "here"
+[1] "here"
+[1] "Done with method LDA"
+              error K Q1   R Q2   M mode           method    time
+elapsed   0.6856561 2 10 100 10 100   A1         bayesian 114.503
+elapsed1  0.8976482 2 10 100 10 100   A2         bayesian 114.503
+elapsed2  1.7751116 4 10 100 10 100   A3         bayesian 114.503
+elapsed3  1.5780779 4 10 100 10 100 core         bayesian 114.503
+elapsed4  5.9427345 2 10 100 10 100   A1              LDA   0.975
+elapsed5  3.6543975 2 10 100 10 100   A2              LDA   0.975
+elapsed6  2.9449393 4 10 100 10 100   A3              LDA   0.975
+elapsed7  3.1801239 4 10 100 10 100 core              LDA   0.975
+elapsed8  3.1840523 2 10 100 10 100   A1              NTD   0.889
+elapsed9  2.1268261 2 10 100 10 100   A2              NTD   0.889
+elapsed10 2.6742723 4 10 100 10 100   A3              NTD   0.889
+elapsed11 2.8460922 4 10 100 10 100 core              NTD   0.889
+elapsed12 1.4736526 2 10 100 10 100   A1 TopicScore-HOSVD   0.314
+elapsed13 2.1427979 2 10 100 10 100   A2 TopicScore-HOSVD   0.314
+elapsed14 2.8236572 4 10 100 10 100   A3 TopicScore-HOSVD   0.314
+elapsed15 4.0482997 4 10 100 10 100 core TopicScore-HOSVD   0.314
+elapsed16 0.6767472 2 10 100 10 100   A1         TTM-HOOI   0.073
+elapsed17 2.4989751 2 10 100 10 100   A2         TTM-HOOI   0.073
+elapsed18 2.7085699 4 10 100 10 100   A3         TTM-HOOI   0.073
+elapsed19 4.4956447 4 10 100 10 100 core         TTM-HOOI   0.073
+elapsed20 1.3797390 2 10 100 10 100   A1        TTM-HOSVD   0.023
+elapsed21 0.7410769 2 10 100 10 100   A2        TTM-HOSVD   0.023
+elapsed22 2.7085699 4 10 100 10 100   A3        TTM-HOSVD   0.023
+elapsed23 4.8179395 4 10 100 10 100 core        TTM-HOSVD   0.023
+elapsed24 1.7759127 2 10 500 10 100   A1         bayesian 121.581
+elapsed25 0.9160931 2 10 500 10 100   A2         bayesian 121.581
+elapsed26 2.5456820 4 10 500 10 100   A3         bayesian 121.581
+elapsed27 2.5288099 4 10 500 10 100 core         bayesian 121.581
+elapsed28 6.6879248 2 10 500 10 100   A1              LDA   0.445
+elapsed29 3.4492575 2 10 500 10 100   A2              LDA   0.445
+elapsed30 3.3856112 4 10 500 10 100   A3              LDA   0.445
+elapsed31 3.1495501 4 10 500 10 100 core              LDA   0.445
+[1] "finish NTD"
+[1] "here"
+[1] "here"
+[1] "Done with method NTD"
+              error K Q1   R Q2   M mode           method    time
+elapsed   0.6856561 2 10 100 10 100   A1         bayesian 114.503
+elapsed1  0.8976482 2 10 100 10 100   A2         bayesian 114.503
+elapsed2  1.7751116 4 10 100 10 100   A3         bayesian 114.503
+elapsed3  1.5780779 4 10 100 10 100 core         bayesian 114.503
+elapsed4  5.9427345 2 10 100 10 100   A1              LDA   0.975
+elapsed5  3.6543975 2 10 100 10 100   A2              LDA   0.975
+elapsed6  2.9449393 4 10 100 10 100   A3              LDA   0.975
+elapsed7  3.1801239 4 10 100 10 100 core              LDA   0.975
+elapsed8  3.1840523 2 10 100 10 100   A1              NTD   0.889
+elapsed9  2.1268261 2 10 100 10 100   A2              NTD   0.889
+elapsed10 2.6742723 4 10 100 10 100   A3              NTD   0.889
+elapsed11 2.8460922 4 10 100 10 100 core              NTD   0.889
+elapsed12 1.4736526 2 10 100 10 100   A1 TopicScore-HOSVD   0.314
+elapsed13 2.1427979 2 10 100 10 100   A2 TopicScore-HOSVD   0.314
+elapsed14 2.8236572 4 10 100 10 100   A3 TopicScore-HOSVD   0.314
+elapsed15 4.0482997 4 10 100 10 100 core TopicScore-HOSVD   0.314
+elapsed16 0.6767472 2 10 100 10 100   A1         TTM-HOOI   0.073
+elapsed17 2.4989751 2 10 100 10 100   A2         TTM-HOOI   0.073
+elapsed18 2.7085699 4 10 100 10 100   A3         TTM-HOOI   0.073
+elapsed19 4.4956447 4 10 100 10 100 core         TTM-HOOI   0.073
+elapsed20 1.3797390 2 10 100 10 100   A1        TTM-HOSVD   0.023
+elapsed21 0.7410769 2 10 100 10 100   A2        TTM-HOSVD   0.023
+elapsed22 2.7085699 4 10 100 10 100   A3        TTM-HOSVD   0.023
+elapsed23 4.8179395 4 10 100 10 100 core        TTM-HOSVD   0.023
+elapsed24 1.7759127 2 10 500 10 100   A1         bayesian 121.581
+elapsed25 0.9160931 2 10 500 10 100   A2         bayesian 121.581
+elapsed26 2.5456820 4 10 500 10 100   A3         bayesian 121.581
+elapsed27 2.5288099 4 10 500 10 100 core         bayesian 121.581
+elapsed28 6.6879248 2 10 500 10 100   A1              LDA   0.445
+elapsed29 3.4492575 2 10 500 10 100   A2              LDA   0.445
+elapsed30 3.3856112 4 10 500 10 100   A3              LDA   0.445
+elapsed31 3.1495501 4 10 500 10 100 core              LDA   0.445
+elapsed32 8.5491293 2 10 500 10 100   A1              NTD   3.218
+elapsed33 9.0183602 2 10 500 10 100   A2              NTD   3.218
+elapsed34 3.8941903 4 10 500 10 100   A3              NTD   3.218
+elapsed35 3.1875408 4 10 500 10 100 core              NTD   3.218
+[1] 499 100  10  10 499
+[1] "Dim voc init: 499"
+  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "here"
+[1] "here"
+[1] "Done with method TopicScore-HOSVD"
+              error K Q1   R Q2   M mode           method    time
+elapsed   0.6856561 2 10 100 10 100   A1         bayesian 114.503
+elapsed1  0.8976482 2 10 100 10 100   A2         bayesian 114.503
+elapsed2  1.7751116 4 10 100 10 100   A3         bayesian 114.503
+elapsed3  1.5780779 4 10 100 10 100 core         bayesian 114.503
+elapsed4  5.9427345 2 10 100 10 100   A1              LDA   0.975
+elapsed5  3.6543975 2 10 100 10 100   A2              LDA   0.975
+elapsed6  2.9449393 4 10 100 10 100   A3              LDA   0.975
+elapsed7  3.1801239 4 10 100 10 100 core              LDA   0.975
+elapsed8  3.1840523 2 10 100 10 100   A1              NTD   0.889
+elapsed9  2.1268261 2 10 100 10 100   A2              NTD   0.889
+elapsed10 2.6742723 4 10 100 10 100   A3              NTD   0.889
+elapsed11 2.8460922 4 10 100 10 100 core              NTD   0.889
+elapsed12 1.4736526 2 10 100 10 100   A1 TopicScore-HOSVD   0.314
+elapsed13 2.1427979 2 10 100 10 100   A2 TopicScore-HOSVD   0.314
+elapsed14 2.8236572 4 10 100 10 100   A3 TopicScore-HOSVD   0.314
+elapsed15 4.0482997 4 10 100 10 100 core TopicScore-HOSVD   0.314
+elapsed16 0.6767472 2 10 100 10 100   A1         TTM-HOOI   0.073
+elapsed17 2.4989751 2 10 100 10 100   A2         TTM-HOOI   0.073
+elapsed18 2.7085699 4 10 100 10 100   A3         TTM-HOOI   0.073
+elapsed19 4.4956447 4 10 100 10 100 core         TTM-HOOI   0.073
+elapsed20 1.3797390 2 10 100 10 100   A1        TTM-HOSVD   0.023
+elapsed21 0.7410769 2 10 100 10 100   A2        TTM-HOSVD   0.023
+elapsed22 2.7085699 4 10 100 10 100   A3        TTM-HOSVD   0.023
+elapsed23 4.8179395 4 10 100 10 100 core        TTM-HOSVD   0.023
+elapsed24 1.7759127 2 10 500 10 100   A1         bayesian 121.581
+elapsed25 0.9160931 2 10 500 10 100   A2         bayesian 121.581
+elapsed26 2.5456820 4 10 500 10 100   A3         bayesian 121.581
+elapsed27 2.5288099 4 10 500 10 100 core         bayesian 121.581
+elapsed28 6.6879248 2 10 500 10 100   A1              LDA   0.445
+elapsed29 3.4492575 2 10 500 10 100   A2              LDA   0.445
+elapsed30 3.3856112 4 10 500 10 100   A3              LDA   0.445
+elapsed31 3.1495501 4 10 500 10 100 core              LDA   0.445
+elapsed32 8.5491293 2 10 500 10 100   A1              NTD   3.218
+elapsed33 9.0183602 2 10 500 10 100   A2              NTD   3.218
+elapsed34 3.8941903 4 10 500 10 100   A3              NTD   3.218
+elapsed35 3.1875408 4 10 500 10 100 core              NTD   3.218
+elapsed36 3.8520574 2 10 500 10 100   A1 TopicScore-HOSVD   0.042
+elapsed37 5.1236477 2 10 500 10 100   A2 TopicScore-HOSVD   0.042
+elapsed38 3.4602546 4 10 500 10 100   A3 TopicScore-HOSVD   0.042
+elapsed39 3.8416527 4 10 500 10 100 core TopicScore-HOSVD   0.042
+[1] 499 100  10  10 499
+[1] "Dim voc init: 499"
+[1]  10  10 499
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "here"
+[1] "here"
+[1] "Done with method TTM-HOOI"
+              error K Q1   R Q2   M mode           method    time
+elapsed   0.6856561 2 10 100 10 100   A1         bayesian 114.503
+elapsed1  0.8976482 2 10 100 10 100   A2         bayesian 114.503
+elapsed2  1.7751116 4 10 100 10 100   A3         bayesian 114.503
+elapsed3  1.5780779 4 10 100 10 100 core         bayesian 114.503
+elapsed4  5.9427345 2 10 100 10 100   A1              LDA   0.975
+elapsed5  3.6543975 2 10 100 10 100   A2              LDA   0.975
+elapsed6  2.9449393 4 10 100 10 100   A3              LDA   0.975
+elapsed7  3.1801239 4 10 100 10 100 core              LDA   0.975
+elapsed8  3.1840523 2 10 100 10 100   A1              NTD   0.889
+elapsed9  2.1268261 2 10 100 10 100   A2              NTD   0.889
+elapsed10 2.6742723 4 10 100 10 100   A3              NTD   0.889
+elapsed11 2.8460922 4 10 100 10 100 core              NTD   0.889
+elapsed12 1.4736526 2 10 100 10 100   A1 TopicScore-HOSVD   0.314
+elapsed13 2.1427979 2 10 100 10 100   A2 TopicScore-HOSVD   0.314
+elapsed14 2.8236572 4 10 100 10 100   A3 TopicScore-HOSVD   0.314
+elapsed15 4.0482997 4 10 100 10 100 core TopicScore-HOSVD   0.314
+elapsed16 0.6767472 2 10 100 10 100   A1         TTM-HOOI   0.073
+elapsed17 2.4989751 2 10 100 10 100   A2         TTM-HOOI   0.073
+elapsed18 2.7085699 4 10 100 10 100   A3         TTM-HOOI   0.073
+elapsed19 4.4956447 4 10 100 10 100 core         TTM-HOOI   0.073
+elapsed20 1.3797390 2 10 100 10 100   A1        TTM-HOSVD   0.023
+elapsed21 0.7410769 2 10 100 10 100   A2        TTM-HOSVD   0.023
+elapsed22 2.7085699 4 10 100 10 100   A3        TTM-HOSVD   0.023
+elapsed23 4.8179395 4 10 100 10 100 core        TTM-HOSVD   0.023
+elapsed24 1.7759127 2 10 500 10 100   A1         bayesian 121.581
+elapsed25 0.9160931 2 10 500 10 100   A2         bayesian 121.581
+elapsed26 2.5456820 4 10 500 10 100   A3         bayesian 121.581
+elapsed27 2.5288099 4 10 500 10 100 core         bayesian 121.581
+elapsed28 6.6879248 2 10 500 10 100   A1              LDA   0.445
+elapsed29 3.4492575 2 10 500 10 100   A2              LDA   0.445
+elapsed30 3.3856112 4 10 500 10 100   A3              LDA   0.445
+elapsed31 3.1495501 4 10 500 10 100 core              LDA   0.445
+elapsed32 8.5491293 2 10 500 10 100   A1              NTD   3.218
+elapsed33 9.0183602 2 10 500 10 100   A2              NTD   3.218
+elapsed34 3.8941903 4 10 500 10 100   A3              NTD   3.218
+elapsed35 3.1875408 4 10 500 10 100 core              NTD   3.218
+elapsed36 3.8520574 2 10 500 10 100   A1 TopicScore-HOSVD   0.042
+elapsed37 5.1236477 2 10 500 10 100   A2 TopicScore-HOSVD   0.042
+elapsed38 3.4602546 4 10 500 10 100   A3 TopicScore-HOSVD   0.042
+elapsed39 3.8416527 4 10 500 10 100 core TopicScore-HOSVD   0.042
+elapsed40 1.2461826 2 10 500 10 100   A1         TTM-HOOI   0.280
+elapsed41 4.5405046 2 10 500 10 100   A2         TTM-HOOI   0.280
+elapsed42 3.0549549 4 10 500 10 100   A3         TTM-HOOI   0.280
+elapsed43 4.0133860 4 10 500 10 100 core         TTM-HOOI   0.280
+[1] 499 100  10  10 499
+[1] "Dim voc init: 499"
+[1]  10  10 499
+  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "here"
+[1] "here"
+[1] "Done with method TTM-HOSVD"
+              error K Q1   R Q2   M mode           method    time
+elapsed   0.6856561 2 10 100 10 100   A1         bayesian 114.503
+elapsed1  0.8976482 2 10 100 10 100   A2         bayesian 114.503
+elapsed2  1.7751116 4 10 100 10 100   A3         bayesian 114.503
+elapsed3  1.5780779 4 10 100 10 100 core         bayesian 114.503
+elapsed4  5.9427345 2 10 100 10 100   A1              LDA   0.975
+elapsed5  3.6543975 2 10 100 10 100   A2              LDA   0.975
+elapsed6  2.9449393 4 10 100 10 100   A3              LDA   0.975
+elapsed7  3.1801239 4 10 100 10 100 core              LDA   0.975
+elapsed8  3.1840523 2 10 100 10 100   A1              NTD   0.889
+elapsed9  2.1268261 2 10 100 10 100   A2              NTD   0.889
+elapsed10 2.6742723 4 10 100 10 100   A3              NTD   0.889
+elapsed11 2.8460922 4 10 100 10 100 core              NTD   0.889
+elapsed12 1.4736526 2 10 100 10 100   A1 TopicScore-HOSVD   0.314
+elapsed13 2.1427979 2 10 100 10 100   A2 TopicScore-HOSVD   0.314
+elapsed14 2.8236572 4 10 100 10 100   A3 TopicScore-HOSVD   0.314
+elapsed15 4.0482997 4 10 100 10 100 core TopicScore-HOSVD   0.314
+elapsed16 0.6767472 2 10 100 10 100   A1         TTM-HOOI   0.073
+elapsed17 2.4989751 2 10 100 10 100   A2         TTM-HOOI   0.073
+elapsed18 2.7085699 4 10 100 10 100   A3         TTM-HOOI   0.073
+elapsed19 4.4956447 4 10 100 10 100 core         TTM-HOOI   0.073
+elapsed20 1.3797390 2 10 100 10 100   A1        TTM-HOSVD   0.023
+elapsed21 0.7410769 2 10 100 10 100   A2        TTM-HOSVD   0.023
+elapsed22 2.7085699 4 10 100 10 100   A3        TTM-HOSVD   0.023
+elapsed23 4.8179395 4 10 100 10 100 core        TTM-HOSVD   0.023
+elapsed24 1.7759127 2 10 500 10 100   A1         bayesian 121.581
+elapsed25 0.9160931 2 10 500 10 100   A2         bayesian 121.581
+elapsed26 2.5456820 4 10 500 10 100   A3         bayesian 121.581
+elapsed27 2.5288099 4 10 500 10 100 core         bayesian 121.581
+elapsed28 6.6879248 2 10 500 10 100   A1              LDA   0.445
+elapsed29 3.4492575 2 10 500 10 100   A2              LDA   0.445
+elapsed30 3.3856112 4 10 500 10 100   A3              LDA   0.445
+elapsed31 3.1495501 4 10 500 10 100 core              LDA   0.445
+elapsed32 8.5491293 2 10 500 10 100   A1              NTD   3.218
+elapsed33 9.0183602 2 10 500 10 100   A2              NTD   3.218
+elapsed34 3.8941903 4 10 500 10 100   A3              NTD   3.218
+elapsed35 3.1875408 4 10 500 10 100 core              NTD   3.218
+elapsed36 3.8520574 2 10 500 10 100   A1 TopicScore-HOSVD   0.042
+elapsed37 5.1236477 2 10 500 10 100   A2 TopicScore-HOSVD   0.042
+elapsed38 3.4602546 4 10 500 10 100   A3 TopicScore-HOSVD   0.042
+elapsed39 3.8416527 4 10 500 10 100 core TopicScore-HOSVD   0.042
+elapsed40 1.2461826 2 10 500 10 100   A1         TTM-HOOI   0.280
+elapsed41 4.5405046 2 10 500 10 100   A2         TTM-HOOI   0.280
+elapsed42 3.0549549 4 10 500 10 100   A3         TTM-HOOI   0.280
+elapsed43 4.0133860 4 10 500 10 100 core         TTM-HOOI   0.280
+elapsed44 1.1287845 2 10 500 10 100   A1        TTM-HOSVD   0.045
+elapsed45 4.5828793 2 10 500 10 100   A2        TTM-HOSVD   0.045
+elapsed46 3.0549549 4 10 500 10 100   A3        TTM-HOSVD   0.045
+elapsed47 3.9568262 4 10 500 10 100 core        TTM-HOSVD   0.045
+[1] "R = 1000 Q1 = 10 Q2=10 K1 = 2 K2 = 2 K3= 4 M= 100 seed = 9"
+Chain 1: ------------------------------------------------------------
+Chain 1: EXPERIMENTAL ALGORITHM:
+Chain 1:   This procedure has not been thoroughly tested and may be unstable
+Chain 1:   or buggy. The interface is subject to change.
+Chain 1: ------------------------------------------------------------
+Chain 1: 
+Chain 1: 
+Chain 1: 
+Chain 1: Gradient evaluation took 0.038356 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 383.56 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Begin eta adaptation.
+Chain 1: Iteration:   1 / 250 [  0%]  (Adaptation)
+Chain 1: Iteration:  50 / 250 [ 20%]  (Adaptation)
+Chain 1: Iteration: 100 / 250 [ 40%]  (Adaptation)
+Chain 1: Iteration: 150 / 250 [ 60%]  (Adaptation)
+Chain 1: Iteration: 200 / 250 [ 80%]  (Adaptation)
+Chain 1: Success! Found best value [eta = 1] earlier than expected.
+Chain 1: 
+Chain 1: Begin stochastic gradient ascent.
+Chain 1:   iter             ELBO   delta_ELBO_mean   delta_ELBO_med   notes 
+Chain 1:    100       -31173.195             1.000            1.000
+Chain 1:    200       -30796.035             0.506            1.000
+Chain 1:    300       -30746.924             0.338            0.012
+Chain 1:    400       -30730.764             0.254            0.012
+Chain 1:    500       -30690.163             0.203            0.002   MEDIAN ELBO CONVERGED
+Chain 1: 
+Chain 1: Drawing a sample of size 1000 from the approximate posterior... 
+Chain 1: COMPLETED.
+[1] "here"
+[1] "here"
+[1] "here"
+[1] "Done with method bayesian"
+              error K Q1    R Q2   M mode           method    time
+elapsed   0.6856561 2 10  100 10 100   A1         bayesian 114.503
+elapsed1  0.8976482 2 10  100 10 100   A2         bayesian 114.503
+elapsed2  1.7751116 4 10  100 10 100   A3         bayesian 114.503
+elapsed3  1.5780779 4 10  100 10 100 core         bayesian 114.503
+elapsed4  5.9427345 2 10  100 10 100   A1              LDA   0.975
+elapsed5  3.6543975 2 10  100 10 100   A2              LDA   0.975
+elapsed6  2.9449393 4 10  100 10 100   A3              LDA   0.975
+elapsed7  3.1801239 4 10  100 10 100 core              LDA   0.975
+elapsed8  3.1840523 2 10  100 10 100   A1              NTD   0.889
+elapsed9  2.1268261 2 10  100 10 100   A2              NTD   0.889
+elapsed10 2.6742723 4 10  100 10 100   A3              NTD   0.889
+elapsed11 2.8460922 4 10  100 10 100 core              NTD   0.889
+elapsed12 1.4736526 2 10  100 10 100   A1 TopicScore-HOSVD   0.314
+elapsed13 2.1427979 2 10  100 10 100   A2 TopicScore-HOSVD   0.314
+elapsed14 2.8236572 4 10  100 10 100   A3 TopicScore-HOSVD   0.314
+elapsed15 4.0482997 4 10  100 10 100 core TopicScore-HOSVD   0.314
+elapsed16 0.6767472 2 10  100 10 100   A1         TTM-HOOI   0.073
+elapsed17 2.4989751 2 10  100 10 100   A2         TTM-HOOI   0.073
+elapsed18 2.7085699 4 10  100 10 100   A3         TTM-HOOI   0.073
+elapsed19 4.4956447 4 10  100 10 100 core         TTM-HOOI   0.073
+elapsed20 1.3797390 2 10  100 10 100   A1        TTM-HOSVD   0.023
+elapsed21 0.7410769 2 10  100 10 100   A2        TTM-HOSVD   0.023
+elapsed22 2.7085699 4 10  100 10 100   A3        TTM-HOSVD   0.023
+elapsed23 4.8179395 4 10  100 10 100 core        TTM-HOSVD   0.023
+elapsed24 1.7759127 2 10  500 10 100   A1         bayesian 121.581
+elapsed25 0.9160931 2 10  500 10 100   A2         bayesian 121.581
+elapsed26 2.5456820 4 10  500 10 100   A3         bayesian 121.581
+elapsed27 2.5288099 4 10  500 10 100 core         bayesian 121.581
+elapsed28 6.6879248 2 10  500 10 100   A1              LDA   0.445
+elapsed29 3.4492575 2 10  500 10 100   A2              LDA   0.445
+elapsed30 3.3856112 4 10  500 10 100   A3              LDA   0.445
+elapsed31 3.1495501 4 10  500 10 100 core              LDA   0.445
+elapsed32 8.5491293 2 10  500 10 100   A1              NTD   3.218
+elapsed33 9.0183602 2 10  500 10 100   A2              NTD   3.218
+elapsed34 3.8941903 4 10  500 10 100   A3              NTD   3.218
+elapsed35 3.1875408 4 10  500 10 100 core              NTD   3.218
+elapsed36 3.8520574 2 10  500 10 100   A1 TopicScore-HOSVD   0.042
+elapsed37 5.1236477 2 10  500 10 100   A2 TopicScore-HOSVD   0.042
+elapsed38 3.4602546 4 10  500 10 100   A3 TopicScore-HOSVD   0.042
+elapsed39 3.8416527 4 10  500 10 100 core TopicScore-HOSVD   0.042
+elapsed40 1.2461826 2 10  500 10 100   A1         TTM-HOOI   0.280
+elapsed41 4.5405046 2 10  500 10 100   A2         TTM-HOOI   0.280
+elapsed42 3.0549549 4 10  500 10 100   A3         TTM-HOOI   0.280
+elapsed43 4.0133860 4 10  500 10 100 core         TTM-HOOI   0.280
+elapsed44 1.1287845 2 10  500 10 100   A1        TTM-HOSVD   0.045
+elapsed45 4.5828793 2 10  500 10 100   A2        TTM-HOSVD   0.045
+elapsed46 3.0549549 4 10  500 10 100   A3        TTM-HOSVD   0.045
+elapsed47 3.9568262 4 10  500 10 100 core        TTM-HOSVD   0.045
+elapsed48 7.0526885 2 10 1000 10 100   A1         bayesian 159.932
+elapsed49 5.2966112 2 10 1000 10 100   A2         bayesian 159.932
+elapsed50 2.6837887 4 10 1000 10 100   A3         bayesian 159.932
+elapsed51 4.5472082 4 10 1000 10 100 core         bayesian 159.932
+[1] "here"
+[1] "here"
+[1] "Done with method LDA"
+              error K Q1    R Q2   M mode           method    time
+elapsed   0.6856561 2 10  100 10 100   A1         bayesian 114.503
+elapsed1  0.8976482 2 10  100 10 100   A2         bayesian 114.503
+elapsed2  1.7751116 4 10  100 10 100   A3         bayesian 114.503
+elapsed3  1.5780779 4 10  100 10 100 core         bayesian 114.503
+elapsed4  5.9427345 2 10  100 10 100   A1              LDA   0.975
+elapsed5  3.6543975 2 10  100 10 100   A2              LDA   0.975
+elapsed6  2.9449393 4 10  100 10 100   A3              LDA   0.975
+elapsed7  3.1801239 4 10  100 10 100 core              LDA   0.975
+elapsed8  3.1840523 2 10  100 10 100   A1              NTD   0.889
+elapsed9  2.1268261 2 10  100 10 100   A2              NTD   0.889
+elapsed10 2.6742723 4 10  100 10 100   A3              NTD   0.889
+elapsed11 2.8460922 4 10  100 10 100 core              NTD   0.889
+elapsed12 1.4736526 2 10  100 10 100   A1 TopicScore-HOSVD   0.314
+elapsed13 2.1427979 2 10  100 10 100   A2 TopicScore-HOSVD   0.314
+elapsed14 2.8236572 4 10  100 10 100   A3 TopicScore-HOSVD   0.314
+elapsed15 4.0482997 4 10  100 10 100 core TopicScore-HOSVD   0.314
+elapsed16 0.6767472 2 10  100 10 100   A1         TTM-HOOI   0.073
+elapsed17 2.4989751 2 10  100 10 100   A2         TTM-HOOI   0.073
+elapsed18 2.7085699 4 10  100 10 100   A3         TTM-HOOI   0.073
+elapsed19 4.4956447 4 10  100 10 100 core         TTM-HOOI   0.073
+elapsed20 1.3797390 2 10  100 10 100   A1        TTM-HOSVD   0.023
+elapsed21 0.7410769 2 10  100 10 100   A2        TTM-HOSVD   0.023
+elapsed22 2.7085699 4 10  100 10 100   A3        TTM-HOSVD   0.023
+elapsed23 4.8179395 4 10  100 10 100 core        TTM-HOSVD   0.023
+elapsed24 1.7759127 2 10  500 10 100   A1         bayesian 121.581
+elapsed25 0.9160931 2 10  500 10 100   A2         bayesian 121.581
+elapsed26 2.5456820 4 10  500 10 100   A3         bayesian 121.581
+elapsed27 2.5288099 4 10  500 10 100 core         bayesian 121.581
+elapsed28 6.6879248 2 10  500 10 100   A1              LDA   0.445
+elapsed29 3.4492575 2 10  500 10 100   A2              LDA   0.445
+elapsed30 3.3856112 4 10  500 10 100   A3              LDA   0.445
+elapsed31 3.1495501 4 10  500 10 100 core              LDA   0.445
+elapsed32 8.5491293 2 10  500 10 100   A1              NTD   3.218
+elapsed33 9.0183602 2 10  500 10 100   A2              NTD   3.218
+elapsed34 3.8941903 4 10  500 10 100   A3              NTD   3.218
+elapsed35 3.1875408 4 10  500 10 100 core              NTD   3.218
+elapsed36 3.8520574 2 10  500 10 100   A1 TopicScore-HOSVD   0.042
+elapsed37 5.1236477 2 10  500 10 100   A2 TopicScore-HOSVD   0.042
+elapsed38 3.4602546 4 10  500 10 100   A3 TopicScore-HOSVD   0.042
+elapsed39 3.8416527 4 10  500 10 100 core TopicScore-HOSVD   0.042
+elapsed40 1.2461826 2 10  500 10 100   A1         TTM-HOOI   0.280
+elapsed41 4.5405046 2 10  500 10 100   A2         TTM-HOOI   0.280
+elapsed42 3.0549549 4 10  500 10 100   A3         TTM-HOOI   0.280
+elapsed43 4.0133860 4 10  500 10 100 core         TTM-HOOI   0.280
+elapsed44 1.1287845 2 10  500 10 100   A1        TTM-HOSVD   0.045
+elapsed45 4.5828793 2 10  500 10 100   A2        TTM-HOSVD   0.045
+elapsed46 3.0549549 4 10  500 10 100   A3        TTM-HOSVD   0.045
+elapsed47 3.9568262 4 10  500 10 100 core        TTM-HOSVD   0.045
+elapsed48 7.0526885 2 10 1000 10 100   A1         bayesian 159.932
+elapsed49 5.2966112 2 10 1000 10 100   A2         bayesian 159.932
+elapsed50 2.6837887 4 10 1000 10 100   A3         bayesian 159.932
+elapsed51 4.5472082 4 10 1000 10 100 core         bayesian 159.932
+elapsed52 3.4503958 2 10 1000 10 100   A1              LDA   0.452
+elapsed53 3.7005162 2 10 1000 10 100   A2              LDA   0.452
+elapsed54 3.5118704 4 10 1000 10 100   A3              LDA   0.452
+elapsed55 3.1471180 4 10 1000 10 100 core              LDA   0.452
+[1] "finish NTD"
+[1] "here"
+[1] "here"
+[1] "Done with method NTD"
+              error K Q1    R Q2   M mode           method    time
+elapsed   0.6856561 2 10  100 10 100   A1         bayesian 114.503
+elapsed1  0.8976482 2 10  100 10 100   A2         bayesian 114.503
+elapsed2  1.7751116 4 10  100 10 100   A3         bayesian 114.503
+elapsed3  1.5780779 4 10  100 10 100 core         bayesian 114.503
+elapsed4  5.9427345 2 10  100 10 100   A1              LDA   0.975
+elapsed5  3.6543975 2 10  100 10 100   A2              LDA   0.975
+elapsed6  2.9449393 4 10  100 10 100   A3              LDA   0.975
+elapsed7  3.1801239 4 10  100 10 100 core              LDA   0.975
+elapsed8  3.1840523 2 10  100 10 100   A1              NTD   0.889
+elapsed9  2.1268261 2 10  100 10 100   A2              NTD   0.889
+elapsed10 2.6742723 4 10  100 10 100   A3              NTD   0.889
+elapsed11 2.8460922 4 10  100 10 100 core              NTD   0.889
+elapsed12 1.4736526 2 10  100 10 100   A1 TopicScore-HOSVD   0.314
+elapsed13 2.1427979 2 10  100 10 100   A2 TopicScore-HOSVD   0.314
+elapsed14 2.8236572 4 10  100 10 100   A3 TopicScore-HOSVD   0.314
+elapsed15 4.0482997 4 10  100 10 100 core TopicScore-HOSVD   0.314
+elapsed16 0.6767472 2 10  100 10 100   A1         TTM-HOOI   0.073
+elapsed17 2.4989751 2 10  100 10 100   A2         TTM-HOOI   0.073
+elapsed18 2.7085699 4 10  100 10 100   A3         TTM-HOOI   0.073
+elapsed19 4.4956447 4 10  100 10 100 core         TTM-HOOI   0.073
+elapsed20 1.3797390 2 10  100 10 100   A1        TTM-HOSVD   0.023
+elapsed21 0.7410769 2 10  100 10 100   A2        TTM-HOSVD   0.023
+elapsed22 2.7085699 4 10  100 10 100   A3        TTM-HOSVD   0.023
+elapsed23 4.8179395 4 10  100 10 100 core        TTM-HOSVD   0.023
+elapsed24 1.7759127 2 10  500 10 100   A1         bayesian 121.581
+elapsed25 0.9160931 2 10  500 10 100   A2         bayesian 121.581
+elapsed26 2.5456820 4 10  500 10 100   A3         bayesian 121.581
+elapsed27 2.5288099 4 10  500 10 100 core         bayesian 121.581
+elapsed28 6.6879248 2 10  500 10 100   A1              LDA   0.445
+elapsed29 3.4492575 2 10  500 10 100   A2              LDA   0.445
+elapsed30 3.3856112 4 10  500 10 100   A3              LDA   0.445
+elapsed31 3.1495501 4 10  500 10 100 core              LDA   0.445
+elapsed32 8.5491293 2 10  500 10 100   A1              NTD   3.218
+elapsed33 9.0183602 2 10  500 10 100   A2              NTD   3.218
+elapsed34 3.8941903 4 10  500 10 100   A3              NTD   3.218
+elapsed35 3.1875408 4 10  500 10 100 core              NTD   3.218
+elapsed36 3.8520574 2 10  500 10 100   A1 TopicScore-HOSVD   0.042
+elapsed37 5.1236477 2 10  500 10 100   A2 TopicScore-HOSVD   0.042
+elapsed38 3.4602546 4 10  500 10 100   A3 TopicScore-HOSVD   0.042
+elapsed39 3.8416527 4 10  500 10 100 core TopicScore-HOSVD   0.042
+elapsed40 1.2461826 2 10  500 10 100   A1         TTM-HOOI   0.280
+elapsed41 4.5405046 2 10  500 10 100   A2         TTM-HOOI   0.280
+elapsed42 3.0549549 4 10  500 10 100   A3         TTM-HOOI   0.280
+elapsed43 4.0133860 4 10  500 10 100 core         TTM-HOOI   0.280
+elapsed44 1.1287845 2 10  500 10 100   A1        TTM-HOSVD   0.045
+elapsed45 4.5828793 2 10  500 10 100   A2        TTM-HOSVD   0.045
+elapsed46 3.0549549 4 10  500 10 100   A3        TTM-HOSVD   0.045
+elapsed47 3.9568262 4 10  500 10 100 core        TTM-HOSVD   0.045
+elapsed48 7.0526885 2 10 1000 10 100   A1         bayesian 159.932
+elapsed49 5.2966112 2 10 1000 10 100   A2         bayesian 159.932
+elapsed50 2.6837887 4 10 1000 10 100   A3         bayesian 159.932
+elapsed51 4.5472082 4 10 1000 10 100 core         bayesian 159.932
+elapsed52 3.4503958 2 10 1000 10 100   A1              LDA   0.452
+elapsed53 3.7005162 2 10 1000 10 100   A2              LDA   0.452
+elapsed54 3.5118704 4 10 1000 10 100   A3              LDA   0.452
+elapsed55 3.1471180 4 10 1000 10 100 core              LDA   0.452
+elapsed56 8.8567522 2 10 1000 10 100   A1              NTD   5.508
+elapsed57 5.5052331 2 10 1000 10 100   A2              NTD   5.508
+elapsed58 4.1940263 4 10 1000 10 100   A3              NTD   5.508
+elapsed59 2.9923022 4 10 1000 10 100 core              NTD   5.508
+[1] 996 100  10  10 996
+[1] "Dim voc init: 996"
+  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "here"
+[1] "here"
+[1] "Done with method TopicScore-HOSVD"
+              error K Q1    R Q2   M mode           method    time
+elapsed   0.6856561 2 10  100 10 100   A1         bayesian 114.503
+elapsed1  0.8976482 2 10  100 10 100   A2         bayesian 114.503
+elapsed2  1.7751116 4 10  100 10 100   A3         bayesian 114.503
+elapsed3  1.5780779 4 10  100 10 100 core         bayesian 114.503
+elapsed4  5.9427345 2 10  100 10 100   A1              LDA   0.975
+elapsed5  3.6543975 2 10  100 10 100   A2              LDA   0.975
+elapsed6  2.9449393 4 10  100 10 100   A3              LDA   0.975
+elapsed7  3.1801239 4 10  100 10 100 core              LDA   0.975
+elapsed8  3.1840523 2 10  100 10 100   A1              NTD   0.889
+elapsed9  2.1268261 2 10  100 10 100   A2              NTD   0.889
+elapsed10 2.6742723 4 10  100 10 100   A3              NTD   0.889
+elapsed11 2.8460922 4 10  100 10 100 core              NTD   0.889
+elapsed12 1.4736526 2 10  100 10 100   A1 TopicScore-HOSVD   0.314
+elapsed13 2.1427979 2 10  100 10 100   A2 TopicScore-HOSVD   0.314
+elapsed14 2.8236572 4 10  100 10 100   A3 TopicScore-HOSVD   0.314
+elapsed15 4.0482997 4 10  100 10 100 core TopicScore-HOSVD   0.314
+elapsed16 0.6767472 2 10  100 10 100   A1         TTM-HOOI   0.073
+elapsed17 2.4989751 2 10  100 10 100   A2         TTM-HOOI   0.073
+elapsed18 2.7085699 4 10  100 10 100   A3         TTM-HOOI   0.073
+elapsed19 4.4956447 4 10  100 10 100 core         TTM-HOOI   0.073
+elapsed20 1.3797390 2 10  100 10 100   A1        TTM-HOSVD   0.023
+elapsed21 0.7410769 2 10  100 10 100   A2        TTM-HOSVD   0.023
+elapsed22 2.7085699 4 10  100 10 100   A3        TTM-HOSVD   0.023
+elapsed23 4.8179395 4 10  100 10 100 core        TTM-HOSVD   0.023
+elapsed24 1.7759127 2 10  500 10 100   A1         bayesian 121.581
+elapsed25 0.9160931 2 10  500 10 100   A2         bayesian 121.581
+elapsed26 2.5456820 4 10  500 10 100   A3         bayesian 121.581
+elapsed27 2.5288099 4 10  500 10 100 core         bayesian 121.581
+elapsed28 6.6879248 2 10  500 10 100   A1              LDA   0.445
+elapsed29 3.4492575 2 10  500 10 100   A2              LDA   0.445
+elapsed30 3.3856112 4 10  500 10 100   A3              LDA   0.445
+elapsed31 3.1495501 4 10  500 10 100 core              LDA   0.445
+elapsed32 8.5491293 2 10  500 10 100   A1              NTD   3.218
+elapsed33 9.0183602 2 10  500 10 100   A2              NTD   3.218
+elapsed34 3.8941903 4 10  500 10 100   A3              NTD   3.218
+elapsed35 3.1875408 4 10  500 10 100 core              NTD   3.218
+elapsed36 3.8520574 2 10  500 10 100   A1 TopicScore-HOSVD   0.042
+elapsed37 5.1236477 2 10  500 10 100   A2 TopicScore-HOSVD   0.042
+elapsed38 3.4602546 4 10  500 10 100   A3 TopicScore-HOSVD   0.042
+elapsed39 3.8416527 4 10  500 10 100 core TopicScore-HOSVD   0.042
+elapsed40 1.2461826 2 10  500 10 100   A1         TTM-HOOI   0.280
+elapsed41 4.5405046 2 10  500 10 100   A2         TTM-HOOI   0.280
+elapsed42 3.0549549 4 10  500 10 100   A3         TTM-HOOI   0.280
+elapsed43 4.0133860 4 10  500 10 100 core         TTM-HOOI   0.280
+elapsed44 1.1287845 2 10  500 10 100   A1        TTM-HOSVD   0.045
+elapsed45 4.5828793 2 10  500 10 100   A2        TTM-HOSVD   0.045
+elapsed46 3.0549549 4 10  500 10 100   A3        TTM-HOSVD   0.045
+elapsed47 3.9568262 4 10  500 10 100 core        TTM-HOSVD   0.045
+elapsed48 7.0526885 2 10 1000 10 100   A1         bayesian 159.932
+elapsed49 5.2966112 2 10 1000 10 100   A2         bayesian 159.932
+elapsed50 2.6837887 4 10 1000 10 100   A3         bayesian 159.932
+elapsed51 4.5472082 4 10 1000 10 100 core         bayesian 159.932
+elapsed52 3.4503958 2 10 1000 10 100   A1              LDA   0.452
+elapsed53 3.7005162 2 10 1000 10 100   A2              LDA   0.452
+elapsed54 3.5118704 4 10 1000 10 100   A3              LDA   0.452
+elapsed55 3.1471180 4 10 1000 10 100 core              LDA   0.452
+elapsed56 8.8567522 2 10 1000 10 100   A1              NTD   5.508
+elapsed57 5.5052331 2 10 1000 10 100   A2              NTD   5.508
+elapsed58 4.1940263 4 10 1000 10 100   A3              NTD   5.508
+elapsed59 2.9923022 4 10 1000 10 100 core              NTD   5.508
+elapsed60 4.0715596 2 10 1000 10 100   A1 TopicScore-HOSVD   0.077
+elapsed61 8.7719832 2 10 1000 10 100   A2 TopicScore-HOSVD   0.077
+elapsed62 3.2180679 4 10 1000 10 100   A3 TopicScore-HOSVD   0.077
+elapsed63 2.8283505 4 10 1000 10 100 core TopicScore-HOSVD   0.077
+[1] 996 100  10  10 996
+[1] "Dim voc init: 996"
+[1]  10  10 996
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "here"
+[1] "here"
+[1] "Done with method TTM-HOOI"
+              error K Q1    R Q2   M mode           method    time
+elapsed   0.6856561 2 10  100 10 100   A1         bayesian 114.503
+elapsed1  0.8976482 2 10  100 10 100   A2         bayesian 114.503
+elapsed2  1.7751116 4 10  100 10 100   A3         bayesian 114.503
+elapsed3  1.5780779 4 10  100 10 100 core         bayesian 114.503
+elapsed4  5.9427345 2 10  100 10 100   A1              LDA   0.975
+elapsed5  3.6543975 2 10  100 10 100   A2              LDA   0.975
+elapsed6  2.9449393 4 10  100 10 100   A3              LDA   0.975
+elapsed7  3.1801239 4 10  100 10 100 core              LDA   0.975
+elapsed8  3.1840523 2 10  100 10 100   A1              NTD   0.889
+elapsed9  2.1268261 2 10  100 10 100   A2              NTD   0.889
+elapsed10 2.6742723 4 10  100 10 100   A3              NTD   0.889
+elapsed11 2.8460922 4 10  100 10 100 core              NTD   0.889
+elapsed12 1.4736526 2 10  100 10 100   A1 TopicScore-HOSVD   0.314
+elapsed13 2.1427979 2 10  100 10 100   A2 TopicScore-HOSVD   0.314
+elapsed14 2.8236572 4 10  100 10 100   A3 TopicScore-HOSVD   0.314
+elapsed15 4.0482997 4 10  100 10 100 core TopicScore-HOSVD   0.314
+elapsed16 0.6767472 2 10  100 10 100   A1         TTM-HOOI   0.073
+elapsed17 2.4989751 2 10  100 10 100   A2         TTM-HOOI   0.073
+elapsed18 2.7085699 4 10  100 10 100   A3         TTM-HOOI   0.073
+elapsed19 4.4956447 4 10  100 10 100 core         TTM-HOOI   0.073
+elapsed20 1.3797390 2 10  100 10 100   A1        TTM-HOSVD   0.023
+elapsed21 0.7410769 2 10  100 10 100   A2        TTM-HOSVD   0.023
+elapsed22 2.7085699 4 10  100 10 100   A3        TTM-HOSVD   0.023
+elapsed23 4.8179395 4 10  100 10 100 core        TTM-HOSVD   0.023
+elapsed24 1.7759127 2 10  500 10 100   A1         bayesian 121.581
+elapsed25 0.9160931 2 10  500 10 100   A2         bayesian 121.581
+elapsed26 2.5456820 4 10  500 10 100   A3         bayesian 121.581
+elapsed27 2.5288099 4 10  500 10 100 core         bayesian 121.581
+elapsed28 6.6879248 2 10  500 10 100   A1              LDA   0.445
+elapsed29 3.4492575 2 10  500 10 100   A2              LDA   0.445
+elapsed30 3.3856112 4 10  500 10 100   A3              LDA   0.445
+elapsed31 3.1495501 4 10  500 10 100 core              LDA   0.445
+elapsed32 8.5491293 2 10  500 10 100   A1              NTD   3.218
+elapsed33 9.0183602 2 10  500 10 100   A2              NTD   3.218
+elapsed34 3.8941903 4 10  500 10 100   A3              NTD   3.218
+elapsed35 3.1875408 4 10  500 10 100 core              NTD   3.218
+elapsed36 3.8520574 2 10  500 10 100   A1 TopicScore-HOSVD   0.042
+elapsed37 5.1236477 2 10  500 10 100   A2 TopicScore-HOSVD   0.042
+elapsed38 3.4602546 4 10  500 10 100   A3 TopicScore-HOSVD   0.042
+elapsed39 3.8416527 4 10  500 10 100 core TopicScore-HOSVD   0.042
+elapsed40 1.2461826 2 10  500 10 100   A1         TTM-HOOI   0.280
+elapsed41 4.5405046 2 10  500 10 100   A2         TTM-HOOI   0.280
+elapsed42 3.0549549 4 10  500 10 100   A3         TTM-HOOI   0.280
+elapsed43 4.0133860 4 10  500 10 100 core         TTM-HOOI   0.280
+elapsed44 1.1287845 2 10  500 10 100   A1        TTM-HOSVD   0.045
+elapsed45 4.5828793 2 10  500 10 100   A2        TTM-HOSVD   0.045
+elapsed46 3.0549549 4 10  500 10 100   A3        TTM-HOSVD   0.045
+elapsed47 3.9568262 4 10  500 10 100 core        TTM-HOSVD   0.045
+elapsed48 7.0526885 2 10 1000 10 100   A1         bayesian 159.932
+elapsed49 5.2966112 2 10 1000 10 100   A2         bayesian 159.932
+elapsed50 2.6837887 4 10 1000 10 100   A3         bayesian 159.932
+elapsed51 4.5472082 4 10 1000 10 100 core         bayesian 159.932
+elapsed52 3.4503958 2 10 1000 10 100   A1              LDA   0.452
+elapsed53 3.7005162 2 10 1000 10 100   A2              LDA   0.452
+elapsed54 3.5118704 4 10 1000 10 100   A3              LDA   0.452
+elapsed55 3.1471180 4 10 1000 10 100 core              LDA   0.452
+elapsed56 8.8567522 2 10 1000 10 100   A1              NTD   5.508
+elapsed57 5.5052331 2 10 1000 10 100   A2              NTD   5.508
+elapsed58 4.1940263 4 10 1000 10 100   A3              NTD   5.508
+elapsed59 2.9923022 4 10 1000 10 100 core              NTD   5.508
+elapsed60 4.0715596 2 10 1000 10 100   A1 TopicScore-HOSVD   0.077
+elapsed61 8.7719832 2 10 1000 10 100   A2 TopicScore-HOSVD   0.077
+elapsed62 3.2180679 4 10 1000 10 100   A3 TopicScore-HOSVD   0.077
+elapsed63 2.8283505 4 10 1000 10 100 core TopicScore-HOSVD   0.077
+elapsed64 0.9286600 2 10 1000 10 100   A1         TTM-HOOI   0.484
+elapsed65 4.7627362 2 10 1000 10 100   A2         TTM-HOOI   0.484
+elapsed66 3.1714549 4 10 1000 10 100   A3         TTM-HOOI   0.484
+elapsed67 4.5914399 4 10 1000 10 100 core         TTM-HOOI   0.484
+[1] 996 100  10  10 996
+[1] "Dim voc init: 996"
+[1]  10  10 996
+  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "Start VH"
+[1] "Start Step 4"
+[1] "here"
+[1] "here"
+[1] "Done with method TTM-HOSVD"
+              error K Q1    R Q2   M mode           method    time
+elapsed   0.6856561 2 10  100 10 100   A1         bayesian 114.503
+elapsed1  0.8976482 2 10  100 10 100   A2         bayesian 114.503
+elapsed2  1.7751116 4 10  100 10 100   A3         bayesian 114.503
+elapsed3  1.5780779 4 10  100 10 100 core         bayesian 114.503
+elapsed4  5.9427345 2 10  100 10 100   A1              LDA   0.975
+elapsed5  3.6543975 2 10  100 10 100   A2              LDA   0.975
+elapsed6  2.9449393 4 10  100 10 100   A3              LDA   0.975
+elapsed7  3.1801239 4 10  100 10 100 core              LDA   0.975
+elapsed8  3.1840523 2 10  100 10 100   A1              NTD   0.889
+elapsed9  2.1268261 2 10  100 10 100   A2              NTD   0.889
+elapsed10 2.6742723 4 10  100 10 100   A3              NTD   0.889
+elapsed11 2.8460922 4 10  100 10 100 core              NTD   0.889
+elapsed12 1.4736526 2 10  100 10 100   A1 TopicScore-HOSVD   0.314
+elapsed13 2.1427979 2 10  100 10 100   A2 TopicScore-HOSVD   0.314
+elapsed14 2.8236572 4 10  100 10 100   A3 TopicScore-HOSVD   0.314
+elapsed15 4.0482997 4 10  100 10 100 core TopicScore-HOSVD   0.314
+elapsed16 0.6767472 2 10  100 10 100   A1         TTM-HOOI   0.073
+elapsed17 2.4989751 2 10  100 10 100   A2         TTM-HOOI   0.073
+elapsed18 2.7085699 4 10  100 10 100   A3         TTM-HOOI   0.073
+elapsed19 4.4956447 4 10  100 10 100 core         TTM-HOOI   0.073
+elapsed20 1.3797390 2 10  100 10 100   A1        TTM-HOSVD   0.023
+elapsed21 0.7410769 2 10  100 10 100   A2        TTM-HOSVD   0.023
+elapsed22 2.7085699 4 10  100 10 100   A3        TTM-HOSVD   0.023
+elapsed23 4.8179395 4 10  100 10 100 core        TTM-HOSVD   0.023
+elapsed24 1.7759127 2 10  500 10 100   A1         bayesian 121.581
+elapsed25 0.9160931 2 10  500 10 100   A2         bayesian 121.581
+elapsed26 2.5456820 4 10  500 10 100   A3         bayesian 121.581
+elapsed27 2.5288099 4 10  500 10 100 core         bayesian 121.581
+elapsed28 6.6879248 2 10  500 10 100   A1              LDA   0.445
+elapsed29 3.4492575 2 10  500 10 100   A2              LDA   0.445
+elapsed30 3.3856112 4 10  500 10 100   A3              LDA   0.445
+elapsed31 3.1495501 4 10  500 10 100 core              LDA   0.445
+elapsed32 8.5491293 2 10  500 10 100   A1              NTD   3.218
+elapsed33 9.0183602 2 10  500 10 100   A2              NTD   3.218
+elapsed34 3.8941903 4 10  500 10 100   A3              NTD   3.218
+elapsed35 3.1875408 4 10  500 10 100 core              NTD   3.218
+elapsed36 3.8520574 2 10  500 10 100   A1 TopicScore-HOSVD   0.042
+elapsed37 5.1236477 2 10  500 10 100   A2 TopicScore-HOSVD   0.042
+elapsed38 3.4602546 4 10  500 10 100   A3 TopicScore-HOSVD   0.042
+elapsed39 3.8416527 4 10  500 10 100 core TopicScore-HOSVD   0.042
+elapsed40 1.2461826 2 10  500 10 100   A1         TTM-HOOI   0.280
+elapsed41 4.5405046 2 10  500 10 100   A2         TTM-HOOI   0.280
+elapsed42 3.0549549 4 10  500 10 100   A3         TTM-HOOI   0.280
+elapsed43 4.0133860 4 10  500 10 100 core         TTM-HOOI   0.280
+elapsed44 1.1287845 2 10  500 10 100   A1        TTM-HOSVD   0.045
+elapsed45 4.5828793 2 10  500 10 100   A2        TTM-HOSVD   0.045
+elapsed46 3.0549549 4 10  500 10 100   A3        TTM-HOSVD   0.045
+elapsed47 3.9568262 4 10  500 10 100 core        TTM-HOSVD   0.045
+elapsed48 7.0526885 2 10 1000 10 100   A1         bayesian 159.932
+elapsed49 5.2966112 2 10 1000 10 100   A2         bayesian 159.932
+elapsed50 2.6837887 4 10 1000 10 100   A3         bayesian 159.932
+elapsed51 4.5472082 4 10 1000 10 100 core         bayesian 159.932
+elapsed52 3.4503958 2 10 1000 10 100   A1              LDA   0.452
+elapsed53 3.7005162 2 10 1000 10 100   A2              LDA   0.452
+elapsed54 3.5118704 4 10 1000 10 100   A3              LDA   0.452
+elapsed55 3.1471180 4 10 1000 10 100 core              LDA   0.452
+elapsed56 8.8567522 2 10 1000 10 100   A1              NTD   5.508
+elapsed57 5.5052331 2 10 1000 10 100   A2              NTD   5.508
+elapsed58 4.1940263 4 10 1000 10 100   A3              NTD   5.508
+elapsed59 2.9923022 4 10 1000 10 100 core              NTD   5.508
+elapsed60 4.0715596 2 10 1000 10 100   A1 TopicScore-HOSVD   0.077
+elapsed61 8.7719832 2 10 1000 10 100   A2 TopicScore-HOSVD   0.077
+elapsed62 3.2180679 4 10 1000 10 100   A3 TopicScore-HOSVD   0.077
+elapsed63 2.8283505 4 10 1000 10 100 core TopicScore-HOSVD   0.077
+elapsed64 0.9286600 2 10 1000 10 100   A1         TTM-HOOI   0.484
+elapsed65 4.7627362 2 10 1000 10 100   A2         TTM-HOOI   0.484
+elapsed66 3.1714549 4 10 1000 10 100   A3         TTM-HOOI   0.484
+elapsed67 4.5914399 4 10 1000 10 100 core         TTM-HOOI   0.484
+elapsed68 1.1621476 2 10 1000 10 100   A1        TTM-HOSVD   0.085
+elapsed69 4.5305272 2 10 1000 10 100   A2        TTM-HOSVD   0.085
+elapsed70 3.1714549 4 10 1000 10 100   A3        TTM-HOSVD   0.085
+elapsed71 4.5900464 4 10 1000 10 100 core        TTM-HOSVD   0.085
+[1] "R = 5000 Q1 = 10 Q2=10 K1 = 2 K2 = 2 K3= 4 M= 100 seed = 9"
+Chain 1: ------------------------------------------------------------
+Chain 1: EXPERIMENTAL ALGORITHM:
+Chain 1:   This procedure has not been thoroughly tested and may be unstable
+Chain 1:   or buggy. The interface is subject to change.
+Chain 1: ------------------------------------------------------------
+Chain 1: 
+Chain 1: 
+Chain 1: 
+Chain 1: Gradient evaluation took 0.154299 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1542.99 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Begin eta adaptation.
+Chain 1: Iteration:   1 / 250 [  0%]  (Adaptation)
+Chain 1: Iteration:  50 / 250 [ 20%]  (Adaptation)

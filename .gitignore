@@ -1,0 +1,4 @@
+synthetic/results/*
+*.csv
+*.RData
+*.Rhistory
