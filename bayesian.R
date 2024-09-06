@@ -1,4 +1,5 @@
 library(rstan)
+library(stm)
 library(CVXR)
 source("PLSI.r")
 
@@ -152,6 +153,81 @@ fit_LDA <- function(X, K1, K2, K3){
 }
 
 
+
+fit_stm_model <- function(X, K1, K2, K3){
+  D3 = matricization(X, 3)
+  R = dim(D3)[1]
+  Q1 = dim(X)[1]
+  Q2 = dim(X)[2]
+  meta_data =data.frame(reviewer = unlist(lapply(1:Q1, function(x){rep(x, Q2)})),
+                        paper = unlist(lapply(1:Q1, function(x){1:Q2})))
+  meta_data$reviewer  = as.factor(meta_data$reviewer)
+  meta_data$paper = as.factor(meta_data$paper)
+  
+  stm_result <- stm(documents = docs, 
+                    K = K3, prevalence =~ reviewer + paper,
+                    max.em.its = 75, data = meta_data,
+                    init.type = "Spectral")
+  
+  ap_topics3 <- tidy(stm_result, matrix = "beta")
+  ap_topics3["word"] = unlist(lapply(1:R, function(x){rep(x, K3)}))
+  ap_topics3 = pivot_wider(ap_topics3, id_cols = "word", names_from = "topic", 
+                           values_from = "beta")
+  W3 = tidy(stm_result, matrix = "theta")
+  W3 <- pivot_wider(W3, id_cols = "document", 
+                    names_from = "topic",
+                    values_from = "gamma")
+  W3_modified = W3
+  W3_modified["dim1"] = unlist(lapply(1:Q1, function(x){rep(x, Q2)}))
+  W3_modified["dim2"] = unlist(lapply(1:Q1, function(x){1:Q2}))
+  #### Transform W3 into a tensor
+  W3_modified = W3_modified %>%
+    pivot_longer(cols = starts_with("1"):starts_with("4"), 
+                 names_to = "topic", 
+                 values_to = "value")
+  
+  W3_modified_A1 <- W3_modified %>%
+    select(-c("document"))%>%
+    unite("dim2_topic", dim2, topic, sep = "_topic_") %>%
+    pivot_wider(names_from = dim2_topic, values_from = value)
+  #### Apply SPOC
+  A1_hat <- fit_SPOC(W3_modified_A1 %>% select(-c("dim1"))/ Q2, K1)
+  
+  W3_modified_A2 <- W3_modified %>%
+    select(-c("document"))%>%
+    unite("dim1_topic", dim1, topic, sep = "_topic_") %>%
+    pivot_wider(names_from = dim1_topic, values_from = value)
+  #### Apply SPOC
+  A2_hat <- fit_SPOC(W3_modified_A2 %>% select(-c("dim2"))/ Q1, K2)
+  ##### Estimate the core through regression
+  # Compute the Kronecker product
+  A1A2 <- kronecker(A1_hat$What, A2_hat$What)
+  
+  # Define the beta variable as a matrix with K1 * K2 rows and K3 columns
+  beta <- Variable(K1 * K2, K3)
+  
+  # Objective: minimize the sum of squared residuals
+  objective <- Minimize(sum_squares(as.matrix(W3 %>% select(-c("document"))) - A1A2 %*% beta))
+  
+  # Constraints: non-negativity and row sums equal to 1
+  constraints <- list(beta >= 0, sum_entries(beta, axis = 2) == 1)
+  
+  # Define the problem
+  problem <- Problem(objective, constraints)
+  
+  # Solve the problem
+  result <- solve(problem)
+  
+  # Get the optimized beta
+  beta_optimized <- matrix(result$getValue(beta), nrow = K1 * K2, ncol = K3)
+  beta_optimized[which(beta_optimized < 1e-10)] = 0
+  # Print the optimized beta
+  return(list(core = beta_optimized,
+              A1 = A1_hat,
+              A2 = A2_hat,
+              A3 = ap_topics3))
+  
+}
 
 
 
