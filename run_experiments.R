@@ -157,6 +157,78 @@ run_experiment<- function(data, K1, K2, K3, M, method, threshold=FALSE){
   }
   
   
+  if (method == "STM"){
+    elapsed_time_stm <- system.time({
+      stm_res <- tryCatch(
+        fit_stm_model(data$D, K1, K2, K3),
+        error = function(err) {
+          # Code to handle the error (e.g., print an error message, log the error, etc.)
+          paste0("Error occurred while running the LDA method ", R, " :", conditionMessage(err), "\n")
+          # Return a default value or NULL to continue with the rest of the code
+          return(NULL)
+        }
+      )     
+    })["elapsed"]
+    
+    if (is.null(stm_res)==FALSE){
+      A1_hat_df = data.frame(stm_res$A1$What)
+      colnames(A1_hat_df) = 1:K1
+      A1_hat_df["Id1"] = 1:Q1
+      A1_hat_df = A1_hat_df %>% pivot_longer(cols = -c('Id1'))
+      colnames(A1_hat_df) = c("Id1", "Cluster1", "Probability")
+      A2_hat_df = data.frame(stm_res$A2$What)
+      colnames(A2_hat_df) = 1:K2
+      A2_hat_df["Id2"] = 1:Q2
+      A2_hat_df = A2_hat_df %>% pivot_longer(cols = -c('Id2'))
+      colnames(A2_hat_df) = c("Id2", "Cluster2", "Probability")
+      A3_hat_df = stm_res$A3 %>% pivot_longer(cols=-c("word"))
+      colnames(A3_hat_df) = c("word", "Topic", "Probability")
+      core_hat_df = data.frame(stm_res$core)
+      colnames(core_hat_df) = 1:K3
+      core_hat_df["cluster1"] = unlist(lapply(1:K1, function(x){rep(x, K2)}))
+      core_hat_df["cluster2"] = unlist(lapply(1:K1, function(x){1:K2}))
+      core_hat_df = core_hat_df %>% 
+        pivot_longer(cols = -c("cluster1", "cluster2"))
+      colnames(core_hat_df) = c("cluster1", "cluster2", "Topic", "Probability")
+      time = elapsed_time_stm
+      
+      #### convert into matrices
+      
+      A1_hat = stm_res$A1$What
+      A2_hat = stm_res$A2$What
+      A3_hat = as.matrix(stm_res$A3[,2:ncol(stm_res$A3)])
+      core_hat = array(rep(0, K1 * K2 *K3),
+                       dim=c(K1,K2,K3))
+      for (k1 in 1:K1){
+        for (k2 in 1:K2){
+          for (k3 in 1:K3){
+            core_hat[k1,k2,k3] = stm_res$core[(k1 - 1) * K2 + k2, k3]
+          }
+        }
+      }
+      
+    }else{
+      A1_hat = NULL
+      A2_hat = NULL
+      A3_hat = NULL
+      core_hat = NULL
+      time = elapsed_time_stm
+      A1_hat_df = NULL
+      A2_hat_df = NULL
+      A3_hat_df = NULL
+      core_hat_df = NULL
+    }
+    return(list(A1 = A1_hat,
+                A2 = A2_hat,
+                A3 = A3_hat,
+                core = core_hat,
+                A1_df = A1_hat_df,
+                A2_df = A2_hat_df,
+                A3_df = A3_hat_df,
+                core_hat_df = core_hat_df,
+                time = time))
+  }
+  
   if (method =="NTD"){
     elapsed_timeNTD <- system.time({
       ntd_res <- tryCatch(
