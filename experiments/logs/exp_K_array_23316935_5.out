@@ -1,153 +1,0 @@
-My SLURM_ARRAY_TASK_ID:  5
-My SLURM_ARRAY_JOB_ID:  23316935
-name experiment is exp_K_10-5000-FALSE-23316935_5
-[1] " result file; "
-[1] "exp_K_10-5000-FALSE-23316935_5"
-[1] 5
-[1] "R = 5000 Q1 = 10 Q2=10 K1 = 2 K2 = 2 K3= 2 M= 500 seed = 5"
-Chain 1: ------------------------------------------------------------
-Chain 1: EXPERIMENTAL ALGORITHM:
-Chain 1:   This procedure has not been thoroughly tested and may be unstable
-Chain 1:   or buggy. The interface is subject to change.
-Chain 1: ------------------------------------------------------------
-Chain 1: 
-Chain 1: 
-Chain 1: 
-Chain 1: Gradient evaluation took 0.119453 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1194.53 seconds.
-Chain 1: Adjust your expectations accordingly!
-Chain 1: 
-Chain 1: 
-Chain 1: Begin eta adaptation.
-Chain 1: Iteration:   1 / 250 [  0%]  (Adaptation)
-Chain 1: Iteration:  50 / 250 [ 20%]  (Adaptation)
-Chain 1: Iteration: 100 / 250 [ 40%]  (Adaptation)
-Chain 1: Iteration: 150 / 250 [ 60%]  (Adaptation)
-Chain 1: Iteration: 200 / 250 [ 80%]  (Adaptation)
-Chain 1: Success! Found best value [eta = 1] earlier than expected.
-Chain 1: 
-Chain 1: Begin stochastic gradient ascent.
-Chain 1:   iter             ELBO   delta_ELBO_mean   delta_ELBO_med   notes 
-Chain 1:    100      -148200.954             1.000            1.000
-Chain 1:    200      -147141.890             0.504            1.000
-Chain 1:    300      -146902.957             0.336            0.007   MEDIAN ELBO CONVERGED
-Chain 1: 
-Chain 1: Drawing a sample of size 1000 from the approximate posterior... 
-Chain 1: COMPLETED.
-[1] "here"
-[1] "here"
-[1] "here"
-[1] "Done with method bayesian"
-            error K Q1    R Q2   M mode   method    time
-elapsed  1.003584 2 10 5000 10 500   A1 bayesian 338.342
-elapsed1 2.974186 2 10 5000 10 500   A2 bayesian 338.342
-elapsed2 1.228902 2 10 5000 10 500   A3 bayesian 338.342
-elapsed3 2.227843 2 10 5000 10 500 core bayesian 338.342
-[1] "Done with method LDA"
-            error K Q1    R Q2   M mode   method    time
-elapsed  1.003584 2 10 5000 10 500   A1 bayesian 338.342
-elapsed1 2.974186 2 10 5000 10 500   A2 bayesian 338.342
-elapsed2 1.228902 2 10 5000 10 500   A3 bayesian 338.342
-elapsed3 2.227843 2 10 5000 10 500 core bayesian 338.342
-[1] "finish NTD"
-[1] "here"
-[1] "here"
-[1] "Done with method NTD"
-            error K Q1    R Q2   M mode   method    time
-elapsed  1.003584 2 10 5000 10 500   A1 bayesian 338.342
-elapsed1 2.974186 2 10 5000 10 500   A2 bayesian 338.342
-elapsed2 1.228902 2 10 5000 10 500   A3 bayesian 338.342
-elapsed3 2.227843 2 10 5000 10 500 core bayesian 338.342
-elapsed4 8.258635 2 10 5000 10 500   A1      NTD  21.907
-elapsed5 8.955477 2 10 5000 10 500   A2      NTD  21.907
-elapsed6 1.653450 2 10 5000 10 500   A3      NTD  21.907
-elapsed7 1.741485 2 10 5000 10 500 core      NTD  21.907
-[1] 4932  100   10   10 4932
-[1] "Dim voc init: 4932"
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "here"
-[1] "here"
-[1] "Done with method TopicScore-HOSVD"
-             error K Q1    R Q2   M mode           method    time
-elapsed   1.003584 2 10 5000 10 500   A1         bayesian 338.342
-elapsed1  2.974186 2 10 5000 10 500   A2         bayesian 338.342
-elapsed2  1.228902 2 10 5000 10 500   A3         bayesian 338.342
-elapsed3  2.227843 2 10 5000 10 500 core         bayesian 338.342
-elapsed4  8.258635 2 10 5000 10 500   A1              NTD  21.907
-elapsed5  8.955477 2 10 5000 10 500   A2              NTD  21.907
-elapsed6  1.653450 2 10 5000 10 500   A3              NTD  21.907
-elapsed7  1.741485 2 10 5000 10 500 core              NTD  21.907
-elapsed8  7.076215 2 10 5000 10 500   A1 TopicScore-HOSVD   0.551
-elapsed9  8.188654 2 10 5000 10 500   A2 TopicScore-HOSVD   0.551
-elapsed10 1.354457 2 10 5000 10 500   A3 TopicScore-HOSVD   0.551
-elapsed11 1.457699 2 10 5000 10 500 core TopicScore-HOSVD   0.551
-[1] 4932  100   10   10 4932
-[1] "Dim voc init: 4932"
-[1]   10   10 4932
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "here"
-[1] "here"
-[1] "Done with method TTM-HOOI"
-              error K Q1    R Q2   M mode           method    time
-elapsed   1.0035842 2 10 5000 10 500   A1         bayesian 338.342
-elapsed1  2.9741864 2 10 5000 10 500   A2         bayesian 338.342
-elapsed2  1.2289024 2 10 5000 10 500   A3         bayesian 338.342
-elapsed3  2.2278425 2 10 5000 10 500 core         bayesian 338.342
-elapsed4  8.2586350 2 10 5000 10 500   A1              NTD  21.907
-elapsed5  8.9554775 2 10 5000 10 500   A2              NTD  21.907
-elapsed6  1.6534498 2 10 5000 10 500   A3              NTD  21.907
-elapsed7  1.7414849 2 10 5000 10 500 core              NTD  21.907
-elapsed8  7.0762151 2 10 5000 10 500   A1 TopicScore-HOSVD   0.551
-elapsed9  8.1886535 2 10 5000 10 500   A2 TopicScore-HOSVD   0.551
-elapsed10 1.3544574 2 10 5000 10 500   A3 TopicScore-HOSVD   0.551
-elapsed11 1.4576991 2 10 5000 10 500 core TopicScore-HOSVD   0.551
-elapsed12 0.7350286 2 10 5000 10 500   A1         TTM-HOOI   3.936
-elapsed13 3.0450127 2 10 5000 10 500   A2         TTM-HOOI   3.936
-elapsed14 1.3821604 2 10 5000 10 500   A3         TTM-HOOI   3.936
-elapsed15 2.6720381 2 10 5000 10 500 core         TTM-HOOI   3.936
-[1] 4932  100   10   10 4932
-[1] "Dim voc init: 4932"
-[1]   10   10 4932
-  |                                                                              |                                                                      |   0%  |                                                                              |=======================                                               |  33%  |                                                                              |===============================================                       |  67%  |                                                                              |======================================================================| 100%
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "Start VH"
-[1] "Start Step 4"
-[1] "here"
-[1] "here"
-[1] "Done with method TTM-HOSVD"
-              error K Q1    R Q2   M mode           method    time
-elapsed   1.0035842 2 10 5000 10 500   A1         bayesian 338.342
-elapsed1  2.9741864 2 10 5000 10 500   A2         bayesian 338.342
-elapsed2  1.2289024 2 10 5000 10 500   A3         bayesian 338.342
-elapsed3  2.2278425 2 10 5000 10 500 core         bayesian 338.342
-elapsed4  8.2586350 2 10 5000 10 500   A1              NTD  21.907
-elapsed5  8.9554775 2 10 5000 10 500   A2              NTD  21.907
-elapsed6  1.6534498 2 10 5000 10 500   A3              NTD  21.907
-elapsed7  1.7414849 2 10 5000 10 500 core              NTD  21.907
-elapsed8  7.0762151 2 10 5000 10 500   A1 TopicScore-HOSVD   0.551
-elapsed9  8.1886535 2 10 5000 10 500   A2 TopicScore-HOSVD   0.551
-elapsed10 1.3544574 2 10 5000 10 500   A3 TopicScore-HOSVD   0.551
-elapsed11 1.4576991 2 10 5000 10 500 core TopicScore-HOSVD   0.551
-elapsed12 0.7350286 2 10 5000 10 500   A1         TTM-HOOI   3.936
-elapsed13 3.0450127 2 10 5000 10 500   A2         TTM-HOOI   3.936
-elapsed14 1.3821604 2 10 5000 10 500   A3         TTM-HOOI   3.936
-elapsed15 2.6720381 2 10 5000 10 500 core         TTM-HOOI   3.936
-elapsed16 0.8458078 2 10 5000 10 500   A1        TTM-HOSVD   0.439
-elapsed17 3.5639918 2 10 5000 10 500   A2        TTM-HOSVD   0.439
-elapsed18 1.3821604 2 10 5000 10 500   A3        TTM-HOSVD   0.439
-elapsed19 2.6720381 2 10 5000 10 500 core        TTM-HOSVD   0.439
-[1] "R = 5000 Q1 = 10 Q2=10 K1 = 2 K2 = 2 K3= 2 M= 1000 seed = 5"
