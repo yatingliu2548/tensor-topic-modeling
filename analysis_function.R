@@ -7,7 +7,7 @@ library(reshape2) # For melt function
 library(viridis)
 #library(scico)
 
-plot_slice <- function(tensor, k=1,xlab="Groups",ylab="Topics",yes=TRUE,option="H",limits=c(0,1)) {
+plot_slice <- function(tensor, k=1,xlab="Groups",ylab="Topics",yes=TRUE,option="H",limits=c(0,1),guide = "colourbar",trans="sqrt") {
   # tensor: A 3-dimensional array (or tensor) to be sliced and plotted.
   # k: The dimension along which to slice the tensor.
   #    k=1: Slices along the first dimension (rows).
@@ -47,7 +47,7 @@ plot_slice <- function(tensor, k=1,xlab="Groups",ylab="Topics",yes=TRUE,option="
   # Plotting
   g=ggplot(df_long, aes(x = X, y =Y, fill = Value)) +
     geom_tile() +  # Create the heatmap
-    scale_fill_viridis_c(limits=limits,option=option,trans="sqrt") +  # Use a color scale that's visually appealing for heatmaps
+    scale_fill_viridis_c(limits=limits,option=option,trans=trans,guide = guide) +  # Use a color scale that's visually appealing for heatmaps
     facet_wrap(~Slice, ncol = 10) +  # Facet by slice, adjust ncol for desired layout
     labs(x = xlab, y = ylab, fill = "") +
     theme_minimal() +  # Use a minimal theme
@@ -60,12 +60,12 @@ plot_slice <- function(tensor, k=1,xlab="Groups",ylab="Topics",yes=TRUE,option="
 }
 
 
-heatmap_matrix<- function(matrix_data,xlab="Topics",ylab="Mode 3",trans="sqrt"){
-  # matrix_data: The input matrix to be visualized as a heatmap.
+heatmap_matrix<- function(matrix_data,xlab="Topics",ylab="Mode 3",trans="sqrt",guide="colourbar"){
+  # matrix_data: The input matrix is n*K
   # xlab: Label for the x-axis (default is "Topics").
   # ylab: Label for the y-axis (default is "Mode 3").
   # trans: Transformation applied to the fill scale (default is "sqrt").
-
+ colnames(matrix_data)=paste0("V",1:dim(matrix_data)[2])
   # Convert matrix to data frame in long format
   df <- as.data.frame(matrix_data) %>%
     rownames_to_column("Row") %>%
@@ -75,7 +75,7 @@ heatmap_matrix<- function(matrix_data,xlab="Topics",ylab="Mode 3",trans="sqrt"){
   # Create heatmap
   g=ggplot(df, aes(x = as.factor(Column), y =( Row), fill = Value)) +
     geom_tile() +
-    scale_fill_viridis_c(limits=c(0,1),option="H",trans=trans) +  # Use a color scale that's visually appealing for heatmaps
+    scale_fill_viridis_c(limits=c(0,1),option="H",trans=trans,guide = guide) +  # Use a color scale that's visually appealing for heatmaps
     # scale_fill_viridis_c() +  # Us
     labs(x = xlab, y = ylab, fill = "") +
     #scale_y_continuous(breaks=seq(0,max(as.numeric(df$Row)),by=5))+
@@ -87,13 +87,14 @@ heatmap_matrix<- function(matrix_data,xlab="Topics",ylab="Mode 3",trans="sqrt"){
 
   print(g)
 }
-heatmap_matrix2<- function(matrix_data,xlab="Topics",ylab="Mode 3",trans="sqrt"){
+heatmap_matrix2<- function(matrix_data,xlab="Topics",ylab="Mode 3",trans="sqrt",guide = "colourbar"){
   #use when dim of mode is not numeric.
   # matrix_data: The input matrix to be visualized as a heatmap.
   # xlab: Label for the x-axis (default is "Topics").
   # ylab: Label for the y-axis (default is "Mode 3").
   # trans: Transformation applied to the fill scale (default is "sqrt").
 
+  colnames(matrix_data)=paste0("V",1:dim(matrix_data)[2])
   # Convert matrix to data frame in long format
   df <- as.data.frame(matrix_data) %>%
     rownames_to_column("Row") %>%
@@ -103,7 +104,7 @@ heatmap_matrix2<- function(matrix_data,xlab="Topics",ylab="Mode 3",trans="sqrt")
   # Create heatmap
   g=ggplot(df, aes(x = as.factor(Column), y =( Row), fill = Value)) +
     geom_tile() +
-    scale_fill_viridis_c(limits=c(0,1),option="H",trans=trans) +  # Use a color scale that's visually appealing for heatmaps
+    scale_fill_viridis_c(limits=c(0,1),option="H",trans=trans,guide = guide) +  # Use a color scale that's visually appealing for heatmaps
     # scale_fill_viridis_c() +  # Us
     labs(x = xlab, y = ylab, fill = "") +
     scale_y_continuous(breaks=seq(0,max(as.numeric(df$Row)),by=5))+
