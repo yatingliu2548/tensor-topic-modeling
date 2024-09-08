@@ -210,4 +210,3 @@ l2_error <- function(A, B) {
 l1_error <- function(A, B) {
   sum(abs(A - B))
 }
-

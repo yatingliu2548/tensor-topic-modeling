@@ -1,3 +1,4 @@
+library(stm)
 ###Run SLDA
 
 #Y3 is R times N1N2
@@ -57,7 +58,7 @@ run_SLDA_models <- function(X, train_index,data,Q1,Q2,
             K = k, prevalence =~ mense_status*Age+mense_status*Race,
             max.em.its = max_em,
             data = data,
-            init.type = "Spectral"),
+            init.type = "Spectral",gamma.prior='L1'),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
           cat("Error occurred while running lda:", conditionMessage(err), "\n")

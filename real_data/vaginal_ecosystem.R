@@ -1,14 +1,29 @@
 library(reshape2)
 library(reshape)
 library(dplyr)
+library(tidyverse)
+library(alto)
+library(ggplot2)
+theme_set(theme_bw(base_size = 14))
 
-source("D:/yatingliu/CODE/tensor-topic-modeling/our_method.R")
-source("D:/yatingliu/CODE/tensor-topic-modeling/analysis_functions.R")
-source("D:/yatingliu/CODE/tensor-topic-modeling/SLDA.R")
+setwd("C:/Users/yichg/yating/tensor-topic-modeling")
+source("our_method.R")
+source("data_generation.R")
+source("analysis_function.R")
+source("our_method.R")
+source("data_generation.R")
+source("tensor_operations.R")
+source("run_experiments.R")
+source("VH_algo.R")
+source("SLDA.R")
+source("SLDA.R")
+source("bayesian.R")
+source("tensor_lda.R")
+source("VMRC-subcommunities-analyses-20230725/analyses/00_setup.R")
 
-selected_nonpreg_subject_m= read_csv("selected_nonpreg_subject_m.csv")
-counts_select=read_csv("vaginal_microbiota.csv")
-
+selected_nonpreg_subject_m= read.csv("real_data/selected_nonpreg_subject_m.csv",row.names = 1)
+counts_select=read.csv("real_data/vaginal_microbiota.csv",row.names=1)
+selected_nonpreg=selected_nonpreg_subject_m
 set.seed(1234)
 # ## data cleaning
 
@@ -124,12 +139,12 @@ rownames(hatA2)=c("[-18,-17]","[-16,-14]","[-13,-12]","[-11,-8]","[-7,-5]","[-4,
 #colnames(hatA3)=c("Topic_1","Topic_2","Topic_3","Topic_4","Topic_5","Topic_6","Topic_7","Topic_8","Topic_9")
 
 
-#Best_K=9
+Best_K=9
 topic_models_ours_full <- run_topic_models(as.matrix(counts_select),1:nrow(counts_select),K1=K1,K2=K2,Q1=Q1,Q2=Q2,list_params=1:Best_K,normalize="Ours")
 aligned_topics_transport_ours<-
   alto::align_topics(
-    models = topic_models_ours_full[1:9],
-    method = "transport",reg=0.005)
+    models = topic_models_ours_full[1:Best_K],
+    method = "transport",reg=0.01)
 plot(aligned_topics_transport_ours, add_leaves = TRUE, label_topics = TRUE)
 
 lda_varying_params_lists <-  list()
@@ -147,18 +162,37 @@ lda_models_full  <-
   )
 aligned_topics_transport_comp <-
   alto::align_topics(
-    models = lda_models_full[3:Best_K],
+    models = lda_models_full[1:Best_K],
     method = "transport")
 plot(aligned_topics_transport_comp, add_leaves = TRUE, label_topics = TRUE,min_feature_prop=0.1)
 
 
+#post_lda
+plda_full <- run_pLDA_models(as.matrix(counts_select),1:nrow(counts_select),K1=K1,K2=K2,Q1=Q1,Q2=Q2,list_params=1:Best_K)
+aligned_topics_transport_postLDA<-
+  alto::align_topics(
+    models = plda_full[1:Best_K],
+    method = "transport",reg=0.01)
+plot(aligned_topics_transport_postLDA, add_leaves = TRUE, label_topics = TRUE)
+
+
+
 #SLDA
-SLDA_full <- run_SLDA_models(as.matrix(counts_select),1:nrow(counts_select),data=selected_nonpreg,Q1=Q1,Q2=Q2,list_params=2:9,max_em=20)
+
+SLDA_full <- run_SLDA_models(as.matrix(counts_select),rownames(counts_select),data=selected_nonpreg,Q1=Q1,Q2=Q2,list_params=1:Best_K,max_em=5)
 aligned_topics_transport_SLDA<-
   alto::align_topics(
-    models = SLDA_full,
+    models = SLDA_full[which( map_int(SLDA_full, ~class(.) == "list")==1)],
     method = "transport",reg=0.1)
-plot(aligned_topics_transport_SLDA, add_leaves = TRUE, label_topics = TRUE)
+plot(aligned_topics_transport_SLDA, add_leaves = TRUE, label_topics = TRUE,min_feature_prop=0.001)
+
+###Tensor LDA
+tensorlda_full <- run_tensorLDA_models(as.matrix(counts_select),1:nrow(counts_select),K1=K1,K2=K2,Q1=Q1,Q2=Q2,list_params=1:Best_K)
+aligned_topics_transport_tensorLDA<-
+  alto::align_topics(
+    models = tensorlda_full[1:Best_K],
+    method = "transport",reg=0.01)
+plot(aligned_topics_transport_tensorLDA, add_leaves = TRUE, label_topics = TRUE)
 
 
 #####starting analysis
@@ -171,12 +205,11 @@ plot_dirichlet<-function(W,Topic_K=9,word="v",by="SampleID",relationship= "many-
     rownames(W)=rownames(counts_select)
   }else if(by=="Subject_m"){
     rownames(W)=unique(selected_nonpreg$Subject_m)
-  }
-  else if(by=="expected_status2"){
+  }else if(by=="expected_status2"){
     rownames(W)=c("[-18,-17]","[-16,-14]","[-13,-12]","[-11,-8]","[-7,-5]","[-4,-3]","[-2,-1]","[0,2]","[3,4]","[5,6]","[7]")
   }
   W_df$ID=rownames(W)
-  W_df=W_df%>%rename(ID=by)
+  colnames(W_df)[colnames(W_df) == "ID"] <- by
 
   W_df=selected_nonpreg_subject_m%>%
     left_join(., W_df,by=by,relationship=relationship)
@@ -220,7 +253,7 @@ plot_dirichlet<-function(W,Topic_K=9,word="v",by="SampleID",relationship= "many-
   return(plot)
 }
 
-library(tidyverse)
+  library(tidyverse)
 
 plot_words_per_group<- function(matrix,words=10){
   #colnames(matrix) <- paste0("Group","_", colnames(matrix) )
@@ -283,6 +316,29 @@ plot_dirichlet(A2_SLDA,Topic_K=K2,by="expected_status2",word="t")
 heatmap_matrix(A2_SLDA,"Classes","time")
 G_SLDA=compute_G_from_WA(kronecker(A1_SLDA,A2_SLDA),W_slda)
 plot_slice(tensorization(t(G_SLDA),3,K1,K2,dim(G_SLDA)[2])@data,2,"Groups of Subject","Topics",yes=T)
+
+
+#tensorlda
+active_index=which(apply(counts_select, 2, sum)>0)
+data_active = t( counts_select[, active_index])
+tlda_9=tensor_lda(tensorization(data_active,3,Q1=Q1,Q2=11,Q3=dim(data_active)[1]),K1,K2,K3=K3)
+#rownames(W_tlda)=rownames(counts_select)
+plot_dirichlet(tensorlda_full[[K3]]$gamma,Topic_K=K3,word="v")
+plot_dirichlet(tlda_9$A1,Topic_K=K1,by="Subject_m",word="g")
+heatmap_matrix(tlda_9$A1,"Groups","Subject_m")
+plot_dirichlet(tlda_9$A2,Topic_K=K2,by="expected_status2",word="t")
+heatmap_matrix(tlda_9$A2,"Classes","time")
+plot_slice(tlda_9$core,2,"Groups of Subject","Topics",yes=T)
+
+#postlda
+model=post_lda(tensorization(t(counts_select),3,Q1=Q1,Q2=Q2,Q3=dim(counts_select)[2])@data,K1,K2,K3=K3)
+#rownames(W_tlda)=rownames(counts_select)
+plot_dirichlet(plda_full[[K3]]$gamma,Topic_K=K3,word="v")
+plot_dirichlet(model$A1,Topic_K=K1,by="Subject_m",word="g")
+heatmap_matrix(model$A1,"Groups","Subject_m")
+plot_dirichlet(model$A2,Topic_K=K2,by="expected_status2",word="t")
+heatmap_matrix(model$A2,"Classes","time")
+plot_slice(model$core,2,"Groups of Subject","Topics",yes=T)
 
 
 #Ours
@@ -649,7 +705,7 @@ res_df <- function(res,match_permuted,k,method,group){
 }
 
 group_list=c("mense1","luteal2","luteal1","follicular1")
-group_list=seq(1:25)
+group_list=seq(1:20)
 res=c()
 Best_K=16
 lda_varying_params_lists <-  list()
@@ -671,8 +727,11 @@ Q22=11
 topic_models_ours_full_train <- run_topic_models(as.matrix(counts_select),train_data,K1=3,K2=4,Q1=Q11,Q2=Q21,list_params=1:Best_K,normalize="Ours")
 topic_models_ours_full_test <- run_topic_models(as.matrix(counts_select),test_data,K1=3,K2=4,Q1=Q12,Q2=Q22,list_params=1:Best_K,normalize="Ours")
 
-SLDA_full_train <- run_SLDA_models(as.matrix(counts_select),train_data,data=selected_nonpreg,Q1=Q1,Q2=Q2,list_params=3:Best_K)
-SLDA_full_test <- run_SLDA_models(as.matrix(counts_select),test_data,data=selected_nonpreg,Q1=Q1,Q2=Q2,list_params=3:Best_K)
+tensorlda_full_train <- run_tensorLDA_models(as.matrix(counts_select),train_data,K1=K1,K2=K2,Q1=Q11,Q2=Q21,list_params=1:Best_K)
+tensorlda_full_test <- run_tensorLDA_models(as.matrix(counts_select),test_data,K1=K1,K2=K2,Q1=Q12,Q2=Q22,list_params=1:Best_K)
+
+SLDA_full_train <- run_SLDA_models(as.matrix(counts_select),train_data,data=selected_nonpreg,Q1=Q11,Q2=Q21,list_params=3:Best_K)
+SLDA_full_test <- run_SLDA_models(as.matrix(counts_select),test_data,data=selected_nonpreg,Q1=Q12,Q2=Q22,list_params=3:Best_K)
 
 lda_models_full_train  <-tryCatch(
   alto::run_lda_models(
@@ -726,9 +785,17 @@ for (k in 3:Best_K){
     match_permuted <- alignment$match
     res=res_df(res,match_permuted,k,"SLDA",group)
   }
+  if(paste0("k",k)%in% names(tensorlda_full_train) & paste0("k",k) %in% names(tensorlda_full_test)){
+    alignment <- align_topics(exp(tensorlda_full_train[[paste0("k",k)]]$beta),
+                              exp(tensorlda_full_test[[paste0("k",k)]]$beta),
+                              dist="cosine", do.plot=FALSE)
+    match_permuted <- alignment$match
+    res=res_df(res,match_permuted,k,"tLDA",group)
+  }
 
 }
 }
+ res1_4=res
 
 write_csv(as.data.frame(res), "C:/Users/建新/Desktop/tensor-topic-modeling/tensor-topic-modeling/real_data/vaginal_permute_subject_1_10.csv")
 res_fi=as.data.frame(res) %>%
