@@ -14,12 +14,13 @@ K2 =  as.numeric(args[4])
 K3 =  as.numeric(args[5])
 sparse = as.logical(args[6])
 n_anchors = 2
+Rvalue = as.numeric(args[7])
 error <- c()
-print(seed)
+print(c(seed, Rvalue))
 
-Rlist <- c(100, 500, 1000, 5000,  10000, 20000, 50000)# 
+Mlist <- c(100, 500, 1000, 5000,  10000, 20000, 50000)# 
 Q1list <- c(10, 50, 100)
-Mlist <- c(100, 500, 1000, 5000, 10000)#
+Rlist <- c(Rvalue)#
 for (Q1 in Q1list){
   for (M in Mlist){
     for (R in Rlist){
@@ -32,7 +33,7 @@ for (Q1 in Q1list){
                                         delta_anchor=0.1, N=M, seed=seed, offset_zipf=2.7, 
                                         vary_by_topic=FALSE, sparsity = sparse)
       #write_csv(as.data.frame(matrization_tensor(data$Y,3)), paste0(getwd(), paste0("/synthetic/results/","data")))
-      for (method in c("bayesian", "LDA", "NTD", "TopicScore-HOSVD", "TTM-HOOI", "TTM-HOSVD")){
+      for (method in c("bayesian", "LDA", "STM", "NTD", "TopicScore-HOSVD", "TTM-HOOI", "TTM-HOSVD")){
         results <- run_experiment(data=data, K1=K1, K2=K2, K3=K3, 
                                 M=M, method=method)
         error <- update_error(hatA1=results$A1, data$A1,

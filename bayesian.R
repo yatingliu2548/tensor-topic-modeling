@@ -159,6 +159,9 @@ fit_stm_model <- function(X, K1, K2, K3){
   R = dim(D3)[1]
   Q1 = dim(X)[1]
   Q2 = dim(X)[2]
+
+  docs <- t(as(matricization(data$D, 3), "sparseMatrix"))
+  colnames(docs) <- as.character( 1:R)
   meta_data =data.frame(reviewer = unlist(lapply(1:Q1, function(x){rep(x, Q2)})),
                         paper = unlist(lapply(1:Q1, function(x){1:Q2})))
   meta_data$reviewer  = as.factor(meta_data$reviewer)
