@@ -7,6 +7,40 @@ library(reshape2) # For melt function
 library(viridis)
 #library(scico)
 
+library(tidyverse)
+
+plot_words_per_group<- function(matrix,words=10){
+  #colnames(matrix) <- paste0("Group","_", colnames(matrix) )
+  gene_data <- as.data.frame(matrix) %>%
+    rownames_to_column(var = "Names") %>%
+    pivot_longer(cols = -Names, names_to = "Group", values_to = "Probability")
+  
+  top_genes <- gene_data  %>%
+    group_by(Group)%>%
+    top_n(n = words, wt = Probability) %>%
+    ungroup()
+  
+  # Plot
+  ggplot(top_genes, aes(x = Group, y = Names, size = Probability)) +
+    geom_point(shape = 21, fill = "skyblue",alpha = 0.6) +  # Adjust alpha for transparency, if desired
+    scale_size_continuous(range = c(0.1, 5)) +  # Adjust the size range for bubbles
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +  # Rotate x-axis labels for better readability
+    labs(title = "",
+         x = "Group_Category",
+         y = "",
+         size = "Probability")
+}
+
+
+library(rdist)
+
+normalize_rows <- function(mat) {
+  row_norms <- sqrt(rowSums(mat^2))
+  return(sweep(mat, 1, row_norms, FUN="/"))
+}
+
+
 plot_slice <- function(tensor, k=1,xlab="Groups",ylab="Topics",yes=TRUE,option="H",limits=c(0,1),guide = "colourbar",trans="sqrt") {
   # tensor: A 3-dimensional array (or tensor) to be sliced and plotted.
   # k: The dimension along which to slice the tensor.
