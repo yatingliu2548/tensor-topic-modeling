@@ -291,3 +291,4 @@ normalize_rows <- function(mat) {
   row_norms <- sqrt(rowSums(mat^2))
   return(sweep(mat, 1, row_norms, FUN="/"))
 }
+
