@@ -6,12 +6,13 @@ source("VH_algo.R")
 library(Matrix)
 library(rTensor)
 library(tensr)
+library(cluster)
 
 
 score <- function(D, K1, K2, K3, 
                   scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, threshold=FALSE,
                   Mquantile=0.00, 
-                  VHMethod = 'SP', method="HOSVD",normalization="TTM",
+                  VHMethod = 'SP', method="HOSVD", normalization="TTM",
                   alpha=0.005, max_K=150, returnW=FALSE, estimateK=FALSE,
                   as.sparse = FALSE){
   #' This function computes the estimates for the A and W matrix based on the algorithm proposed in Ke and Wang's work: https://arxiv.org/pdf/1704.07016.pdf
@@ -80,6 +81,7 @@ score <- function(D, K1, K2, K3,
         setJ = sort(tildeM, decreasing=TRUE, index.return=TRUE)$ix[1:ceiling( 0.1 * length(tildeM))]
       }
       newD3 = as.matrix(x_train[setJ,])
+      newD3 = as.matrix(x_train[setJ,])
       tildeM = tildeM[setJ]
       print(paste0(p-length(setJ), " words were thresholded (", (p-length(setJ))/p * 100, "%)"))
       print(paste0(length(setJ), " words remain"))
@@ -88,10 +90,13 @@ score <- function(D, K1, K2, K3,
     }else{
       new_p = p
       newD3 = as.matrix(x_train)
+      newD3 = as.matrix(x_train)
       setJ = 1:length(tildeM)
-      #print(paste0("Dim voc", new_p))
-      #print(paste0("Dim old voc", p))
     }
+  }
+
+  D=tensorization(as.matrix(newD3), 3, Q1, Q2, dim(newD3)[1])
+  if (normalize =="TTM"){
     normM=n/M * diag(tildeM)
     newD =  newD3 %*% t(newD3)  - n/M * normM
     D=tensorization(as.matrix(newD3), 3, Q1, Q2, dim(newD3)[1])
@@ -128,7 +133,7 @@ score <- function(D, K1, K2, K3,
   
   obj12 <- switch(method,
                 "HOSVD" = rTensor::hosvd(D, ranks=ranks),
-                "HOOI" =  hooi(D@data,r=ranks, itermax = 50))
+                "HOOI" =  hooi(D@data,r=ranks, itermax = 100))
 
   Xi1 <- obj12$U[[1]]
   Xi2 <- obj12$U[[2]]
@@ -138,8 +143,8 @@ score <- function(D, K1, K2, K3,
   }else{
     Xi3 <- obj12$U[[3]]
   }
-  
-  
+
+
   Xi1[,1] <- abs(Xi1[,1])#
   Xi2[,1] <- abs(Xi2[,1])#
   Xi3[,1] <- abs(Xi3[,1])#
@@ -151,9 +156,9 @@ score <- function(D, K1, K2, K3,
   est3 <- steps_procedure( Xi=Xi3, normalize="C2", K=K3, K0=K0, VHMethod=VHMethod)
   
   ### Compute the core tensor
-  S_hat <- create_tensor(D,t(Xi1),t(Xi2),t(Xi3))
+  S_hat <- create_tensor(D, t(Xi1), t(Xi2), t(Xi3))
   a_0 <- colSums(abs(est3$A_star))
-  check_V3 <- a_0 *est3$V
+  check_V3 <- a_0 * est3$V
   G <- create_tensor(S_hat, est1$V, est2$V, check_V3)
   G3 <- matricization(G,3)
   G3 <- pmax(G3,matrix(0, dim(G3)[1], dim(G3)[2])) ### sets negative entries to 0
@@ -193,7 +198,7 @@ steps_procedure <- function(Xi ,K, normalize, K0, VHMethod){
     if(normalize=="C2"){
       H <- apply(as.matrix(Xi[, 2:K]),2, function(x) x/ Xi[,1])
       H[is.na(H)]<-0
-      
+
     }else{
       H=Xi
     }
@@ -209,7 +214,7 @@ steps_procedure <- function(Xi ,K, normalize, K0, VHMethod){
     if (K<3){
       i1 = which.max(H[,1])
       i2 = which.min(H[,1])
-      
+
       V <- as.matrix(H[c(i1, i2),], ncol=ncol(H))
     }else{
       vertices_est_obj <- successiveProj(H, K)
@@ -224,17 +229,17 @@ steps_procedure <- function(Xi ,K, normalize, K0, VHMethod){
     vertices_est_obj <- ArchetypeA(r_to_py(H), as.integer(K))
     V<-vertices_est_obj$V
     theta<-NULL
-    
+
   }
-  
+
   # if (scatterplot & K>2){
   #   par(mar=c(1,1,1,1))
   #   ggplot(data.frame(R), aes(x=X1, y=X2))+
   #     geom_point( size=3.5)+
   #     geom_point(data=data.frame(V), colour="red", size=3.5)
   # }
-  
-  
+
+
   #Step 4: Topic matrix estimation
   print("Start Step 4")
   if (K == 1){
@@ -255,14 +260,14 @@ steps_procedure <- function(Xi ,K, normalize, K0, VHMethod){
       }
     }
   }
-  
-  
+
+
   Pi <- pmax(Pi,matrix(0,dim(Pi)[1],dim(Pi)[2])) ### sets negative entries to 0
   temp <- rowSums(Pi)
   Pi <- apply(Pi,2,function(x) x/temp)
-  
+
   #Step 5
-  
+
   if (normalize=="C2"){
     A_star <- Xi[,1] * Pi
     if (K==1){
@@ -274,7 +279,7 @@ steps_procedure <- function(Xi ,K, normalize, K0, VHMethod){
     A_star=replace(A_star, is.na(A_star), 0)
     temp <- colSums(A_star)
     A_hat <- t(apply(A_star,1,function(x) x/temp))
-    
+
   }else{
     if (K==1){
       V=as.matrix(max(V),1,1)
@@ -282,9 +287,10 @@ steps_procedure <- function(Xi ,K, normalize, K0, VHMethod){
     A_star= Pi
     A_hat=Pi
   }
-  
+
   return(list(A_hat=A_hat,A_star=A_star, H=H,V=V, Pi=Pi, theta=theta,Xi=Xi))
-  
-  
+
+
 }
+
 

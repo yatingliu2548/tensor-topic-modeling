@@ -239,7 +239,7 @@ run_experiment<- function(data, K1, K2, K3, M, method, threshold=FALSE){
         # Return a default value or NULL to continue with the rest of the code
         return(NULL)
       }
-      )     
+      )
     })["elapsed"]
     if (is.null(ntd_res)==FALSE){
       print("finish NTD")
@@ -460,9 +460,9 @@ get_hat_core<- function(Y,A1,A2,A3){
   M_NA <- Y
   M_NA@data[] <- 1
   M_NA@data[which(is.na(Y@data))] <- 0
- 
+
     M <- M_NA
-  
+
   pM <- M
   # Pseudo count
   pseudocount=.Machine$double.eps
@@ -472,7 +472,7 @@ get_hat_core<- function(Y,A1,A2,A3){
   X_bar <- recTensor(S=S, A=A, idx=c(1,2,3),reverse=TRUE)
 
   pM <- .pseudocount(M, pseudocount)
-  
+
   numer <- pM * Y * X_bar^(2 - 1)
   denom <- pM * X_bar^2
   for (n in 1:3) {

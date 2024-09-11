@@ -2,6 +2,7 @@ source("algorithm.R")
 source("data_generation.R")
 source("run_experiments.R")
 source("VH_algo.R")
+source("SLDA.R")
 
 #setwd("~/Documents/tensor-topic-modeling/")
 args = commandArgs(trailingOnly=TRUE)
@@ -50,3 +51,4 @@ for (Q1 in Q1list){
     }
   }
 }
+
