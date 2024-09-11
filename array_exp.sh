@@ -3,8 +3,8 @@
 #SBATCH --job-name=array
 #SBATCH --output=experiments/logs/array_%A_%a.out
 #SBATCH --error=experiments/logs/array_%A_%a.err
-#SBATCH --array=1-100
-#SBATCH --time=6:00:00
+#SBATCH --array=1-50
+#SBATCH --time=24:00:00
 #SBATCH --partition=caslake
 #SBATCH --ntasks=1
 #SBATCH --mem=15G
@@ -20,14 +20,16 @@ module load gcc
 module load gsl
 
 id_experiment="${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
-name_experiment="$1-$2-$3-$4-${id_experiment}"
+name_experiment="exp_$1-$2-$3-$4-${id_experiment}"
 echo "name experiment is ${name_experiment}"
 cd $SCRATCH/tensor-topic-modeling/tensor-topic-modeling/
 
 # Run one experiment  to create the dataset
-Rscript synthetic_array.R ${SLURM_ARRAY_TASK_ID} ${name_experiment} $1 $2 $3 $4
+Rscript synthetic_array.R ${SLURM_ARRAY_TASK_ID} ${name_experiment} $1 $2 $3 $4 $5
 
-#Q2 = $1
-#K1 = $2
-#K2 = $3
-#K3 = $4
+
+#K1 = $1
+#K2 = $2
+#K3 = $3
+#sparse = $4
+#R = $5

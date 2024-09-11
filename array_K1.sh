@@ -3,8 +3,8 @@
 #SBATCH --job-name=array_K1
 #SBATCH --output=experiments/logs/exp_K1_array_%A_%a.out
 #SBATCH --error=experiments/logs/exp_K1_array_%A_%a.err
-#SBATCH --array=1-50
-#SBATCH --time=10:00:00
+#SBATCH --array=1-25
+#SBATCH --time=12:00:00
 #SBATCH --partition=caslake
 #SBATCH --ntasks=1
 #SBATCH --mem=10G
@@ -25,7 +25,7 @@ echo "name experiment is ${name_experiment}"
 cd $SCRATCH/tensor-topic-modeling/tensor-topic-modeling/
 
 # Run one experiment  to create the dataset
-Rscript synthetic_array_K.R ${SLURM_ARRAY_TASK_ID} ${name_experiment} $1 $2 $3
+Rscript synthetic_array_K1.R ${SLURM_ARRAY_TASK_ID} ${name_experiment} $1 $2 $3
 
 #Q1 = $1
 #R = $2

@@ -3,9 +3,9 @@
 #SBATCH --job-name=array_K
 #SBATCH --output=experiments/logs/exp_K_array_%A_%a.out
 #SBATCH --error=experiments/logs/exp_K_array_%A_%a.err
-#SBATCH --array=1-50
-#SBATCH --time=10:00:00
-#SBATCH --partition=cdonnat
+#SBATCH --array=1-25
+#SBATCH --time=16:00:00
+#SBATCH --partition=caslake
 #SBATCH --ntasks=1
 #SBATCH --mem=10G
 #SBATCH --account=pi-cdonnat
