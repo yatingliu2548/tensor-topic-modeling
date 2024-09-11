@@ -1,7 +1,28 @@
+library(reshape2)
+library(reshape)
+library(dplyr)
+library(tidyverse)
+library(alto)
+library(ggplot2)
+theme_set(theme_bw(base_size = 14))
+
+setwd("C:/Users/yichg/yating/tensor-topic-modeling/tensor-topic-modeling")
+source("our_method.R")
+source("data_generation.R")
+source("analysis_function.R")
+source("our_method.R")
+source("data_generation.R")
+source("tensor_operations.R")
+source("run_experiments.R")
+source("VH_algo.R")
+source("SLDA.R")
+source("SLDA.R")
+source("bayesian.R")
+source("tensor_lda.R")
 library(readr)
 
 ##clean the data
-CNN_Articles_clean <- read_csv("C:/Users/建新/Desktop/tensor-topic-modeling/tensor-topic-modeling/real_data/CNN_Articels_clean.csv")
+CNN_Articles_clean <- read_csv("real_data/CNN_Articels_clean.csv")
 CNN=CNN_Articles_clean
 CNN$date=as.Date(CNN$`Date published`)
 library(stringr)
@@ -13,6 +34,9 @@ library(dplyr)
 covid_related <- grepl("Covid", CNN$`Article text`, ignore.case = TRUE)
 contain_COVID=CNN[covid_related, ]
 table(contain_COVID$Category)
+
+table(contain_COVID[contain_COVID$Category=="news",]$Section)
+
 
 after2021=CNN%>%filter(date>as.Date("2021-01-01"))
 

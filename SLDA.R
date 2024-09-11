@@ -90,3 +90,61 @@ run_SLDA_models <- function(X, train_index,data,Q1,Q2,
   return(topic_models)
 
 }
+
+
+run_NTD<- function(X, train_index,Q1,Q2,K1,K2,
+                   list_params=1:9){
+  ####
+  active_train = which(apply(X[train_index,], 2, sum)>0)
+  x_train = t(diag(1/ apply(X[train_index, active_train],1, sum)) %*% X[train_index, active_train])
+  print(dim(x_train))
+  topic_models <- vector("list", length(list_params))
+  tensor_data=tensorization(as.matrix(x_train),3,Q1,Q2,dim(x_train)[1])
+  D3=colnames(matrization_tensor(tensor_data,3))
+  it = 1
+  list_params_it=rep(0,length(list_params))
+  M=median(apply(X, 1, sum))
+  for (k in list_params){
+   
+    NTD_results <-tryCatch(
+      NTD(tensor_data/M,rank=c(K1,K2,k),algorithm = "KL"),
+      error = function(err) {
+        # Code to handle the error (e.g., print an error message, log the error, etc.)
+        cat("Error occurred while running lda:", conditionMessage(err), "\n")
+        # Return a default value or NULL to continue with the rest of the code
+        return(NULL)
+      })
+    if (is.null(NTD_results)==FALSE){
+      A_hat = matrix(0, ncol(X), k)
+      tensordata=NTD_results$S
+      NTD_G_3=matrization_tensor(tensordata,3)
+      NTD_G_3=NTD_G_3/colSums(NTD_G_3)
+      tensordata=tensorization(NTD_G_3,3,K1,K2,k)
+      #tensordata=G@data
+      W_hat=matricization(tensordata,3)
+      NTD_A1=t(NTD_results$A$A1)
+      NTD_A1=NTD_A1/rowSums(NTD_A1)
+      NTD_A2=t(NTD_results$A$A2)
+      NTD_A2=NTD_A2/rowSums(NTD_A2)
+      NTD_A3=t(NTD_results$A$A3)
+      NTD_A3=NTD_A3/colSums(NTD_A3)
+      # Reshape the permuted tensor into a matrix
+      W_hat <- matrix(W_hat, nrow = dim(tensordata)[3], byrow = FALSE)
+      print(dim(W_hat))
+      W_hat=W_hat%*% kronecker(t(NTD_A1),t(NTD_A2))
+      
+      A_hat[active_train, ] = NTD_A3
+      topic_models[[it]] <- list(
+        beta = log(t(A_hat)) %>% magrittr::set_colnames(colnames(X)),
+        gamma =  t(W_hat) %>% magrittr::set_rownames(D3)
+      )
+      list_params_it[it]=k
+      it=it+1
+    }
+  }
+  
+  names(topic_models) <- sapply(list_params_it, function(x){paste0("k", x)})
+  #names(topic_models_test) <- sapply(list_params,function(x){paste0("k",x)})
+  return(topic_models)
+  
+}
