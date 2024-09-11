@@ -223,6 +223,7 @@ run_pLDA_models <- function(X, train_index,Q1,Q2,K1,K2,
   list_params_it=rep(0,length(list_params))
   for (k in list_params){
     print(k)
+<<<<<<< HEAD
     tm <--tryCatch(post_lda(tensor_data@data,K1,K2,k), error = function(err) {
       # Code to handle the error (e.g., print an error message, log the error, etc.)
       cat("Error occurred while running lda:", conditionMessage(err), "\n")
@@ -231,6 +232,10 @@ run_pLDA_models <- function(X, train_index,Q1,Q2,K1,K2,
     })
     if (is.null(tm)==FALSE){
       print(k)
+=======
+    tm <-post_lda(tensor_data@data,K1,K2,k)
+    if (is.null(tm)==FALSE){
+>>>>>>> 909d9a5458a38aec2aac841bef37f8c7c1152136
     A_hat = matrix(0, ncol(X), k)
     tensordata=tm$core
     #tensordata=G@data

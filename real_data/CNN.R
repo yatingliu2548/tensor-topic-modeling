@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 library(reshape2)
 library(reshape)
 library(dplyr)
@@ -23,6 +24,12 @@ library(readr)
 
 ##clean the data
 CNN_Articles_clean <- read_csv("real_data/CNN_Articels_clean.csv")
+=======
+library(readr)
+
+##clean the data
+CNN_Articles_clean <- read_csv("C:/Users/建新/Desktop/tensor-topic-modeling/tensor-topic-modeling/real_data/CNN_Articels_clean.csv")
+>>>>>>> 909d9a5458a38aec2aac841bef37f8c7c1152136
 CNN=CNN_Articles_clean
 CNN$date=as.Date(CNN$`Date published`)
 library(stringr)
@@ -35,9 +42,12 @@ covid_related <- grepl("Covid", CNN$`Article text`, ignore.case = TRUE)
 contain_COVID=CNN[covid_related, ]
 table(contain_COVID$Category)
 
+<<<<<<< HEAD
 table(contain_COVID[contain_COVID$Category=="news",]$Section)
 
 
+=======
+>>>>>>> 909d9a5458a38aec2aac841bef37f8c7c1152136
 after2021=CNN%>%filter(date>as.Date("2021-01-01"))
 
 
@@ -291,4 +301,7 @@ normalize_rows <- function(mat) {
   row_norms <- sqrt(rowSums(mat^2))
   return(sweep(mat, 1, row_norms, FUN="/"))
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 909d9a5458a38aec2aac841bef37f8c7c1152136
