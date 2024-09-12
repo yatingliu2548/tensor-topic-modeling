@@ -90,7 +90,7 @@ run_SLDA_models <- function(X, train_index,data,Q1,Q2,
   return(topic_models)
 
 }
-<<<<<<< HEAD
+
 
 
 run_NTD<- function(X, train_index,Q1,Q2,K1,K2,
@@ -149,5 +149,4 @@ run_NTD<- function(X, train_index,Q1,Q2,K1,K2,
   return(topic_models)
   
 }
-=======
->>>>>>> 909d9a5458a38aec2aac841bef37f8c7c1152136
+

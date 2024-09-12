@@ -184,8 +184,17 @@ matrix_lp_distance <- function(A, B, lp=2){
   K <- dim(A)[2]
   if (lp ==2){
     error_matrix <- outer(seq_len(ncol(A)), seq_len(ncol(B)), Vectorize(function(i, j) l2_error(A[, i], B[, j])))
-  }else{
+    permutation <- solve_LSAP(error_matrix) 
+  }else if (lp=="cosine"){
+    A_normalized <- normalize_rows(t(A))
+    B_normalized <- normalize_rows(t(B))
+    match = (A_normalized) %*% t(B_normalized)
+    error_matrix=  as.matrix(data.frame(match))
+    permutation <- solve_LSAP(error_matrix, maximum=TRUE) 
+  }
+  else{
     error_matrix <- outer(seq_len(ncol(A)), seq_len(ncol(B)), Vectorize(function(i, j) l1_error(A[, i], B[, j])))
+    permutation <- solve_LSAP(error_matrix) 
   }
   # Find the optimal column permutation using the Hungarian algorithm
   permutation <- solve_LSAP(error_matrix) 

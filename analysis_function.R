@@ -7,7 +7,7 @@ library(reshape2) # For melt function
 library(viridis)
 #library(scico)
 
-<<<<<<< HEAD
+
 library(tidyverse)
 
 plot_words_per_group<- function(matrix,words=10){
@@ -41,9 +41,6 @@ normalize_rows <- function(mat) {
   return(sweep(mat, 1, row_norms, FUN="/"))
 }
 
-
-=======
->>>>>>> 909d9a5458a38aec2aac841bef37f8c7c1152136
 plot_slice <- function(tensor, k=1,xlab="Groups",ylab="Topics",yes=TRUE,option="H",limits=c(0,1),guide = "colourbar",trans="sqrt") {
   # tensor: A 3-dimensional array (or tensor) to be sliced and plotted.
   # k: The dimension along which to slice the tensor.

@@ -365,19 +365,11 @@ run_topic_models <- function(X, train_index,K1,K2,Q1,Q2, #test_index,
   topic_models <- vector("list", length(list_params))
   tensor_data=tensorization(as.matrix(x_train),3,Q1,Q2,dim(x_train)[1])
   D3=colnames(matrization_tensor(tensor_data,3))
-<<<<<<< HEAD
   M=median(apply(X, 1, sum))
   it = 1
   for (k in list_params){
 
     tm <- score(tensor_data/M, K1=K1,K2=K2,K3=k,M=median(apply(X, 1, sum)), normalize=normalize)
-=======
-  it = 1
-  for (k in list_params){
-
-    tm <- score(tensor_data, K1=K1,K2=K2,K3=k,M=median(apply(X, 1, sum)), normalize=normalize)
->>>>>>> 909d9a5458a38aec2aac841bef37f8c7c1152136
-    A_hat = matrix(0, ncol(X), k)
     G=tm$hatcore
     tensordata=G@data
     W_hat=aperm(tensordata, c(3, 2, 1))

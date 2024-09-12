@@ -13,7 +13,7 @@ library(alto)
 library(ggplot2)
 theme_set(theme_bw(base_size = 14))
 
-setwd("C:/Users/yichg/yating/tensor-topic-modeling")
+setwd("C:/Users/yichg/yating/tensor-topic-modeling/tensor-topic-modeling")
 source("our_method.R")
 source("data_generation.R")
 source("analysis_function.R")
@@ -121,7 +121,7 @@ data[,271:300]=data[,151:180]
 
 tensor_true=array(t(data),dim=c(30,10,50))
 Y_true=as.tensor(tensor_true)
-plot_slice(tensor_true,2,"Mode 1","Mode 3",option="viridis",limits=c(0,max(data)),yes = F,trans = "sqrt")
+plot_slice(tensor_true,2,"Mode 1: customer ID","Mode 3: product ID",option="viridis",limits=c(0,max(data)),yes = F,trans = "identity")
 
 D0=as.tensor(tensor_true)
 D3=matrization_tensor(D0,3)
@@ -139,7 +139,7 @@ tensor=tensorization(D3,mode=3,Q1,Q2,length(vocab))
 print(dim(D3))
 Y=tensorization(Y3,mode=3,Q1,Q2,length(vocab))
 tensor=Y@data
-plot_slice(Y@data/M,2,"Mode 1","Mode 3",option="viridis",limits=c(0,0.1),yes = F,trans = "sqrt")
+plot_slice(Y@data/M,2,"Mode 1","Mode 3",option="viridis",limits=c(0,0.1),yes = F,trans = "identity")
 
 #D0_true=tensorization(D3,mode=3,Q1,Q2,length(vocab))
 K3=3
@@ -151,12 +151,21 @@ K3=3
 plot_slice(tensor,2,"mode1","mode2")
 Y=as.tensor(tensor)
 Y3=matrization_tensor(Y,3) # first 10 is dim2* first from dim 1
+print(l1_error(Y3/M,D3))
+
 
 #write.csv(Y3, file = "Y3.csv", row.names = F)
 #write.csv(D3, file = "D3.csv", row.names = F)
 
 heatmap_matrix(t(Y3),"Topics","Mode 3")
+permute1_2=matrix(0,2,2)
+permute1_2[1,2]=1
+permute1_2[2,1]=1
+permutate1_3=matrix(0,3,3)
+permutate1_3[1,2]=1
 
+permutate1_3[2,1]=1
+permutate1_3[3,3]=1
 
 
 # tensor LDA
@@ -167,12 +176,13 @@ heatmap_matrix(t(Y3),"Topics","Mode 3")
 tlda <-tensor_lda(Y@data,K1=2,K2=2,K3=K3)
 #tlda_sampling_d0=tensor_lda(D0,K1=2,K2=2,K3=4,use_vb = FALSE)
 #tlda=tlda_vb
-heatmap_matrix(as.matrix(tlda$A1),"Groups","Mode 1",guide="none",trans="sqrt")
-heatmap_matrix2(tlda$A2,"Classes","Mode 2",guide="none",trans="sqrt")
-heatmap_matrix(tlda$A3,"Topics","Mode 3",guide="none",trans="sqrt")
+heatmap_matrix(as.matrix(tlda$A1),"Groups","Mode 1: customer ID",guide="none",trans="identity")
+heatmap_matrix2(tlda$A2,"Events","Mode 2: time slice",guide="none",trans="identity")
+heatmap_matrix(tlda$A3,"Topics","Mode 3: product ID",guide="none",trans="identity")
+
 tlda_W=kronecker(tlda$A1,tlda$A2)%*%t(matricization(tlda$core,3))
 heatmap_matrix(tlda_W,"Topics","Modes 1 & 2")
-plot_slice(tlda$core,2,"Groups","Topics",TRUE,trans="sqrt")
+plot_slice(tlda$core,2,"Groups","Topics",TRUE,trans="identity")
 hatY=tensor_create(tensorization( matricization(tlda$core,3),3,2,2,K3),tlda$A1,tlda$A2,tlda$A3)
 print(l1_error(hatY@data,tensorization(D3,3,30,10,dim(D3)[1])@data))
 
@@ -180,54 +190,54 @@ print(l1_error(hatY@data,tensorization(D3,3,30,10,dim(D3)[1])@data))
 ###our method
 ours_results=score(Y/M,K1=2,K2=2,K3=K3,M=M,normalize="Ours")
 
-heatmap_matrix(ours_results$hatA1,"Groups","Mode 1",trans="sqrt",guide="none")
-heatmap_matrix2(ours_results$hatA2,"Classes","Mode 2",guide="none",trans="sqrt")
-heatmap_matrix(ours_results$hatA3,"Topics","Mode 3",guide="none",trans="sqrt")
+heatmap_matrix(ours_results$hatA1,"Groups","Mode 1: customer ID",trans="identity",guide="none")
+heatmap_matrix2(ours_results$hatA2,"Events","Mode 2: time slice",guide="none",trans="identity")
+heatmap_matrix(ours_results$hatA3,"Topics","Mode 3: product ID",guide="none",trans="identity")
 
 our_W=kronecker(ours_results$hatA1,ours_results$hatA2)%*%t(matrization_tensor(ours_results$hatcore,3))
 heatmap_matrix(our_W,"Topics","Modes 1 & 2")
-plot_slice(ours_results$hatcore@data,2,"Groups","Topics",yes=TRUE,trans="sqrt")
+plot_slice(ours_results$hatcore@data,2,"Groups","Topics",yes=TRUE,trans="identity")
 hatY=tensor_create(ours_results$hatcore,ours_results$hatA1,ours_results$hatA2,ours_results$hatA3)
 print(l1_error(hatY@data,tensorization(D3,3,30,10,dim(D3)[1])@data))
 print(matrix_lp_distance(matricization(hatY,3),D3,1)$error)
-
+print(l1_error(hatY@data,D0@data))
 ##nonnegative Tucker decomposition
 NTD_result=NTD(Y/M,rank=c(2,2,3),algorithm = "KL")
 
 NTD_A1=t(NTD_result$A$A1)
 NTD_A1=NTD_A1/rowSums(NTD_A1)
-heatmap_matrix(NTD_A1,"Groups","Mode 1",guide="none",trans="sqrt")
+heatmap_matrix(NTD_A1,"Groups","Mode 1: customer ID",guide="none",trans="identity")
 
 NTD_A2=t(NTD_result$A$A2)
 NTD_A2=NTD_A2/rowSums(NTD_A2)
-heatmap_matrix2(NTD_A2,"Classes","Mode 2",guide="none",trans="sqrt")
+heatmap_matrix2(NTD_A2,"Events","Mode 2: time slice",guide="none",trans="identity")
 
 NTD_A3=t(NTD_result$A$A3)
 NTD_A3=NTD_A3/colSums(NTD_A3)
-heatmap_matrix(NTD_A3,"Topics","Mode 3",guide="none",trans="sqrt")
+heatmap_matrix(NTD_A3,"Topics","Mode 3: product ID",guide="none",trans="identity")
 
 NTD_G=NTD_result$S
 NTD_W=kronecker(NTD_A1,NTD_A2)%*%t(matrization_tensor(NTD_G,3))
-heatmap_matrix(NTD_W,"Topics","Modes 1 & 2",guide="none",trans="sqrt")
+heatmap_matrix(NTD_W,"Topics","Modes 1 & 2",guide="none",trans="identity")
 NTD_G_3=matrization_tensor(NTD_G,3)
 NTD_G_3=NTD_G_3/colSums(NTD_G_3)
 NTD_G=tensorization(NTD_G_3,3,2,2,3)
-plot_slice(NTD_G@data,2,"Groups","Topics",TRUE,trans="sqrt")
+plot_slice(NTD_G@data,2,"Groups","Topics",TRUE,trans="identity")
 hatY=tensor_create(NTD_G,NTD_A1,NTD_A2,NTD_A3)
 print(l1_error(hatY@data,tensorization(D3,3,30,10,dim(D3)[1])@data))
 print(matrix_lp_distance(matricization(hatY,3),D3,1)$error)
 
 ## nonnegative CP decomposition
-NTF_result=cp(Y,num_components =K3)
+NTF_result=cp(Y/M,num_components=3)
 U1=abs(NTF_result$U[[1]])
 U2=abs(NTF_result$U[[2]])
 U3=abs(NTF_result$U[[3]])
 
-heatmap_matrix(U1/rowSums(U1),"Topics","Mode 1",guide="none",trans="sqrt")
+heatmap_matrix(U1/rowSums(U1),"Topics","Mode 1: customer ID",guide="none",trans="identity")
 
 
-heatmap_matrix2(U2/rowSums(U2),"Topics","Mode 2",guide="none",trans="sqrt")
-heatmap_matrix(U3/colSums(U3),"Topics","Mode 3",guide="none",trans="sqrt")
+heatmap_matrix2(U2/rowSums(U2),"Topics","Mode 2: time slice",guide="none",trans="identity")
+heatmap_matrix(U3/colSums(U3),"Topics","Mode 3: product ID",trans="identity",guide = "none")
 print(NTF_result$lambdas)
 
 A=t(NTF_result$U[[1]])
@@ -242,23 +252,23 @@ print(l1_error(YY,tensorization(D3,3,30,10,dim(D3)[1])@data))
 M=100
 #matrix_data=t(Y3)*M
 #lda_data=matrix(unlist(lapply(matrix_data, as.integer)), nrow = nrow(matrix_data))
-LDA_results=LDA(t(Y3),k=K3,control = list(seed = 1234), method = 'VEM')
+LDA_results=LDA(t(Y3),k=K3,control = list(seed =1234), method = 'VEM')
 lda_A=exp(t(LDA_results@beta))
 lda_W=t(LDA_results@gamma)
-heatmap_matrix(lda_A,"Topics","Mode 3",guide="none",trans="sqrt")
-heatmap_matrix(t(lda_W),"Topics","Modes 1 & 2",guide="none",trans="sqrt")
+heatmap_matrix(lda_A,"Topics","Mode 3: Product ID",guide="none",trans="identity")
+heatmap_matrix(t(lda_W),"Topics","Modes 1 & 2: Customer i at time t",trans="identity",guide="none")
 #hatY=lda_A%*%lda_W
-#print(l1_error(hatY,matrization_tensor(D0,3)))
+print(l1_error(lda_A%*%lda_W,D3))
 
-heatmap_matrix(t(lda_W),"Topics","Modes 1 & 2",guide="none",trans="sqrt")
+heatmap_matrix(t(lda_W),"Topics","Modes 1 & 2",guide="none",trans="identity")
 W1_LDA=matrization_tensor(tensorization(lda_W,3,30,10,dim(lda_W)[1]),1)
 A1_LDA=spectral_clustering(W1_LDA %*% t(W1_LDA),K=2,mix=T)
-heatmap_matrix(A1_LDA,"Groups","Mode 1",guide="none",trans="sqrt")
+heatmap_matrix(A1_LDA,"Groups","Mode 1: customer ID",guide="none",trans="identity")
 W2_LDA=matrization_tensor(tensorization((lda_W),3,30,10,dim(lda_W)[1]),2)
 A2_LDA=spectral_clustering(W2_LDA %*% t(W2_LDA),K=2,mix=T)
-heatmap_matrix2(A2_LDA,"Classes","Mode 1",guide="none",trans="sqrt")
+heatmap_matrix2(A2_LDA,"Events","Mode 2: time slice",guide="none",trans="identity")
 G_LDA=compute_G_from_WA(kronecker(A1_LDA,A2_LDA),t(lda_W))
-plot_slice(tensorization(t(G_LDA),3,2,2,dim(G_LDA)[2])@data,2,"Groups of Subject","Topics",yes=T,trans="sqrt")
+plot_slice(tensorization(t(G_LDA),3,2,2,dim(G_LDA)[2])@data,2,"Groups","Topics",yes=T,trans="identity")
 
 print(l1_error(tensor_create(tensorization(t(G_LDA),3,2,2,dim(G_LDA)[2]),A1_LDA,A2_LDA,lda_A)@data,tensorization(D3,3,30,10,dim(D3)[1])@data))
 
@@ -270,10 +280,10 @@ time <- rep(rep(c(rep(1, 5), rep(2, 5)), times = 3),each=10)
 # Combine into a data frame
 df <- data.frame(race = race, time = time)
 SLDA <- stm(documents = Matrix(as.matrix(as.data.frame(t(Y3))), sparse = TRUE),
-                       K = K3, prevalence =~ race*time,
-                       max.em.its = 10,
-                       data = df,
-                       init.type = "Spectral")
+            K = K3, prevalence =~ race*time,
+            max.em.its = 5,
+            data = df,
+            init.type = "Spectral")
 
 ##finding optimal K in SLDA
 #Y3_doc=convert_dtm_to_stm_format(as.matrix(as.data.frame(t(Y3))))$documents
@@ -285,23 +295,24 @@ SLDA <- stm(documents = Matrix(as.matrix(as.data.frame(t(Y3))), sparse = TRUE),
 ##heldout-likelihood high, better, then we can see K=5 get highest plot
 W_SLDA_sim=SLDA$theta
 A_SLDA_sim=exp(SLDA$beta$logbeta[[1]])
+print(l1_error(t(A_SLDA_sim)%*%t(W_SLDA_sim),D3))
 
 #colnames(A_SLDA_sim)=SLDA$vocab
 
-heatmap_matrix(t(A_SLDA_sim),"Topics","Mode 3",guide="none",trans="sqrt")
-heatmap_matrix(W_SLDA_sim,"Topics","Modes 1 & 2",guide="none",trans="sqrt")
+heatmap_matrix(t(A_SLDA_sim),"Topics","Mode 3: Product ID",guide="none",trans="identity")
+heatmap_matrix(W_SLDA_sim,"Topics","Modes 1 & 2: Customer i at time t",trans="identity")
 W1_SLDA=matrization_tensor(tensorization(t(W_SLDA_sim),3,30,10,dim(W_SLDA_sim)[2]),1)
 A1_SLDA=spectral_clustering(W1_SLDA %*% t(W1_SLDA),K=2,mix=T)
 
-heatmap_matrix(A1_SLDA,"Groups","Mode 1",guide="none",trans="sqrt")
+heatmap_matrix(A1_SLDA,"Groups","Mode 1: customer ID",guide="none",trans="identity")
 
 W2_SLDA=matrization_tensor(tensorization(t(W_SLDA_sim),3,30,10,dim(W_SLDA_sim)[2]),2)
 A2_SLDA=spectral_clustering(W2_SLDA %*% t(W2_SLDA),K=2,mix=T)
 
-heatmap_matrix2(A2_SLDA,"Classes","Mode 2",guide="none",trans="sqrt")
+heatmap_matrix2(A2_SLDA,"Events","Mode 2: time slice",guide="none",trans="identity")
 G_SLDA=compute_G_from_WA(kronecker(A1_SLDA,A2_SLDA),W_SLDA_sim)
 
-plot_slice(tensorization(t(G_SLDA),3,2,2,dim(G_SLDA)[2])@data,2,"Groups of Subject","Topics",yes=T,trans="sqrt")
+plot_slice(tensorization(t(G_SLDA),3,2,2,dim(G_SLDA)[2])@data,2,"Groups","Topics",yes=T,trans="identity")
 print(l1_error(tensor_create(tensorization(t(G_SLDA),3,2,2,dim(G_SLDA)[2]),A1_SLDA,A2_SLDA,t(A_SLDA_sim))@data,tensorization(D3,3,30,10,dim(D3)[1])@data))
 
 
@@ -316,28 +327,66 @@ heatmap(t(data),
 
 
 errors=c()
-
+D0_true_use=tensorization(D3,3,30,10,dim(D3)[1])@data
 for (i in 1:30){
-  NTD_result=NTD(Y/M,rank=c(2,2,4),algorithm="KL",nmf.algorithm = "KL")
-  NTD_D=tensor_create(NTD_result$S,t(NTD_result$A$A1),t(NTD_result$A$A2),t(NTD_result$A$A3))
-  errors=rbind(errors,error_sim(D0@data,NTD_D@data,"NTD"))
-  NTF_result=NTF(Y/M,rank=4)
-  NNCPD_D=get_cp(t(NTF_result$A[[1]]),t(NTF_result$A[[2]]),t(NTF_result$A[[3]]),NTF_result$S)
-  errors=rbind(errors,error_sim(D0@data,NNCPD_D,"NNCPD"))
-  LDA_results=LDA(t(Y3),k=4, control = list(seed=i), method = 'VEM')
+  print(i)
+  NTD_result=NTD(Y/M,rank=c(2,2,3),algorithm="KL",nmf.algorithm = "KL")
+  NTD_A1=t(NTD_result$A$A1)
+  NTD_A1=NTD_A1/rowSums(NTD_A1)
+  NTD_A2=t(NTD_result$A$A2)
+  NTD_A2=NTD_A2/rowSums(NTD_A2)
+  NTD_A3=t(NTD_result$A$A3)
+  NTD_A3=NTD_A3/colSums(NTD_A3)
+  NTD_G=NTD_result$S
+  NTD_G_3=matrization_tensor(NTD_G,3)
+  NTD_G_3=NTD_G_3/colSums(NTD_G_3)
+  NTD_G=tensorization(NTD_G_3,3,2,2,3)
+  hatY_ndt=tensor_create(NTD_G,NTD_A1,NTD_A2,NTD_A3)
+  errors=rbind(errors,error_sim(D0_true_use,hatY_ndt@data,"NTD",i=i))
+  
+  tlda <-tensor_lda(Y@data,K1=2,K2=2,K3=K3)
+  #tlda_sampling_d0=tensor_lda(D0,K1=2,K2=2,K3=4,use_vb = FALSE)
+  #tlda=tlda_vb
+  hatY_tlda=tensor_create(tensorization( matricization(tlda$core,3),3,2,2,K3),tlda$A1,tlda$A2,tlda$A3)@data
+  errors=rbind(errors,error_sim(D0_true_use,hatY_tlda,"Tensor-LDA",i=i))
+  
+  LDA_results=LDA(t(Y3),k=3, control = list(seed=i), method = 'VEM')
   lda_A=exp(t(LDA_results@beta))
   lda_W=t(LDA_results@gamma)
-  hatY=lda_A%*%lda_W
-
-  errors=rbind(errors,error_sim(D0@data,tensorization(hatY,3,30,10,50)@data,"LDA"))
-  ours_results=score(Y/M,K1=2,K2=2,K3=4,M=M,normalize="Ours")
-  our_D=tensor_create(ours_results$hatcore,ours_results$hatA1,ours_results$hatA2,ours_results$hatA3)
-  errors=rbind(errors,error_sim(D0@data,our_D@data,"ours"))
+  #hatY=lda_A%*%lda_W
+  W1_LDA=matrization_tensor(tensorization(lda_W,3,30,10,dim(lda_W)[1]),1)
+  A1_LDA=spectral_clustering(W1_LDA %*% t(W1_LDA),K=2,mix=T)
+  #heatmap_matrix(A1_LDA,"Groups","Mode 1: customer ID",guide="none",trans="identity")
+  W2_LDA=matrization_tensor(tensorization((lda_W),3,30,10,dim(lda_W)[1]),2)
+  A2_LDA=spectral_clustering(W2_LDA %*% t(W2_LDA),K=2,mix=T)
+  #heatmap_matrix2(A2_LDA,"Events","Mode 2: time slice",guide="none",trans="identity")
+  G_LDA=compute_G_from_WA(kronecker(A1_LDA,A2_LDA),t(lda_W))
+  # plot_slice(tensorization(t(G_LDA),3,2,2,dim(G_LDA)[2])@data,2,"Groups","Topics",yes=T,trans="identity")
+  Y_lda=tensor_create(tensorization(t(G_LDA),3,2,2,dim(G_LDA)[2]),A1_LDA,A2_LDA,lda_A)@data
+  #print(l1_error(tensor_create(tensorization(t(G_LDA),3,2,2,dim(G_LDA)[2]),A1_LDA,A2_LDA,lda_A)@data,tensorization(D3,3,30,10,dim(D3)[1])@data))
+  errors=rbind(errors,error_sim(D0_true_use,Y_lda,"hybrid-LDA",i=i))
+  
+  ours_results=score(Y/M,K1=2,K2=2,K3=3,M=M,normalize="Ours")
+  hatY_our=tensor_create(ours_results$hatcore,ours_results$hatA1,ours_results$hatA2,ours_results$hatA3)
+  #print(l1_error(hatY@data,tensorization(D3,3,30,10,dim(D3)[1])@data))
+  errors=rbind(errors,error_sim(D0_true_use,hatY_our@data,"TopicSCORE-HOSVD",i=i))
 }
 
+df <- errors %>%
+  mutate(method = ifelse(method == "hybrid-LDA", "Hybrid-LDA", method)) %>%  # Update value
+  
+  rename(Method = method) 
 
-ggplot(errors %>% filter(method %in% c("NTD","ours","LDA")),
-       aes(x=method,y=l1,fill=method))+
-  geom_boxplot()+
-  theme_minimal()
+write.csv(df,file="sim1_algorithm")
 
+df <- df %>%
+  mutate(Method = ifelse(Method == "TopicSCORE-HOSVD", "TTM-HOSVD", Method))   # Update value
+
+#library(latex2exp)
+#tikz('plot.tex')
+ggplot(df %>% filter(Method %in% c("NTD","TTM-HOSVD","Tensor-LDA","Hybrid-LDA")),
+       aes(x = Method, y = l1, fill = Method)) +
+  geom_boxplot() +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 3, color = "red") +
+  scale_y_log10()+
+  ylab(expression(paste("Reconstruction error:  ", "||", hat(scriptstyle(D)), " - ", scriptstyle(D), "||"[1])))
