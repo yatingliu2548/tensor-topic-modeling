@@ -6,7 +6,7 @@ library(alto)
 library(ggplot2)
 theme_set(theme_bw(base_size = 14))
 
-setwd("C:/Users/yichg/yating/tensor-topic-modeling")
+setwd("C:/Users/yichg/yating/tensor-topic-modeling/tensor-topic-modeling")
 source("our_method.R")
 source("data_generation.R")
 source("analysis_function.R")
@@ -168,7 +168,7 @@ plot(aligned_topics_transport_comp, add_leaves = TRUE, label_topics = TRUE,min_f
 
 
 #post_lda
-plda_full <- run_pLDA_models(as.matrix(counts_select),1:nrow(counts_select),K1=K1,K2=K2,Q1=Q1,Q2=Q2,list_params=1:Best_K)
+plda_full <- run_pLDA_models(as.matrix(counts_select),1:nrow(counts_select),K1=K1,K2=K2,Q1=Q1,Q2=Q2,list_params=2:Best_K)
 aligned_topics_transport_postLDA<-
   alto::align_topics(
     models = plda_full[1:Best_K],
@@ -195,11 +195,20 @@ aligned_topics_transport_tensorLDA<-
 plot(aligned_topics_transport_tensorLDA, add_leaves = TRUE, label_topics = TRUE)
 
 
+###NTD
+ntd_full <- run_NTD(as.matrix(counts_select),1:nrow(counts_select),K1=K1,K2=K2,Q1=Q1,Q2=Q2,list_params=1:Best_K)
+aligned_topics_transport_ntd<-
+  alto::align_topics(
+    models = ntd_full[1:Best_K],
+    method = "transport",reg=0.1)
+plot(aligned_topics_transport_ntd, add_leaves = TRUE, label_topics = TRUE)
+
+
 #####starting analysis
 library (DirichletReg)
 plot_dirichlet<-function(W,Topic_K=9,word="v",by="SampleID",relationship= "many-to-many"){
   #W is p\times k
-
+  
   W_df=as.data.frame(W)
   if (by=="SampleID"){
     rownames(W)=rownames(counts_select)
@@ -210,12 +219,12 @@ plot_dirichlet<-function(W,Topic_K=9,word="v",by="SampleID",relationship= "many-
   }
   W_df$ID=rownames(W)
   colnames(W_df)[colnames(W_df) == "ID"] <- by
-
+  
   W_df=selected_nonpreg_subject_m%>%
     left_join(., W_df,by=by,relationship=relationship)
-
+  
   dr_data=DR_data(W_df[,(ncol(selected_nonpreg_subject_m)+1):(ncol(W_df))])
-
+  
   K3=Topic_K
   dirichlet_model_1 <- DirichReg(dr_data ~ as.factor(Race)  + Age_status+as.factor(mense_status), data = selected_nonpreg_subject_m)
   dirichlet_model_1 %>% summary()
@@ -233,8 +242,8 @@ plot_dirichlet<-function(W,Topic_K=9,word="v",by="SampleID",relationship= "many-
       sign_level = get_sign_levels(p_value)
     ) %>%
     as_tibble()
-
-
+  
+  
   plot=ggplot(dms %>% filter(var_group != ""),
               aes(x = Estimate, y = variable, col = sign_level)) +
     geom_vline(xintercept = 0, col = "gray") +
@@ -248,24 +257,24 @@ plot_dirichlet<-function(W,Topic_K=9,word="v",by="SampleID",relationship= "many-
           axis.text.x = element_text(angle = 45, hjust = 1),
           strip.background = element_rect(fill = "gray80", color = NA)
     ) +
-
+    
     xlab("Dirichlet regression coefficient ± sd. error")
   return(plot)
 }
 
-  library(tidyverse)
+library(tidyverse)
 
 plot_words_per_group<- function(matrix,words=10){
   #colnames(matrix) <- paste0("Group","_", colnames(matrix) )
   gene_data <- as.data.frame(matrix) %>%
     rownames_to_column(var = "Names") %>%
     pivot_longer(cols = -Names, names_to = "Group", values_to = "Probability")
-
+  
   top_genes <- gene_data  %>%
     group_by(Group)%>%
     top_n(n = words, wt = Probability) %>%
     ungroup()
-
+  
   # Plot
   ggplot(top_genes, aes(x = Group, y = Names, size = Probability)) +
     geom_point(shape = 21, fill = "skyblue",alpha = 0.6) +  # Adjust alpha for transparency, if desired
@@ -283,7 +292,7 @@ topic_corre<- function(data,W,mode=1){
 }
 
 ##LDA
-K3=9
+K3=5
 Q1=24
 Q2=11
 model=lda_models_full[[K3]]
@@ -321,7 +330,7 @@ plot_slice(tensorization(t(G_SLDA),3,K1,K2,dim(G_SLDA)[2])@data,2,"Groups of Sub
 #tensorlda
 active_index=which(apply(counts_select, 2, sum)>0)
 data_active = t( counts_select[, active_index])
-tlda_9=tensor_lda(tensorization(data_active,3,Q1=Q1,Q2=11,Q3=dim(data_active)[1]),K1,K2,K3=K3)
+tlda_5=tensor_lda(tensorization(data_active,3,Q1=Q1,Q2=11,Q3=dim(data_active)[1]),K1,K2,K3=K3)
 #rownames(W_tlda)=rownames(counts_select)
 plot_dirichlet(tensorlda_full[[K3]]$gamma,Topic_K=K3,word="v")
 plot_dirichlet(tlda_9$A1,Topic_K=K1,by="Subject_m",word="g")
@@ -505,7 +514,7 @@ poliblogPrevFit <- stm(documents = Matrix(counts_select, sparse = TRUE),
                        init.type = "Spectral")
 
 findingk <- searchK(documents=convert_dtm_to_stm_format(as.matrix(as.data.frame((counts_select))))$documents,vocab=poliblogPrevFit$vocab, K = c(3:20),
-                                        prevalence =~mense_status*Age+mense_status*Race, data = selected_nonpreg, verbose=FALSE, max.em.its = 20)
+                    prevalence =~mense_status*Age+mense_status*Race, data = selected_nonpreg, verbose=FALSE, max.em.its = 20)
 
 
 
@@ -658,7 +667,7 @@ align_topics<- function(A, B, dist="cosine", do.plot=TRUE){
     match=  data.frame(match)
     permutation <- solve_LSAP(as.matrix(match), maximum=FALSE)
   }
-
+  
   match_permuted <- match[, permutation]
   if (do.plot){
     par(mar=c(1,1,1,1))
@@ -667,9 +676,9 @@ align_topics<- function(A, B, dist="cosine", do.plot=TRUE){
     print(ggplot(pivot_longer(match_permuted, cols=-c("X")))+
             geom_tile(aes(x=X, y=name, fill=value)))
     #match = data.frame((exp(lda_models$k12$beta))%*% t((exp(lda_models_test$k12$beta))))
-
+    
   }
-
+  
   B_permuted=B[permutation,]
   return(list("B_permuted"=B_permuted,
               "match" = match_permuted))
@@ -698,13 +707,15 @@ res_df <- function(res,match_permuted,k,method,group){
                         "res8" = sum(diag(as.matrix(match_permuted))>0.8),
                         "res9" = sum(diag(as.matrix(match_permuted))>0.9),
                         "removed_group" = group,
-
+                        
                         "off_diag" = (sum(match_permuted) - sum(diag(as.matrix(match_permuted))))/(ncol(match_permuted)^2 - ncol(match_permuted)) )
   res = rbind(res, res_temp)
   return(res)
 }
 
-group_list=c("mense1","luteal2","luteal1","follicular1")
+run_NTD<-function()
+  
+  group_list=c("mense1","luteal2","luteal1","follicular1")
 group_list=seq(1:20)
 res=c()
 Best_K=16
@@ -713,93 +724,91 @@ for (k in 1:Best_K) {
   lda_varying_params_lists[[paste0("k",k)]] <- list(k = k)
 }
 for (group in group_list){
+  print(paste0("group",group))
   train_index = sample(unique(selected_nonpreg$Subject_m),12)
   train_data=selected_nonpreg[selected_nonpreg$Subject_m %in%train_index,]$SampleID
   test_data = selected_nonpreg[!selected_nonpreg$Subject_m %in% train_index,]$SampleID
-
-#train_data=selected_nonpreg[selected_nonpreg$expected_status==group,]$SampleID
-#test_data = selected_nonpreg[!selected_nonpreg$expected_status==group,]$SampleID
-
-Q11=12
-Q12=12
-Q21=11
-Q22=11
-topic_models_ours_full_train <- run_topic_models(as.matrix(counts_select),train_data,K1=3,K2=4,Q1=Q11,Q2=Q21,list_params=1:Best_K,normalize="Ours")
-topic_models_ours_full_test <- run_topic_models(as.matrix(counts_select),test_data,K1=3,K2=4,Q1=Q12,Q2=Q22,list_params=1:Best_K,normalize="Ours")
-
-tensorlda_full_train <- run_tensorLDA_models(as.matrix(counts_select),train_data,K1=K1,K2=K2,Q1=Q11,Q2=Q21,list_params=1:Best_K)
-tensorlda_full_test <- run_tensorLDA_models(as.matrix(counts_select),test_data,K1=K1,K2=K2,Q1=Q12,Q2=Q22,list_params=1:Best_K)
-
-SLDA_full_train <- run_SLDA_models(as.matrix(counts_select),train_data,data=selected_nonpreg,Q1=Q11,Q2=Q21,list_params=3:Best_K)
-SLDA_full_test <- run_SLDA_models(as.matrix(counts_select),test_data,data=selected_nonpreg,Q1=Q12,Q2=Q22,list_params=3:Best_K)
-
-lda_models_full_train  <-tryCatch(
-  alto::run_lda_models(
-    data = counts_select[train_data,],
-    lda_varying_params_lists = lda_varying_params_lists,
-    lda_fixed_params_list = list(method = "VEM"),
-    dir = "metagenomics_lda_models_full/",
-    reset = TRUE,
-    verbose = TRUE
-  ),
-  error = function(err) {
-    # Code to handle the error (e.g., print an error message, log the error, etc.)
-    cat("Error occurred while running lda:", conditionMessage(err), "\n")
-    # Return a default value or NULL to continue with the rest of the code
-    return(NULL)
-  })
-
-lda_models_full_train_test  <-tryCatch(
-  alto::run_lda_models(
-    data = counts_select[test_data,],
-    lda_varying_params_lists = lda_varying_params_lists,
-    lda_fixed_params_list = list(method = "VEM"),
-    dir = "metagenomics_lda_models_full/",
-    reset = TRUE,
-    verbose = TRUE
-  ),
-  error = function(err) {
-    # Code to handle the error (e.g., print an error message, log the error, etc.)
-    cat("Error occurred while running lda:", conditionMessage(err), "\n")
-    # Return a default value or NULL to continue with the rest of the code
-    return(NULL)
-  })
-
-
-for (k in 3:Best_K){
-  it = 1
-  alignment <- align_topics(exp(topic_models_ours_full_train[[paste0("k",k)]]$beta),
-                            exp(topic_models_ours_full_test[[paste0("k",k)]]$beta),
-                            dist="cosine", do.plot=FALSE)
-  match_permuted <- alignment$match
-  res=res_df(res,match_permuted,k,"Ours",group)
-  alignment <- align_topics(exp(lda_models_full_train[[paste0("k",k)]]$beta),
-                            exp(lda_models_full_train_test[[paste0("k",k)]]$beta),
-                            dist="cosine", do.plot=FALSE)
-  match_permuted <- alignment$match
-  res=res_df(res,match_permuted,k,"LDA",group)
-  if(paste0("k",k)%in% names(SLDA_full_train) & paste0("k",k) %in% names(SLDA_full_test)){
-    alignment <- align_topics(exp(SLDA_full_train[[paste0("k",k)]]$beta),
-                              exp(SLDA_full_test[[paste0("k",k)]]$beta),
+  
+  #train_data=selected_nonpreg[selected_nonpreg$expected_status==group,]$SampleID
+  #test_data = selected_nonpreg[!selected_nonpreg$expected_status==group,]$SampleID
+  
+  Q11=12
+  Q12=12
+  Q21=11
+  Q22=11
+  topic_models_ours_full_train <- run_topic_models(as.matrix(counts_select),train_data,K1=3,K2=4,Q1=Q11,Q2=Q21,list_params=1:Best_K,normalize="Ours")
+  topic_models_ours_full_test <- run_topic_models(as.matrix(counts_select),test_data,K1=3,K2=4,Q1=Q12,Q2=Q22,list_params=1:Best_K,normalize="Ours")
+  
+  NTD_full_train <- run_NTD(as.matrix(counts_select),train_data,K1=3,K2=4,Q1=Q11,Q2=Q21,list_params=1:Best_K)
+  NTD_full_test <- run_NTD(as.matrix(counts_select),test_data,K1=3,K2=4,Q1=Q12,Q2=Q22,list_params=1:Best_K)
+  
+  #tensorlda_full_train <- run_tensorLDA_models(as.matrix(counts_select),train_data,K1=K1,K2=K2,Q1=Q11,Q2=Q21,list_params=1:Best_K)
+  #tensorlda_full_test <- run_tensorLDA_models(as.matrix(counts_select),test_data,K1=K1,K2=K2,Q1=Q12,Q2=Q22,list_params=1:Best_K)
+  
+  #SLDA_full_train <- run_SLDA_models(as.matrix(counts_select),train_data,data=selected_nonpreg,Q1=Q11,Q2=Q21,list_params=3:Best_K)
+  #SLDA_full_test <- run_SLDA_models(as.matrix(counts_select),test_data,data=selected_nonpreg,Q1=Q12,Q2=Q22,list_params=3:Best_K)
+  
+  #lda_models_full_train  <-tryCatch( alto::run_lda_models( data = counts_select[train_data,],  lda_varying_params_lists = lda_varying_params_lists, lda_fixed_params_list = list(method = "VEM"),  dir = "metagenomics_lda_models_full/",reset = TRUE, verbose = TRUE),error = function(err) {cat("Error occurred while running lda:", conditionMessage(err), "\n")return(NULL)})
+  
+  # lda_models_full_train_test  <-tryCatch(
+  #   alto::run_lda_models(
+  #     data = counts_select[test_data,],
+  #     lda_varying_params_lists = lda_varying_params_lists,
+  #     lda_fixed_params_list = list(method = "VEM"),
+  #     dir = "metagenomics_lda_models_full/",
+  #     reset = TRUE,
+  #     verbose = TRUE
+  #   ),
+  #   error = function(err) {
+  #     # Code to handle the error (e.g., print an error message, log the error, etc.)
+  #     cat("Error occurred while running lda:", conditionMessage(err), "\n")
+  #     # Return a default value or NULL to continue with the rest of the code
+  #     return(NULL)
+  #   })
+  
+  
+  for (k in 3:Best_K){
+    it = 1
+    alignment <- align_topics(exp(topic_models_ours_full_train[[paste0("k",k)]]$beta),
+                              exp(topic_models_ours_full_test[[paste0("k",k)]]$beta),
                               dist="cosine", do.plot=FALSE)
     match_permuted <- alignment$match
-    res=res_df(res,match_permuted,k,"SLDA",group)
-  }
-  if(paste0("k",k)%in% names(tensorlda_full_train) & paste0("k",k) %in% names(tensorlda_full_test)){
-    alignment <- align_topics(exp(tensorlda_full_train[[paste0("k",k)]]$beta),
-                              exp(tensorlda_full_test[[paste0("k",k)]]$beta),
+    res=res_df(res,match_permuted,k,"TTM-HOSVD",group)
+    alignment <- align_topics(exp(NTD_full_train[[paste0("k",k)]]$beta),
+                              exp(NTD_full_test[[paste0("k",k)]]$beta),
                               dist="cosine", do.plot=FALSE)
     match_permuted <- alignment$match
-    res=res_df(res,match_permuted,k,"tLDA",group)
+    res=res_df(res,match_permuted,k,"NTD",group)
+    # alignment <- align_topics(exp(lda_models_full_train[[paste0("k",k)]]$beta),
+    #                           exp(lda_models_full_train_test[[paste0("k",k)]]$beta),
+    #                           dist="cosine", do.plot=FALSE)
+    # match_permuted <- alignment$match
+    # res=res_df(res,match_permuted,k,"LDA",group)
+    # if(paste0("k",k)%in% names(SLDA_full_train) & paste0("k",k) %in% names(SLDA_full_test)){
+    #   alignment <- align_topics(exp(SLDA_full_train[[paste0("k",k)]]$beta),
+    #                             exp(SLDA_full_test[[paste0("k",k)]]$beta),
+    #                             dist="cosine", do.plot=FALSE)
+    #   match_permuted <- alignment$match
+    #   res=res_df(res,match_permuted,k,"SLDA",group)
+    # }
+    # if(paste0("k",k)%in% names(tensorlda_full_train) & paste0("k",k) %in% names(tensorlda_full_test)){
+    #   alignment <- align_topics(exp(tensorlda_full_train[[paste0("k",k)]]$beta),
+    #                             exp(tensorlda_full_test[[paste0("k",k)]]$beta),
+    #                             dist="cosine", do.plot=FALSE)
+    #   match_permuted <- alignment$match
+    # res=res_df(res,match_permuted,k,"tLDA",group) }
   }
-
 }
-}
- res1_4=res
+colnames(res)[colnames(res)=="method"]="Method"
+res2_4=res
 
-write_csv(as.data.frame(res), "C:/Users/建新/Desktop/tensor-topic-modeling/tensor-topic-modeling/real_data/vaginal_permute_subject_1_10.csv")
-res_fi=as.data.frame(res) %>%
-  group_by(method, k) %>%
+res_total=rbind(res1_4,res2_4)
+#write_csv(as.data.frame(res), "real_data/vaginal_permute_subject_1_20_NTD.csv")
+
+colnames(res)[colnames(res)=="method"]="Method"
+
+res_fi=as.data.frame(res_total) %>%
+  group_by(Method, k) %>%
   summarise(min=median(min),
             max=median(max),
             mean=median(mean),
@@ -807,14 +816,13 @@ res_fi=as.data.frame(res) %>%
             q25=median(q25),
             q75=median(q75))
 
-ggplot(res_fi,
-       aes(x=k, y=mean, colour=method))+
+ggplot(res_fi%>%filter(Method %in%  c("LDA","NTD","tLDA","TTM-HOSVD")),
+       aes(x=k, y=median, colour=Method))+
   #geom_smooth(alpha=0.2,se = FALSE)+
-  geom_point()+
+  geom_point(size=3)+
   geom_line()+
-  geom_errorbar(aes(ymin = q25, ymax = q75), width = 0.1, alpha=0.4) +
-  scale_color_manual(values = c( "dodgerblue", "chartreuse2"), breaks = c("Ours","LDA"),
-                     labels = c("Ours","LDA"))+
+  geom_errorbar(aes(ymin = q25, ymax = q75), width =0.2, alpha=2) +
+  scale_color_manual(values = c( "#F8766D", "#7CAE00","#00BFC4","#C77CFF"), breaks = c("LDA","NTD","tLDA","TTM-HOSVD"),labels = c("Hybrid-LDA","NTD","Tensor-LDA","TTM-HOSVD"))+
   ylab("Topic Resolution") +
   xlab("K3")
 
