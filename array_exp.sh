@@ -3,11 +3,11 @@
 #SBATCH --job-name=array
 #SBATCH --output=experiments/logs/array_%A_%a.out
 #SBATCH --error=experiments/logs/array_%A_%a.err
-#SBATCH --array=1-50
+#SBATCH --array=1-100
 #SBATCH --time=24:00:00
-#SBATCH --partition=caslake
+#SBATCH --partition=cdonnat
 #SBATCH --ntasks=1
-#SBATCH --mem=15G
+#SBATCH --mem=20G
 #SBATCH --account=pi-cdonnat
 
 # Print the task id.

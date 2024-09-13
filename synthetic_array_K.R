@@ -33,8 +33,7 @@ for (K1 in K1list){
                                         vary_by_topic=FALSE, sparsity = sparse)
       #write_csv(as.data.frame(matrization_tensor(data$Y,3)), paste0(getwd(), paste0("/synthetic/results/","data")))
       for (method in c("bayesian", "LDA", "STM",  "NTD", "TopicScore-HOSVD", "TTM-HOOI", "TTM-HOSVD")){
-        results <- run_experiment(data=data, K1=K1, K2=K2, K3=K3, 
-                                M=M, method=method)
+        results <- run_experiment(data=data, K1=K1, K2=K2, K3=K3, M=M, method=method)
         error <- update_error(hatA1=results$A1, data$A1,
                               hatA2=results$A2, data$A2,
                               hatA3=results$A3, data$A3,

@@ -105,7 +105,7 @@ fit_LDA <- function(X, K1, K2, K3){
   W3_modified["dim2"] = unlist(lapply(1:Q1, function(x){1:Q2}))
   #### Transform W3 into a tensor
   W3_modified = W3_modified %>%
-    pivot_longer(cols = starts_with("1"):starts_with("4"), 
+    pivot_longer(cols = starts_with("1"):starts_with(as.character(K3)), 
                  names_to = "topic", 
                  values_to = "value")
   
@@ -185,7 +185,7 @@ fit_stm_model <- function(X, K1, K2, K3){
   W3_modified["dim2"] = unlist(lapply(1:Q1, function(x){1:Q2}))
   #### Transform W3 into a tensor
   W3_modified = W3_modified %>%
-    pivot_longer(cols = starts_with("1"):starts_with("4"), 
+    pivot_longer(cols = starts_with("1"):starts_with(as.character(K3)), 
                  names_to = "topic", 
                  values_to = "value")
   
