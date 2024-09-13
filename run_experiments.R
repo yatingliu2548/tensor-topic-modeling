@@ -506,15 +506,13 @@ get_hat_core<- function(Y,A1,A2,A3){
 }
 
 error_update <- function(error,K,Q1,R,Q2,M=M,
-			 K2, K3, mode,method=NULL,time=NULL){
+			 K1, K2, mode,method=NULL,time=NULL){
   error_temp <- data.frame(error=error,
                            K = K,
                            Q1=Q1,
                            R=R,
                            Q2=Q2,
-                           M=M,
-			   K2=K2,
-			   K3=K3,
+                           M=M, K1=K1, K2=K2,
                            mode=mode,method=method,time=time)
   return(error_temp)
 }

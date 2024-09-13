@@ -96,7 +96,7 @@ score <- function(D, K1, K2, K3,
   }
 
   D=tensorization(as.matrix(newD3), 3, Q1, Q2, dim(newD3)[1])
-  if (normalize =="TTM"){
+  if (normalization =="TTM"){
     normM=n/M * diag(tildeM)
     newD =  newD3 %*% t(newD3)  - n/M * normM
     D=tensorization(as.matrix(newD3), 3, Q1, Q2, dim(newD3)[1])

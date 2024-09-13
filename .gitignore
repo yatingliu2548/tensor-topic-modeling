@@ -1,4 +1,6 @@
 synthetic/results/*
+synthetic/results_old/*
+synthetic/results_9_10/*
 experiments/logs/*
 *.csv
 *.RData

@@ -6,7 +6,7 @@ library(stringr)
 directory <- "~/Documents/tensor-topic-modeling/synthetic/results"
 
 # List all files in the directory
-files <- list.files(path = directory, pattern = "*.csv", full.names = TRUE)
+files <- list.files(path = directory, pattern = "exp_2.*\\.csv", full.names = TRUE)
 res <- c()
 for (file in files){
   file_name <- str_extract(file, "[^/]+\\.csv$")  # Extract the file name ending with .csv
@@ -15,9 +15,9 @@ for (file in files){
   split_numbers <- str_split(file_name, "[-_]", simplify = TRUE)
   # Split the numbers by - and _
   temp_df <- read_csv(file)
-  temp_df["K1"] = as.numeric(split_numbers[2])
-  temp_df["K2"] = as.numeric(split_numbers[3])
-  temp_df["K3"] = as.numeric(split_numbers[4])
+  temp_df["K1_check"] = as.numeric(split_numbers[2])
+  temp_df["K2_check"] = as.numeric(split_numbers[3])
+  temp_df["K3_check"] = as.numeric(split_numbers[4])
   temp_df["sparse"] = as.logical(split_numbers[5])
   temp_df["exp"] = as.numeric(split_numbers[6])
   temp_df["seed"] = as.numeric(split_numbers[7])
