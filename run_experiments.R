@@ -385,13 +385,13 @@ update_error<- function(hatA1=NULL,A1,hatA2=NULL,A2,hatA3=NULL,A3,hatcore=NULL,
     errorl1_1 = error_res$error
     perm1 = error_res$permutation
     if (method=="TopicScore"){
-      error_temp <- error_update(error=errorl1_1, K=K1, Q1=Q1, R=R, 
+      error_temp <- error_update(error=errorl1_1, K=K3, Q1=Q1, R=R, 
                                  Q2=Q2, M=M,K1=K1, K2=K2,
                                  mode="A1",method="SPOC",time=time)
       
     }else{
       error_temp <- error_update(error=errorl1_1,
-                                 K=K1, Q1=Q1, R=R, Q2=Q2, M=M,K1=K1, K2=K2,
+                                 K=K3, Q1=Q1, R=R, Q2=Q2, M=M,K1=K1, K2=K2,
                                  mode="A1",method=method,time=time)
       
     }
@@ -406,13 +406,13 @@ update_error<- function(hatA1=NULL,A1,hatA2=NULL,A2,hatA3=NULL,A3,hatcore=NULL,
     errorl1_2 = error_res$error
     perm2 = error_res$permutation
     if (method=="TopicScore"){
-      error_temp <- error_update(error=errorl1_2, K=K1, Q1=Q1, R=R, Q2=Q2, M=M,
+      error_temp <- error_update(error=errorl1_2, K=K3, Q1=Q1, R=R, Q2=Q2, M=M,
 				 K1=K1, K2=K2,
                                  mode="A2",method="SPOC",time=time)
       
     }else{
       error_temp <- error_update(error=errorl1_2,
-                                 K=K2, Q1=Q1, R=R, Q2=Q2, M=M, K1=K1, K2=K2,
+                                 K=K3, Q1=Q1, R=R, Q2=Q2, M=M, K1=K1, K2=K2,
                                  mode="A2",method=method,time=time)
       
     }
@@ -505,16 +505,16 @@ get_hat_core<- function(Y,A1,A2,A3){
   X
 }
 
-error_update <- function(error,K,Q1,R,Q2,M=M,
-			 K2, K3, mode,method=NULL,time=NULL){
+error_update <- function(error,Q1, Q2, R, M,
+			 K1, K2, K, mode,method=NULL,time=NULL){
   error_temp <- data.frame(error=error,
                            K = K,
                            Q1=Q1,
                            R=R,
                            Q2=Q2,
                            M=M,
+			   K1=K1,
 			   K2=K2,
-			   K3=K3,
                            mode=mode,method=method,time=time)
   return(error_temp)
 }
