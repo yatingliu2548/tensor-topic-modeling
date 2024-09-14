@@ -16,8 +16,8 @@ n_anchors = 2
 error <- c()
 print(seed)
 
-Mlist <- c(500, 1000, 5000,  10000)# 
-K1list <- c(2, 5)
+Mlist <- c(500, 1000,  5000, 10000)# 
+K1list <- c(2)
 K3list <- c(2, 3, 5, 7, 10, 15, 20, 30, 50)#
 for (K1 in K1list){
   for (K3 in K3list){

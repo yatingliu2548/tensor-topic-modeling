@@ -19,8 +19,8 @@ Rvalue = as.numeric(args[7])
 error <- c()
 print(c(seed, Rvalue))
 
-Mlist <- c(100, 500, 1000, 5000,  10000, 20000, 50000)# 
-Q1list <- c(10, 50, 100)
+Mlist <- c(100, 500, 1000, 5000,  10000)# 
+Q1list <- c(5, 15, 30)
 Rlist <- c(Rvalue)#
 for (Q1 in Q1list){
   for (M in Mlist){
