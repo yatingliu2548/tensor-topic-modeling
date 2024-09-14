@@ -63,15 +63,18 @@ score <- function(D, K1, K2, K3,
   D3 <- matricization(D, 3)
   print(c(dim(D3), n, t, p))
   print(paste0("Dim voc init: ", p))
+  
+  X=t(D3)
+  #### Select words with non-zero entries
+  active_words = which(apply(X[1:nrow(X),], 2, sum)>0)
+  #### Convert counts to frequencies
+  x_train = t(diag(1/ apply(X[1:nrow(X), active_words],1, sum)) %*% X[1:nrow(X), active_words])
+  #x_train = X[1:nrow(X), active_words]
+  D <- tensorization(as.matrix(x_train), 3, n, t, dim(x_train)[1])
+  tildeM <- as.numeric(rowMeans(x_train))
+  nb_docs = n * t
 
   if (normalization == "TTM"){
-    X=t(D3)
-    #### Select words with non-zero entries
-    active_words = which(apply(X[1:nrow(X),], 2, sum)>0)
-    x_train = t(diag(1/ apply(X[1:nrow(X), active_words],1, sum)) %*% X[1:nrow(X), active_words])
-    D=tensorization(as.matrix(x_train), 3, n, t, dim(x_train)[1])
-    tildeM <- as.numeric(rowMeans(x_train))
-    nb_docs = n * t
     if (threshold){
       threshold_J = alpha * sqrt(log(max(p,n))/(M *n))
       print(sprintf("Threshold for alpha = %f  is %f ", alpha, threshold_J))
@@ -93,6 +96,11 @@ score <- function(D, K1, K2, K3,
       newD3 = as.matrix(x_train)
       setJ = 1:length(tildeM)
     }
+  }else{
+    new_p = p
+    newD3 = as.matrix(x_train)
+    newD3 = as.matrix(x_train)
+    setJ = 1:length(tildeM)
   }
 
   D=tensorization(as.matrix(newD3), 3, Q1, Q2, dim(newD3)[1])
@@ -102,14 +110,7 @@ score <- function(D, K1, K2, K3,
     D=tensorization(as.matrix(newD3), 3, Q1, Q2, dim(newD3)[1])
     print(c(dim(D)))
   }
-  
-  
   if (normalization =="TopicScore"){
-    X=t(D3)
-    active_words = which(apply(X[1:nrow(X),], 2, sum)>0)
-    x_train = t(diag(1/ apply(X[1:nrow(X), active_words],1, sum)) %*% X[1:nrow(X), active_words])
-    D=tensorization(as.matrix(x_train), 3, n, t, dim(x_train)[1])
-    
     D3 <- matricization(D, 3)
     tildeM <- as.numeric(rowMeans(D3))
     D3_ts <- diag(sqrt(tildeM^(-1))) %*% D3

@@ -282,7 +282,7 @@ run_experiment<- function(data, K1, K2, K3, M, method, threshold=FALSE){
    if (method =="TTM-HOSVD"){
     elapsed_timeOurs <- system.time({
       tmp<-tryCatch(
-        score(data$D/M, normalization="TTM", method = "HOSVD", K1=K1, K2=K2, K3=K3, M=M,
+        score(data$D, normalization="TTM", method = "HOSVD", K1=K1, K2=K2, K3=K3, M=M,
               as.sparse = FALSE),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
@@ -311,7 +311,7 @@ run_experiment<- function(data, K1, K2, K3, M, method, threshold=FALSE){
   if (method =="TTM-HOOI"){
     elapsed_timeOurs <- system.time({
       tmp<-tryCatch(
-        score(data$D/M, normalization="TTM", method = "HOOI", 
+        score(data$D, normalization="TTM", method = "HOOI", 
               K1=K1, K2=K2, K3=K3, M=M,
               as.sparse = FALSE),
         error = function(err) {
@@ -342,7 +342,7 @@ run_experiment<- function(data, K1, K2, K3, M, method, threshold=FALSE){
   if (method =="TopicScore-HOSVD"){
     elapsed_timeOurs <- system.time({
       tmp<-tryCatch(
-        score(data$D/M, normalization="TopicScore", method = "HOSVD", K1=K1, K2=K2, K3=K3, M=M,
+        score(data$D, normalization="TopicScore", method = "HOSVD", K1=K1, K2=K2, K3=K3, M=M,
               as.sparse = FALSE),
         error = function(err) {
           # Code to handle the error (e.g., print an error message, log the error, etc.)
