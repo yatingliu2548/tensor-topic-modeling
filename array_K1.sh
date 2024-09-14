@@ -3,7 +3,7 @@
 #SBATCH --job-name=array_K1
 #SBATCH --output=experiments/logs/exp_K1_array_%A_%a.out
 #SBATCH --error=experiments/logs/exp_K1_array_%A_%a.err
-#SBATCH --array=1-25
+#SBATCH --array=1-50
 #SBATCH --time=12:00:00
 #SBATCH --partition=caslake
 #SBATCH --ntasks=1

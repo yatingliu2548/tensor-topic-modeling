@@ -14,7 +14,7 @@ run_experiment<- function(data, K1, K2, K3, M, method, threshold=FALSE){
   A2 <- data$A2
   A3 <- data$A3
   core <- data$G
-
+  K <- K3
   Y <- data$D
   Q1 <- dim(A1)[1]
   Q2 <- dim(A2)[1]
