@@ -1,7 +1,9 @@
 synthetic/results/*
 synthetic/results_old/*
 synthetic/results_9_10/*
+synthetic/results_9_13/*
 experiments/logs/*
 *.csv
+*.png
 *.RData
 *.Rhistory

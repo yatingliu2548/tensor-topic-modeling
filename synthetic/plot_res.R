@@ -3,7 +3,7 @@ library(stringr)
 
 
 # Set your directory where files are located
-directory <- "~/Documents/tensor-topic-modeling/synthetic/results"
+directory <- "~/Documents/tensor-topic-modeling/synthetic/results_9_13/results"
 
 # List all files in the directory
 files <- list.files(path = directory, pattern = "exp_2.*\\.csv", full.names = TRUE)
@@ -24,10 +24,10 @@ for (file in files){
   res <- rbind(res, temp_df)
 }
 
-
+res["K3"] = res$K
 
 res_summary <- res %>% 
-  group_by(Q1, Q2, R, M, K1, K2, K3, mode, method, sparse) %>%
+  group_by(Q1, Q2, R, M, K1, K2, K, mode, method, sparse) %>%
   summarise(error_mean = mean(error),
             error_q25 = quantile(error, 0.25),
             error_q50 = quantile(error, 0.5),
@@ -37,6 +37,7 @@ res_summary <- res %>%
             time_q25 = quantile(time, 0.25),
             time_q50 = quantile(time, 0.5),
             time_q75 = quantile(time, 0.75))
+
 unique(res$K1)
 unique(res$K2)
 unique(res$R)
@@ -44,7 +45,7 @@ unique(res$K3)
 unique(res$Q2)
 unique(res$Q1)
 unique(res$M)
-no_go <- which((res_summary$Q1 == 100) & (res_summary$Q2 == 30))
+unique(res_summary$K)
 
 res_summary <- res_summary %>% 
   mutate(M_title = paste0("M = ", M),
@@ -58,17 +59,170 @@ res_summary <- res_summary %>%
 res_summary$R_title = factor(res_summary$R_title ,
                              levels = c("R = 100", "R = 500", "R = 1000",
                                         "R = 5000","R = 10000",
-                                        "R = 20000","R = 50000"))
+                                        "R = 20000","R = 30000","R = 50000"))
 
-ggplot(res_summary%>% filter(mode == "core",
-                       K2 == 2), aes(x = M, y = error_q50,
+test1 = res_summary%>% filter(mode == "A1")
+test2 = res_summary%>% filter(mode == "core")
+
+
+legend_order <- c( "Tensor LDA" , "Hybrid LDA",
+                   "STM" ,
+                  "NTD" ,
+                  "TopicScore-HOSVD",
+                  "TTM-HOSVD",
+                  "TTM-HOOI" )
+my_colors <- c( "black", "skyblue", "chartreuse4", "orange", "grey", "purple", "magenta")
+
+labels_n <- c( "Tensor LDA" , "Hybrid LDA",
+                  "STM" ,
+                  "NTD" ,
+                  "TopicScore-HOSVD",
+                  "TTM-HOSVD",
+                  "TTM-HOOI" )
+theme_set(theme_bw(base_size = 18))
+
+
+
+
+ggplot(res_summary%>% filter(mode == "A1"), aes(x = M, y = error_q50,
                                           colour = method_name)) + 
   geom_line(position = position_dodge(width = 0.15), linewidth=0.6) + 
   geom_point(position = position_dodge(width = 0.15), size=2) + 
   geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
                 position = position_dodge(width = 0.15), size = 0.6) + 
-  facet_grid(Q1Q2_title ~ R_title, scales="free") + 
+  facet_grid(Q1Q2_title ~ R_title + K, scales="free") + 
+  ylab("Core : l1 error")+ 
+  scale_y_log10() + 
+  scale_x_log10() + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  labs(colour = "Method") + 
+  theme_bw()
+
+dim(res_summary%>% filter(mode == "A1",
+                          K2 == 2))
+dim(res_summary%>% filter(mode == "A3",
+                          K2 == 2))
+
+unique(res_summary$K)
+test = res_summary%>% filter( K == 4)
+unique(res_summary$K)
+
+
+ggplot(res_summary%>% filter(mode == "A1", R<20000, Q1<20), 
+       aes(x = M, y = error_q50,
+                                           colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.15), linewidth=0.8) + 
+  geom_point(position = position_dodge(width = 0.15), size=2.5) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.15), 
+                alpha =0.8, size = 0.5) + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  facet_grid(Q1Q2_title ~ R_title, scales="free", 
+             labeller = as_labeller(c("R = 1000" = "R = 1,000",
+                                      "R = 10000" = "R = 10,000",
+                                      "Q1 = 10\nQ2 = 10" =  "Q1 = 10\nQ2 = 10"))) + 
   ylab("Mode 1 : l1 error")+ 
+  #scale_y_log10() + 
+  scale_x_log10() + 
+  labs(colour = "Method") + 
+  theme_bw()
+
+
+ggplot(res_summary%>% filter(mode == "A3", Q1<60,R<20000), 
+       aes(x = M, y = error_q50,
+           colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.15), linewidth=0.8) + 
+  geom_point(position = position_dodge(width = 0.15), size=2.5) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.15), 
+                alpha =0.8, size = 0.5) + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  facet_grid(Q1Q2_title ~ R_title, scales="free", 
+             labeller = as_labeller(c("R = 1000" = "R = 1,000",
+                                      "R = 10000" = "R = 10,000",
+                                      "Q1 = 10\nQ2 = 10" =  "Q1 = 10\nQ2 = 10",
+                                      "Q1 = 50\nQ2 = 50" =  "Q1 = 50\nQ2 = 50"))) + 
+  ylab("A3: l1 error")+ 
+  #scale_y_log10() + 
+  scale_x_log10() + 
+  labs(colour = "Method") + 
+  theme_bw()
+
+ggplot(res_summary%>% filter(mode == "core", Q1<60,R<20000), 
+       aes(x = M, y = error_q50,
+           colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.15), linewidth=0.8) + 
+  geom_point(position = position_dodge(width = 0.15), size=2.5) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.15), 
+                alpha =0.8, size = 0.5) + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  facet_grid(Q1Q2_title ~ R_title, scales="free", 
+             labeller = as_labeller(c("R = 1000" = "R = 1,000",
+                                      "R = 10000" = "R = 10,000",
+                                      "Q1 = 10\nQ2 = 10" =  "Q1 = 10\nQ2 = 10",
+                                      "Q1 = 50\nQ2 = 50" =  "Q1 = 50\nQ2 = 50"))) + 
+  ylab("core: l1 error")+ 
+  #scale_y_log10() + 
+  scale_x_log10() + 
+  labs(colour = "Method") + 
+  theme_bw()
+
+ggplot(res_summary%>% filter(mode == "A2", Q1 <51,
+                             K2 == 2), aes(x = M, y = error_q50,
+                                           colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.15), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.15), size=2) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.15), size = 0.6) + 
+  facet_grid(Q1Q2_title ~ R_title, scales="free") + 
+  ylab("Mode 2 : l1 error")+ 
+  scale_y_log10() + 
+  scale_x_log10() + 
+  labs(colour = "Method") + 
+  theme_bw()
+
+ggplot(res_summary%>% filter(mode == "core", Q1 <51,
+                             K2 == 2), aes(x = M, y = error_mean,
+                                           colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.15), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.15), size=2) + 
+  #geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+  #              position = position_dodge(width = 0.15), size = 0.6) + 
+  facet_grid(Q1Q2_title ~ R_title, scales="free") + 
+  ylab("Core : l1 error")+ 
+  scale_y_log10() + 
+  scale_x_log10() + 
+  labs(colour = "Method") + 
+  theme_bw()
+
+ggplot(res_summary%>% filter(mode == "A3", Q1 <51,
+                             K2 == 2), aes(x = M, y = error_mean,
+                                           colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.15), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.15), size=2) + 
+  #geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+  #              position = position_dodge(width = 0.15), size = 0.6) + 
+  facet_grid(Q1Q2_title ~ R_title, scales="free") + 
+  ylab("Mode 3 : l1 error")+ 
+  scale_y_log10() + 
+  scale_x_log10() + 
+  labs(colour = "Method") + 
+  theme_bw()
+
+unique(res_summary$K)
+ggplot(res_summary%>% filter(mode == "A3", M==100), aes(x = R, y = error_mean,
+                                           colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.15), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.15), size=2) + 
+  #geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+  #              position = position_dodge(width = 0.15), size = 0.6) + 
+  facet_grid(Q1Q2_title ~ K + K1, scales="free") + 
+  ylab("Mode 3 : l1 error")+ 
   scale_y_log10() + 
   scale_x_log10() + 
   labs(colour = "Method") + 
