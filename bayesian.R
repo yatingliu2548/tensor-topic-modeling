@@ -38,7 +38,7 @@ fit_bayesian_model <- function(X, K1, K2, K3,
   # Extracting the reviewer type distributions (reviewer_type)
   reviewer_type_mean <- apply(reviewer_type_samples, c(2, 3), mean)  # Mean across iterations
   reviewer_type_mean = data.frame(reviewer_type_mean)
-  colnames(reviewer_type_mean) = c("Type 1", "Type 2")
+  colnames(reviewer_type_mean) = sapply(1:K1, function(x){paste0("Cluster ", x)})
   reviewer_type_mean["sample"] = sapply(1:Q1, function(x){paste0("Reviewer ", x)})
   # Convert to long format
   reviewer_type_df <- pivot_longer(reviewer_type_mean, cols = -c("sample"))
