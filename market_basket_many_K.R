@@ -24,13 +24,16 @@ doc_length = apply(X[, active_words], 1, sum)
 x_train = t(diag(1/ doc_length) %*% X[, active_words])
 R <- length(active_words)
 X_train <- tensorization(as.matrix(x_train), 3, Q1, Q2, R)
-data <- list(D = D_new,
+data_list <- list(D = D_new,
              X =  X_train)
-stoppppppppp
+
 #for (K3 in c(23, 20, 18, 15, 12, 10, 8, 7, 6 ,5)){
+M = median(apply(D3, 2, sum))
+stoppppp
+save(data_list, K1, K2, M, file= "~/Downloads/market_basket_data_small.RData"
+     )
 for (K3 in c(23, 20, 18, 15, 12)){
   for (method in c("TTM-HOOI", "TTM-HOSVD",  "TopicScore-HOSVD", "NTD")){
-    M = median(apply(D3, 2, sum))
     results <- run_method(data, K1=K1, K2=K2, K3=K3, M=M, 
                           method=method)
     save(results, file=paste0("~/Downloads/market_basket", 
