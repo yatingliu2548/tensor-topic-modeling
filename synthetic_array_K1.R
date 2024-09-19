@@ -18,7 +18,7 @@ print(seed)
 
 Mlist <- c(500, 1000, 5000)# 
 K1list <- c(2, 5, 7, 10)
-K3list <- c(5)#
+K3list <- c(3)#
 for (M in Mlist){
   for (K3 in K3list){
     for (K1 in K1list){
@@ -45,7 +45,7 @@ for (M in Mlist){
         
         print(paste0("Done with method ", method))
 	print(error)
-        write_csv(error, paste0("/scratch/midway3/cdonnat/tensor-topic-modeling/tensor-topic-modeling/synthetic/results/",result_file, ".csv"))
+        write_csv(error, paste0("/scratch/midway3/cdonnat/tensor-topic-modeling/tensor-topic-modeling/synthetic/new_final/",result_file, ".csv"))
       }
     }
   }
