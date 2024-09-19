@@ -36,6 +36,7 @@ quantile(test_product$count, probs = seq(0, 1, 0.1))
 test_product_filtered = test_product %>%
   filter(count > product_count_threshold)
 test_product_filtered["ID"]= 1:nrow(test_product_filtered)
+write_csv(test_product_filtered, "~/Downloads/product_filtered.csv")
 transac2 = left_join(transac,
                      test_product_filtered)
 transac2 = transac2 %>%
@@ -182,7 +183,7 @@ data4analysis = temp_data %>%
 data4analysis = 
   data4analysis %>%
   arrange(household_key, bins) 
-
+STOP
 #data4analysis["total"] = apply(data4analysis[,3:ncol(data4analysis)], 1, sum)
 
 D = tensorization(t(as.matrix(data4analysis[, 3:(ncol(data4analysis))])), mode=3,

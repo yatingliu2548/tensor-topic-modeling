@@ -71,6 +71,8 @@ score <- function(D, K1, K2, K3,
   }
   #### Select words with non-zero entries
   if(sum(X[1,])!=1){
+    print("Processing data to frequency")
+    print(sum(X[1,]))
     active_words = which(apply(X[1:nrow(X),], 2, sum)>0)
     #### Convert counts to frequencies
     doc_length = apply(X[, active_words],1, sum)
@@ -80,12 +82,14 @@ score <- function(D, K1, K2, K3,
     active_words = 1:R
     x_train = X
   }
+  nb_docs = dim(x_train)[1]
   R = dim(x_train)[2]
   #x_train = X[1:nrow(X), active_words]
+  x_train = t(x_train)
   D <- tensorization(as.matrix(x_train), 3, Q1, Q2, R)
   #Dtilde <- tensorization(as.matrix(x_train), 3, n, t, dim(x_train)[1])
   tildeM <- as.numeric(rowMeans(x_train))
-  nb_docs = dim(x_train)[2]
+
 
   if (normalization == "TTM"){
     if (threshold){
@@ -106,12 +110,10 @@ score <- function(D, K1, K2, K3,
     }else{
       new_p = R
       newD3 = as.matrix(x_train)
-      newD3 = as.matrix(x_train)
       setJ = 1:length(tildeM)
     }
   }else{
     new_p = R
-    newD3 = as.matrix(x_train)
     newD3 = as.matrix(x_train)
     setJ = 1:length(tildeM)
   }
@@ -120,6 +122,7 @@ score <- function(D, K1, K2, K3,
   if (normalization =="TTM"){
     normM=nb_docs/M * diag(tildeM)
     newD =  newD3 %*% t(newD3)  - normM
+    print("Normalization by  TTM yields dimensions:")
     print(c(dim(D)))
   }
   if (normalization =="TopicScore"){

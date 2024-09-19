@@ -7,6 +7,7 @@ library(tidytext)
 source("algorithm.R")
 source("bayesian.R")
 source("NTD.R")
+source("tensor_operations.r")
 
 
 run_method <- function(data, K1, K2, K3, M, method, threshold=FALSE){
