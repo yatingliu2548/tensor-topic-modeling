@@ -3,7 +3,7 @@ library(stringr)
 
 
 # Set your directory where files are located
-directory <- "~/Documents/tensor-topic-modeling/synthetic/results_9_13/results"
+directory <- "~/Documents/tensor-topic-modeling/synthetic/results_final/results_final"
 
 # List all files in the directory
 files <- list.files(path = directory, pattern = "exp_2.*\\.csv", full.names = TRUE)
@@ -61,6 +61,16 @@ res_summary$R_title = factor(res_summary$R_title ,
                                         "R = 5000","R = 10000",
                                         "R = 20000","R = 30000","R = 50000"))
 
+
+res_summary$Q1Q2_title = factor(res_summary$Q1Q2_title ,
+                             levels = c( "Q1 = 5\nQ2 = 5",
+                                         "Q1 = 10\nQ2 = 10",
+                                         "Q1 = 15\nQ2 = 15" , 
+                                         "Q1 = 30\nQ2 = 30",
+                                         "Q1 = 50\nQ2 = 50",
+                                         "Q1 = 70\nQ2 = 70",
+                                         "Q1 = 100\nQ2 = 100"))
+
 test1 = res_summary%>% filter(mode == "A1")
 test2 = res_summary%>% filter(mode == "core")
 
@@ -83,16 +93,375 @@ theme_set(theme_bw(base_size = 18))
 
 
 
+unique(res_summary$method)
+unique(res_summary$M)
 
-ggplot(res_summary%>% filter(mode == "A1"), aes(x = M, y = error_q50,
+ggplot(res_summary%>% filter(mode == "A1", R<30000,Q1==5), aes(x = M, y = error_q50,
                                           colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.2), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.2), size=2) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.2), size = 0.6) + 
+  facet_grid(Q1Q2_title ~ R_title, scales="free", 
+             labeller = as_labeller(c("R = 1000" = "R = 1,000",
+                                      "R = 10000" = "R = 10,000",
+                                      "R = 500" = "R = 500",
+                                      "R = 5000" = "R = 5,000",
+                                      "R = 30000" = "R = 30,000",
+                                      "Q1 = 10\nQ2 = 10" =  "N1 = 10\nN2 = 10",
+                                      "Q1 = 5\nQ2 = 5" =    "N1 = 5\nN2 = 5",
+                                      "Q1 = 10\nQ2 = 10"=    "N1 = 10\nN2 = 10",
+                                      "Q1 = 15\nQ2 = 15" = "N1 = 15\nN2 = 15" , 
+                                      "Q1 = 30\nQ2 = 30"=   "N1 = 30\nN2 = 30",
+                                      "Q1 = 50\nQ2 = 50"="N1 = 50\nN2 = 50",
+                                      "Q1 = 70\nQ2 = 70"="N1 = 70\nN2 = 70",
+                                      "Q1 = 100\nQ2 = 100"=    "N1 = 100\nN2 = 100"))) + 
+  ylab("A1 : l1 error")+ 
+  scale_y_log10() + 
+  scale_x_log10() + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  labs(colour = "Method") + 
+  theme_bw()
+
+
+ggplot(res_summary%>% filter(mode == "A3", R<30000,Q1==5), aes(x = M, y = error_q50,
+                                                               colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.2), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.2), size=2) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.2), size = 0.6) + 
+  facet_grid(Q1Q2_title ~ R_title, scales="free", 
+             labeller = as_labeller(c("R = 1000" = "R = 1,000",
+                                      "R = 10000" = "R = 10,000",
+                                      "R = 500" = "R = 500",
+                                      "R = 5000" = "R = 5,000",
+                                      "R = 30000" = "R = 30,000",
+                                      "Q1 = 10\nQ2 = 10" =  "N1 = 10\nN2 = 10",
+                                      "Q1 = 5\nQ2 = 5" =    "N1 = 5\nN2 = 5",
+                                      "Q1 = 10\nQ2 = 10"=    "N1 = 10\nN2 = 10",
+                                      "Q1 = 15\nQ2 = 15" = "N1 = 15\nN2 = 15" , 
+                                      "Q1 = 30\nQ2 = 30"=   "N1 = 30\nN2 = 30",
+                                      "Q1 = 50\nQ2 = 50"="N1 = 50\nN2 = 50",
+                                      "Q1 = 70\nQ2 = 70"="N1 = 70\nN2 = 70",
+                                      "Q1 = 100\nQ2 = 100"=    "N1 = 100\nN2 = 100"))) + 
+  ylab("A3 : l1 error")+ 
+  scale_y_log10() + 
+  scale_x_log10() + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  labs(colour = "Method") + 
+  theme_bw()
+
+ggplot(res_summary%>% filter(mode == "A3"), aes(x = M, y = error_q50,
+                                                               colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.2), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.2), size=2) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.2), size = 0.6) + 
+  facet_grid(Q1Q2_title ~ R_title, scales="free", 
+             labeller = as_labeller(c("R = 1000" = "R = 1,000",
+                                      "R = 10000" = "R = 10,000",
+                                      "R = 500" = "R = 500",
+                                      "R = 5000" = "R = 5,000",
+                                      "R = 30000" = "R = 30,000",
+                                      "Q1 = 10\nQ2 = 10" =  "N1 = 10\nN2 = 10",
+                                      "Q1 = 5\nQ2 = 5" =    "N1 = 5\nN2 = 5",
+                                      "Q1 = 10\nQ2 = 10"=    "N1 = 10\nN2 = 10",
+                                      "Q1 = 15\nQ2 = 15" = "N1 = 15\nN2 = 15" , 
+                                      "Q1 = 30\nQ2 = 30"=   "N1 = 30\nN2 = 30",
+                                      "Q1 = 50\nQ2 = 50"="N1 = 50\nN2 = 50",
+                                      "Q1 = 70\nQ2 = 70"="N1 = 70\nN2 = 70",
+                                      "Q1 = 100\nQ2 = 100"=    "N1 = 100\nN2 = 100"))) + 
+  ylab("Core : l1 error")+ 
+  scale_y_log10() + 
+  scale_x_log10() + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  labs(colour = "Method") + 
+  theme_bw()
+
+
+ggplot(res_summary%>% filter(mode == "core", R==500), aes(x = M, y = error_q50,
+                                                  colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.2), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.2), size=2) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.2), size = 0.6) + 
+  facet_grid(R_title ~ Q1Q2_title, scales="free", 
+             labeller = as_labeller(c("R = 1000" = "R = 1,000",
+                                      "R = 10000" = "R = 10,000",
+                                      "R = 500" = "R = 500",
+                                      "R = 5000" = "R = 5,000",
+                                      "R = 30000" = "R = 30,000",
+                                      "Q1 = 10\nQ2 = 10" =  "N1 = 10\nN2 = 10",
+                                      "Q1 = 5\nQ2 = 5" =    "N1 = 5\nN2 = 5",
+                                      "Q1 = 10\nQ2 = 10"=    "N1 = 10\nN2 = 10",
+                                      "Q1 = 15\nQ2 = 15" = "N1 = 15\nN2 = 15" , 
+                                      "Q1 = 30\nQ2 = 30"=   "N1 = 30\nN2 = 30",
+                                      "Q1 = 50\nQ2 = 50"="N1 = 50\nN2 = 50",
+                                      "Q1 = 70\nQ2 = 70"="N1 = 70\nN2 = 70",
+                                      "Q1 = 100\nQ2 = 100"=    "N1 = 100\nN2 = 100"))) + 
+  ylab("Core : l1 error")+ 
+  #scale_y_log10() + 
+  scale_x_log10() + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  labs(colour = "Method") + 
+  theme_bw()
+
+ggplot(res_summary%>% filter(mode == "A3"), aes(x =R, y = error_q50,
+                                                          colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.1), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.1), size=2) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.1), size = 0.6) + 
+  facet_grid(M_title ~ Q1Q2_title, scales="free") + 
+  ylab("A3 : l1 error")+ 
+  scale_y_log10() + 
+  scale_x_log10() + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  labs(colour = "Method") + 
+  theme_bw()
+
+ggplot(res_summary%>% filter(mode == "core"), aes(x =R, y = error_q50,
+                                                colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.1), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.1), size=2) + 
+  #geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+  #              position = position_dodge(width = 0.1), size = 0.6) + 
+  facet_grid(M_title ~ Q1Q2_title, scales="free") + 
+  ylab("Core : l1 error")+ 
+  scale_y_log10() + 
+  scale_x_log10() + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  labs(colour = "Method") + 
+  theme_bw()
+
+ggplot(res_summary%>% filter(mode == "A3", Q1>10, Q1<51), aes(x =M, y = error_q50,
+                                                  colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.1), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.1), size=2) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.1), size = 0.6) + 
+  facet_grid(R_title ~ Q1Q2_title, scales="free", labeller = as_labeller(c("R = 1000" = "R = 1,000",
+                                                                           "R = 10000" = "R = 10,000",
+                                                                           "R = 500" = "R = 500",
+                                                                           "R = 5000" = "R = 5,000",
+                                                                           "R = 30000" = "R = 30,000",
+                                                                           "Q1 = 10\nQ2 = 10" =  "N1 = 10\nN2 = 10",
+                                                                           "Q1 = 5\nQ2 = 5" =    "N1 = 5\nN2 = 5",
+                                                                           "Q1 = 10\nQ2 = 10"=    "N1 = 10\nN2 = 10",
+                                                                           "Q1 = 15\nQ2 = 15" = "N1 = 15\nN2 = 15" , 
+                                                                           "Q1 = 30\nQ2 = 30"=   "N1 = 30\nN2 = 30",
+                                                                           "Q1 = 50\nQ2 = 50"="N1 = 50\nN2 = 50",
+                                                                           "Q1 = 70\nQ2 = 70"="N1 = 70\nN2 = 70",
+                                                                           "Q1 = 100\nQ2 = 100"=    "N1 = 100\nN2 = 100")))+ 
+  ylab("Core : l1 error")+ 
+  scale_y_log10() + 
+  scale_x_log10() + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  labs(colour = "Method") + 
+  theme_bw()
+
+
+unique(res_summary$Q1)
+ggplot(res_summary%>% filter(mode == "A3"), aes(x = Q1, y = error_q50,
+                                                       colour = method_name)) + 
   geom_line(position = position_dodge(width = 0.15), linewidth=0.6) + 
   geom_point(position = position_dodge(width = 0.15), size=2) + 
   geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
                 position = position_dodge(width = 0.15), size = 0.6) + 
-  facet_grid(Q1Q2_title ~ R_title + K, scales="free") + 
+  facet_grid(M_title ~ R_title, scales="free", 
+             labeller = as_labeller(c("R = 1000" = "R = 1,000",
+                                      "R = 10000" = "R = 10,000",
+                                      "R = 500" = "R = 500",
+                                      "R = 5000" = "R = 5,000",
+                                      "R = 30000" = "R = 30,000",
+                                      "Q1 = 10\nQ2 = 10" =  "N1 = 10\nN2 = 10",
+                                      "Q1 = 5\nQ2 = 5" =    "N1 = 5\nN2 = 5",
+                                      "Q1 = 10\nQ2 = 10"=    "N1 = 10\nN2 = 10",
+                                      "Q1 = 15\nQ2 = 15" = "N1 = 15\nN2 = 15" , 
+                                      "Q1 = 30\nQ2 = 30"=   "N1 = 30\nN2 = 30",
+                                      "Q1 = 50\nQ2 = 50"="N1 = 50\nN2 = 50",
+                                      "Q1 = 100\nQ2 = 100"=    "N1 = 100\nN2 = 100"))) + 
+  ylab("A1 : l1 error")+ 
+  #scale_y_log10() + 
+  scale_x_log10() + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  labs(colour = "Method") + 
+  theme_bw()
+
+
+
+ggplot(res_summary%>% filter(mode == "A3"), aes(x = M, y = error_q50,
+                                                       colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.15), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.15), size=2) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.15), size = 0.6) + 
+  facet_grid(Q1Q2_title ~ R_title, scales="free", 
+             labeller = as_labeller(c("R = 1000" = "R = 1,000",
+                                      "R = 10000" = "R = 10,000",
+                                      "R = 500" = "R = 500",
+                                      "R = 5000" = "R = 5,000",
+                                      "R = 30000" = "R = 30,000",
+                                      "Q1 = 10\nQ2 = 10" =  "N1 = 10\nN2 = 10",
+                                      "Q1 = 5\nQ2 = 5" =    "N1 = 5\nN2 = 5",
+                                      "Q1 = 10\nQ2 = 10"=    "N1 = 10\nN2 = 10",
+                                      "Q1 = 15\nQ2 = 15" = "N1 = 15\nN2 = 15" , 
+                                      "Q1 = 30\nQ2 = 30"=   "N1 = 30\nN2 = 30",
+                                      "Q1 = 50\nQ2 = 50"="N1 = 50\nN2 = 50",
+                                      "Q1 = 100\nQ2 = 100"=    "N1 = 100\nN2 = 100"))) + 
+  ylab("A3 : l1 error")+ 
+  scale_y_log10() + 
+  scale_x_log10() + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  labs(colour = "Method") + 
+  theme_bw()
+
+ggplot(res_summary%>% filter(mode == "core"), aes(x = M, y = error_q50,
+                                                colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.15), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.15), size=2) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.15), size = 0.6) + 
+  facet_grid(Q1Q2_title ~ R_title, scales="free", 
+             labeller = as_labeller(c("R = 1000" = "R = 1,000",
+                                      "R = 10000" = "R = 10,000",
+                                      "R = 500" = "R = 500",
+                                      "R = 5000" = "R = 5,000",
+                                      "R = 30000" = "R = 30,000",
+                                      "Q1 = 10\nQ2 = 10" =  "N1 = 10\nN2 = 10",
+                                      "Q1 = 5\nQ2 = 5" =    "N1 = 5\nN2 = 5",
+                                      "Q1 = 10\nQ2 = 10"=    "N1 = 10\nN2 = 10",
+                                      "Q1 = 15\nQ2 = 15" = "N1 = 15\nN2 = 15" , 
+                                      "Q1 = 30\nQ2 = 30"=   "N1 = 30\nN2 = 30",
+                                      "Q1 = 50\nQ2 = 50"="N1 = 50\nN2 = 50",
+                                      "Q1 = 100\nQ2 = 100"=    "N1 = 100\nN2 = 100"))) + 
   ylab("Core : l1 error")+ 
   scale_y_log10() + 
+  scale_x_log10() + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  labs(colour = "Method") + 
+  theme_bw()
+
+ggplot(res_summary%>% filter(mode == "A3",
+                             method!="bayesian"), aes(x = R, y = error_q50,
+                                                colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.15), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.15), size=2) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.15), size = 0.6) + 
+  facet_grid(Q1Q2_title ~ M_title, scales="free") + 
+  ylab("A3 : l1 error")+ 
+  scale_y_log10() + 
+  scale_x_log10() + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  labs(colour = "Method") + 
+  theme_bw()
+
+unique(res_summary$Q1)
+ggplot(res_summary%>% filter(mode == "A3"), aes(x = Q1, y = error_q50,
+                                                       colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.15), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.15), size=2) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.15), size = 0.6) + 
+  facet_grid(M_title ~ R_title, scales="free", 
+             labeller = as_labeller(c("R = 1000" = "R = 1,000",
+                                      "R = 10000" = "R = 10,000",
+                                      "R = 500" = "R = 500",
+                                      "R = 5000" = "R = 5,000",
+                                      "R = 30000" = "R = 30,000",
+                                      "Q1 = 10\nQ2 = 10" =  "N1 = 10\nN2 = 10",
+                                      "Q1 = 5\nQ2 = 5" =    "N1 = 5\nN2 = 5",
+                                      "Q1 = 10\nQ2 = 10"=    "N1 = 10\nN2 = 10",
+                                      "Q1 = 15\nQ2 = 15" = "N1 = 15\nN2 = 15" , 
+                                      "Q1 = 30\nQ2 = 30"=   "N1 = 30\nN2 = 30",
+                                      "Q1 = 50\nQ2 = 50"="N1 = 50\nN2 = 50",
+                                      "Q1 = 100\nQ2 = 100"=    "N1 = 100\nN2 = 100"))) + 
+  ylab("A3 : l1 error")+ 
+  scale_y_log10() + 
+  scale_x_log10() + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  labs(colour = "Method") + 
+  theme_bw()
+
+
+
+ggplot(res_summary%>% filter(mode == "core"), aes(x = Q1, y = error_q50,
+                                                colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.15), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.15), size=2) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.15), size = 0.6) + 
+  facet_grid(M_title ~ R_title, scales="free", 
+             labeller = as_labeller(c("R = 1000" = "R = 1,000",
+                                      "R = 10000" = "R = 10,000",
+                                      "R = 500" = "R = 500",
+                                      "R = 5000" = "R = 5,000",
+                                      "R = 30000" = "R = 30,000",
+                                      "Q1 = 10\nQ2 = 10" =  "N1 = 10\nN2 = 10",
+                                      "Q1 = 5\nQ2 = 5" =    "N1 = 5\nN2 = 5",
+                                      "Q1 = 10\nQ2 = 10"=    "N1 = 10\nN2 = 10",
+                                      "Q1 = 15\nQ2 = 15" = "N1 = 15\nN2 = 15" , 
+                                      "Q1 = 30\nQ2 = 30"=   "N1 = 30\nN2 = 30",
+                                      "Q1 = 50\nQ2 = 50"="N1 = 50\nN2 = 50",
+                                      "Q1 = 100\nQ2 = 100"=    "N1 = 100\nN2 = 100"))) + 
+  ylab("Core : l1 error")+ 
+  scale_y_log10() + 
+  scale_x_log10() + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  labs(colour = "Method") + 
+  theme_bw()
+
+ggplot(res_summary%>% filter(mode == "core"), aes(x = M, y = error_q50,
+                                                colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.15), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.15), size=2) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.15), size = 0.6) + 
+  facet_grid(Q1Q2_title ~ R_title, scales="free", 
+             labeller = as_labeller(c("R = 1000" = "R = 1,000",
+                                      "R = 10000" = "R = 10,000",
+                                      "R = 500" = "R = 500",
+                                      "R = 5000" = "R = 5,000",
+                                      "R = 30000" = "R = 30,000",
+                                      "Q1 = 10\nQ2 = 10" =  "N1 = 10\nN2 = 10",
+                                      "Q1 = 5\nQ2 = 5" =    "N1 = 5\nN2 = 5",
+                                      "Q1 = 10\nQ2 = 10"=    "N1 = 10\nN2 = 10",
+                                      "Q1 = 15\nQ2 = 15" = "N1 = 15\nN2 = 15" , 
+                                      "Q1 = 30\nQ2 = 30"=   "N1 = 30\nN2 = 30",
+                                      "Q1 = 50\nQ2 = 50"="N1 = 50\nN2 = 50",
+                                      "Q1 = 100\nQ2 = 100"=    "N1 = 100\nN2 = 100"))) + 
+  ylab("Core : l1 error")+ 
+  scale_y_log10() + 
+  scale_x_log10() + 
+  scale_color_manual(values = my_colors, breaks = legend_order,
+                     labels = labels_n) +
+  labs(colour = "Method") + 
+  theme_bw()
+
+
+ggplot(res_summary%>% filter(mode == "A3"), aes(x = R, y = error_q50,
+                                                                colour = method_name)) + 
+  geom_line(position = position_dodge(width = 0.15), linewidth=0.6) + 
+  geom_point(position = position_dodge(width = 0.15), size=2) + 
+  geom_errorbar(aes(ymin = error_q25, ymax = error_q75), 
+                position = position_dodge(width = 0.15), size = 0.6) + 
+  facet_grid(Q1Q2_title ~ M_title, scales="free") + 
+  ylab("Core : l1 error")+ 
+  #scale_y_log10() + 
   scale_x_log10() + 
   scale_color_manual(values = my_colors, breaks = legend_order,
                      labels = labels_n) +
