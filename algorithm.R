@@ -56,48 +56,61 @@ score <- function(D, K1, K2, K3,
     K0 = ceiling(1.5 * K3)
   }
 
-  n <- dim(D@data)[1]
-  t <- dim(D@data)[2]
-  p <- dim(D@data)[3]
+  Q1 <- dim(D@data)[1]
+  Q2 <- dim(D@data)[2]
+  R <- dim(D@data)[3]
 
   D3 <- matricization(D, 3)
-  print(c(dim(D3), n, t, p))
-  print(paste0("Dim voc init: ", p))
+  print(c(dim(D3), Q1, Q2, R))
+  print(paste0("Dim voc init: ", R))
+
   
   X=t(D3)
+  if (is.null(M)){
+    M = median(apply(X, 1, sum))
+  }
   #### Select words with non-zero entries
-  active_words = which(apply(X[1:nrow(X),], 2, sum)>0)
-  #### Convert counts to frequencies
-  x_train = t(diag(1/ apply(X[1:nrow(X), active_words],1, sum)) %*% X[1:nrow(X), active_words])
+  if(sum(X[1,])!=1){
+    active_words = which(apply(X[1:nrow(X),], 2, sum)>0)
+    #### Convert counts to frequencies
+    doc_length = apply(X[, active_words],1, sum)
+    x_train = t(diag(1/ doc_length) %*% X[, active_words])
+  }else{
+    print("Skipped Frequency processing")
+    active_words = 1:R
+    x_train = X
+  }
+  R = dim(x_train)[2]
   #x_train = X[1:nrow(X), active_words]
-  D <- tensorization(as.matrix(x_train), 3, n, t, dim(x_train)[1])
+  D <- tensorization(as.matrix(x_train), 3, Q1, Q2, R)
+  #Dtilde <- tensorization(as.matrix(x_train), 3, n, t, dim(x_train)[1])
   tildeM <- as.numeric(rowMeans(x_train))
-  nb_docs = n * t
+  nb_docs = dim(x_train)[2]
 
   if (normalization == "TTM"){
     if (threshold){
-      threshold_J = alpha * sqrt(log(max(p,n))/(M *n))
+      threshold_J = alpha * sqrt(log(max(R, nb_docs))/(M *nb_docs))
       print(sprintf("Threshold for alpha = %f  is %f ", alpha, threshold_J))
       setJ = which(tildeM > threshold_J)
-      print(sprintf("Nb of elected words = %i  ( %f percent) ", length(setJ), 100 * length(setJ)/p))
+      print(sprintf("Nb of elected words = %i  ( %f percent) ", length(setJ), 100 * length(setJ)/R))
       if (length(setJ) < 0.1 * length(tildeM)){
         setJ = sort(tildeM, decreasing=TRUE, index.return=TRUE)$ix[1:ceiling( 0.1 * length(tildeM))]
       }
       newD3 = as.matrix(x_train[setJ,])
       newD3 = as.matrix(x_train[setJ,])
       tildeM = tildeM[setJ]
-      print(paste0(p-length(setJ), " words were thresholded (", (p-length(setJ))/p * 100, "%)"))
+      print(paste0(R-length(setJ), " words were thresholded (", (R-length(setJ))/R * 100, "%)"))
       print(paste0(length(setJ), " words remain"))
       new_p <- length(setJ)
       #print(dim(newD3))
     }else{
-      new_p = p
+      new_p = R
       newD3 = as.matrix(x_train)
       newD3 = as.matrix(x_train)
       setJ = 1:length(tildeM)
     }
   }else{
-    new_p = p
+    new_p = R
     newD3 = as.matrix(x_train)
     newD3 = as.matrix(x_train)
     setJ = 1:length(tildeM)
@@ -105,16 +118,15 @@ score <- function(D, K1, K2, K3,
 
   D=tensorization(as.matrix(newD3), 3, Q1, Q2, dim(newD3)[1])
   if (normalization =="TTM"){
-    normM=n/M * diag(tildeM)
-    newD =  newD3 %*% t(newD3)  - n/M * normM
-    D=tensorization(as.matrix(newD3), 3, Q1, Q2, dim(newD3)[1])
+    normM=nb_docs/M * diag(tildeM)
+    newD =  newD3 %*% t(newD3)  - normM
     print(c(dim(D)))
   }
   if (normalization =="TopicScore"){
     D3 <- matricization(D, 3)
     tildeM <- as.numeric(rowMeans(D3))
     D3_ts <- diag(sqrt(tildeM^(-1))) %*% D3
-    D <- tensorization(D3_ts, mode=3, Q1=n, Q2=t, Q3=dim(D3_ts)[1])
+    D <- tensorization(D3_ts, mode=3, Q1=Q1, Q2=Q2, Q3=dim(D3_ts)[1])
   }
   
   D3 <- matricization(D, 3)
@@ -125,9 +137,9 @@ score <- function(D, K1, K2, K3,
     if (K >= min(dim(D3))){
       K <- min(K, min(dim(D3)))
       ranks <- c(K, K, K)
-      obj3 <- svd(D3, K)
+      obj3 <- svd(newD, K)
     }else{
-      obj3 <- svds(D3, K3)
+      obj3 <- svds(newD, K3)
     }
   }
   
@@ -166,15 +178,15 @@ score <- function(D, K1, K2, K3,
   temp <- colSums(G3)
   G3 <- t(apply(G3,1,function(x) x/temp))
   G3[is.na(G3)] <- 0
-  Gnew=tensorization(G3,3,dim(G)[1],dim(G)[2],dim(G)[3])
-  hatA3_new=matrix(0, length(active_words), K3)
-  A_temp=matrix(0,length(active_words),K3)
+  Gnew=tensorization(G3, 3, dim(G)[1], dim(G)[2], dim(G)[3])
+  hatA3_new=matrix(0, dim(D@data)[3], K3)
    if(threshold){
+      A_temp=matrix(0, R, K3)
       A_temp[setJ, ] = est3$A_hat
       hatA3_new[active_words,]=A_temp
       hatA3=hatA3_new
     }else{
-      hatA3_new[active_words,]=est3$A_hat
+      hatA3_new[active_words,] = est3$A_hat
       hatA3=hatA3_new
     }
   return(list(hatA1=est1$A_hat,hatA2=est2$A_hat,hatA3=hatA3,hatcore=Gnew))

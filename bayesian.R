@@ -90,6 +90,8 @@ fit_bayesian_model <- function(X, K1, K2, K3,
 fit_LDA <- function(X, K1, K2, K3){
   D3 = matricization(X, 3)
   R = dim(D3)[1]
+  Q1 = dim(X)[1]
+  Q2 = dim(X)[2] 
   lda3 <- LDA(t(D3), k = K3, 
               control = list(seed = 1234), method = 'VEM')
   ap_topics3 <- tidy(lda3, matrix = "beta")
@@ -105,7 +107,7 @@ fit_LDA <- function(X, K1, K2, K3){
   W3_modified["dim2"] = unlist(lapply(1:Q1, function(x){1:Q2}))
   #### Transform W3 into a tensor
   W3_modified = W3_modified %>%
-    pivot_longer(cols = starts_with("1"):starts_with(as.character(K3)), 
+    pivot_longer(cols = -c("document", "dim1", "dim2"), 
                  names_to = "topic", 
                  values_to = "value")
   
@@ -185,7 +187,7 @@ fit_stm_model <- function(X, K1, K2, K3){
   W3_modified["dim2"] = unlist(lapply(1:Q1, function(x){1:Q2}))
   #### Transform W3 into a tensor
   W3_modified = W3_modified %>%
-    pivot_longer(cols = starts_with("1"):starts_with(as.character(K3)), 
+    pivot_longer(cols = -c("document", "dim1", "dim2"), 
                  names_to = "topic", 
                  values_to = "value")
   
