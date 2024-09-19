@@ -70,22 +70,23 @@ score <- function(D, K1, K2, K3,
     M = median(apply(X, 1, sum))
   }
   #### Select words with non-zero entries
+  active_words = which(apply(X[1:nrow(X),], 2, sum)>0)
   if(sum(X[1,])!=1){
-    active_words = which(apply(X[1:nrow(X),], 2, sum)>0)
+    #active_words = which(apply(X[1:nrow(X),], 2, sum)>0)
     #### Convert counts to frequencies
     doc_length = apply(X[, active_words],1, sum)
     x_train = t(diag(1/ doc_length) %*% X[, active_words])
   }else{
     print("Skipped Frequency processing")
-    active_words = 1:R
-    x_train = X
+    #active_words = 1:R
+    x_train = X[, active_words]
   }
   R = dim(x_train)[2]
   #x_train = X[1:nrow(X), active_words]
   D <- tensorization(as.matrix(x_train), 3, Q1, Q2, R)
   #Dtilde <- tensorization(as.matrix(x_train), 3, n, t, dim(x_train)[1])
   tildeM <- as.numeric(rowMeans(x_train))
-  nb_docs = dim(x_train)[2]
+  nb_docs = dim(x_train)[1]
 
   if (normalization == "TTM"){
     if (threshold){
