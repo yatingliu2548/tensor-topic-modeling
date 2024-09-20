@@ -3,12 +3,12 @@ library(stringr)
 
 
 # Set your directory where files are located
-directory <- "~/Documents/tensor-topic-modeling/synthetic/results_final/results_final"
+directory <- "~/Documents/tensor-topic-modeling/synthetic/new_final"
 
 # List all files in the directory
-files <- list.files(path = directory, pattern = "exp_2.*\\.csv", full.names = TRUE)
+files <- list.files(path = directory, pattern = "exp_.*\\.csv", full.names = TRUE)
 res <- c()
-for (file in files){
+for (file in files[1:225]){
   file_name <- str_extract(file, "[^/]+\\.csv$")  # Extract the file name ending with .csv
   file_name <- str_remove(file_name, "\\.csv$")  # Remove the .csv extension
   

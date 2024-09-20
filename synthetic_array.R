@@ -33,8 +33,10 @@ for (Q1 in Q1list){
                                         n_anchors=n_anchors, 
                                         delta_anchor=0.1, N=M, seed=seed + ceiling(runif(1) *1000), offset_zipf=2.7, 
                                         vary_by_topic=FALSE, sparsity = sparse)
+      STOP
       #write_csv(as.data.frame(matrization_tensor(data$Y,3)), paste0(getwd(), paste0("/synthetic/results/","data")))
-      for (method in c("bayesian", "LDA", "STM", "NTD", "TopicScore-HOSVD", "TTM-HOOI", "TTM-HOSVD")){
+      for (method in c( "LDA", "STM", "NTD", "TopicScore-HOSVD", "TTM-HOOI", "TTM-HOSVD",
+                        "TTM-HOOI-reg", "TTM-HOSVD-reg")){
         results <- run_experiment(data=data, K1=K1, K2=K2, K3=K3, 
                                 M=M, method=method)
         error <- update_error(hatA1=results$A1, data$A1,
@@ -47,7 +49,7 @@ for (Q1 in Q1list){
         
         print(paste0("Done with method ", method))
 	print(error)
-        write_csv(error, paste0("/scratch/midway3/cdonnat/tensor-topic-modeling/tensor-topic-modeling/synthetic/new_final/",result_file, ".csv"))
+        #write_csv(error, paste0("/scratch/midway3/cdonnat/tensor-topic-modeling/tensor-topic-modeling/synthetic/new_final/",result_file, ".csv"))
       }
     }
   }

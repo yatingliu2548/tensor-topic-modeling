@@ -13,23 +13,47 @@ source("tensor_operations.r")
 source("run_experiments.R")
 product_count_threshold = 10
 quantity_threshold = 300
-nb_time_point = 10
+nb_time_point = 26
 ### Read in the data
+library(tidyverse)
 transac = read_csv("~/Downloads/market_basket/transaction_data.csv")
 product <- read_csv("~/Downloads/market_basket/product.csv")
 
+clean_names <- function(name) {
+  # Remove everything after the first parenthesis, including the parenthesis itself
+  name <- str_remove(name, "\\s*\\(.*")
+  
+  # Remove text after hyphen and the hyphen itself
+  name <- str_remove(name, "\\s*-.*")
+  
+  # Trim whitespace
+  name <- str_trim(name)
+  
+  return(name)
+}
+
+# Apply the cleaning function to the SUB_COMMODITY_DESC column
+product$Cleaned_SUB_COMMODITY_DESC <- sapply(product$SUB_COMMODITY_DESC, 
+                                             clean_names)
+length(unique(product$Cleaned_SUB_COMMODITY_DESC))
+length(unique(product$SUB_COMMODITY_DESC))
+length(unique(product$SUB_COMMODITY_DESC))
 #### There are a lot of product, but we could group by subcategories (gets rid of brands + quantity)
+
+
 transac = left_join(transac,
                     product %>% select(PRODUCT_ID, DEPARTMENT, 
-                                       COMMODITY_DESC, SUB_COMMODITY_DESC ) )
+                                       COMMODITY_DESC, SUB_COMMODITY_DESC, Cleaned_SUB_COMMODITY_DESC) )
+transac = transac %>%
+  filter(SUB_COMMODITY_DESC != "GASOLINE-REG UNLEADED")
 transac = transac %>%
   group_by(household_key, WEEK_NO, DAY, BASKET_ID, DEPARTMENT, 
-           COMMODITY_DESC, SUB_COMMODITY_DESC) %>%
+           COMMODITY_DESC, Cleaned_SUB_COMMODITY_DESC) %>%
   summarise(QUANTITY = sum(QUANTITY))
 
 ### Check how much products appear
 test_product = transac %>% 
-  group_by(COMMODITY_DESC, SUB_COMMODITY_DESC) %>%
+  group_by(COMMODITY_DESC, Cleaned_SUB_COMMODITY_DESC) %>%
   summarise(count = n())
 quantile(test_product$count, probs = seq(0, 1, 0.1))
 ### Keep only relevant product
@@ -41,8 +65,7 @@ transac2 = left_join(transac,
                      test_product_filtered)
 transac2 = transac2 %>%
   filter(!is.na(ID))
-transac2 = transac2 %>%
-  filter(SUB_COMMODITY_DESC != "GASOLINE-REG UNLEADED")
+
 #### some quantities are just too wide, so need to check that the baskets are reasonable
 
 print(quantile(transac2$QUANTITY, 0.97))
@@ -55,15 +78,12 @@ dim(transac2)
 transac2 = transac2 %>%
   select(-c("count"))
 
-transac2 = transac2 %>%
-  filter(QUANTITY < quantity_threshold, 
-         QUANTITY > 0)
 
 
 #### Aggregate baskets over a week
 transac2 = transac2 %>%
   group_by(household_key, WEEK_NO ,DEPARTMENT,        
-           COMMODITY_DESC, SUB_COMMODITY_DESC, ID) %>%
+           COMMODITY_DESC, Cleaned_SUB_COMMODITY_DESC, ID) %>%
   summarise(QUANTITY=sum(QUANTITY))
 #### keep baskets that are large enough
 baskets = transac2 %>% 
@@ -89,7 +109,7 @@ transac_filtered_hh = transac_filtered %>%
 hist(transac_filtered_hh$count) ### they don't so we
 
 transac_filtered_hh_filtered = transac_filtered_hh %>%
-  filter(count > 31)
+  filter(count > 25)
 
 transac3 =  transac_filtered %>%
   filter(household_key %in%  transac_filtered_hh_filtered$household_key )
@@ -111,7 +131,8 @@ prop_nnz= apply(market_data, 2, function(x){mean(x>0)})
 quantile(prop_nnz, probs = seq(0, 1, 0.01))
 
 ordered_p= sort(prop_nnz[3:length(prop_nnz)], decreasing = T, index.return=T)
-stop_words = names(prop_nnz)[which(prop_nnz>0.1)]
+stop_words = names(prop_nnz)[which(prop_nnz>0.15)]
+
 stop_words = stop_words[3:length(stop_words)]
 market_data2 <- market_data[, setdiff(names(market_data), stop_words)]
 market_data= market_data2
@@ -120,7 +141,7 @@ market_data= market_data2
 temp_data = market_data %>%
   filter(WEEK_NO < 52)
 
-nb_time_point = 26
+
 temp_data$bins <- cut(temp_data$WEEK_NO, breaks = nb_time_point, labels = FALSE)
 
 choose_household = temp_data %>%
@@ -163,6 +184,7 @@ choose_household2=   pivot_wider(choose_household2,
                                 values_fill = 0)
 
 selection2 =which(apply(choose_household2[,2:ncol(choose_household2)],1,function(x){sum(x==0)})==0)
+print(length(selection2))
 temp_data2 = temp_data2 %>%
   filter(household_key %in% choose_household2$household_key[selection2])
 
@@ -183,7 +205,8 @@ data4analysis = temp_data %>%
 data4analysis = 
   data4analysis %>%
   arrange(household_key, bins) 
-STOP
+
+save(data4analysis, words, file="~/Downloads/data4analysis_market_basket.RData")
 #data4analysis["total"] = apply(data4analysis[,3:ncol(data4analysis)], 1, sum)
 
 D = tensorization(t(as.matrix(data4analysis[, 3:(ncol(data4analysis))])), mode=3,
@@ -196,7 +219,7 @@ matrix_D = (data4analysis %>%
 
 ncol(data4analysis)
 R = ncol(data4analysis)-2
-i=100; j=9; mean(as.numeric(matrix_D[(i-1) * nb_time_point + j,1:R]) == D@data[i,j,1:R])
+i=104; j=10; mean(as.numeric(matrix_D[(i-1) * nb_time_point + j,1:R]) == D@data[i,j,1:R])
 
 D3 = matricization(D, 3)
 print(length(which(apply(D3, 1, sum)== 0)))
@@ -227,7 +250,7 @@ plot(eigens2[1:10])
 # eigens3 = svd(D3, nu=200, nv=200)$d
 # plot(eigens3[1:30])
 # #### choose K1=2
-
+STOP
 K1 = 4
 K2 = 4
 K3 = 23
@@ -235,7 +258,9 @@ data <- list(D = D_new)
 dim(D_new)
 length(words)
 
-save.image("~/Downloads/market_basket_data.RData")
+
+
+#save.image("~/Downloads/market_basket_data.RData")
 STOP
 setwd("~/Documents/tensor-topic-modeling/")
 library(tidyverse)
@@ -328,7 +353,7 @@ ap_topics3
 
 
 topics <- data.frame(results$A3)
-colnames(topics)[1:23] <- 1:K3
+colnames(topics)[1:K3] <- 1:K3
 topics["ID"] = as.numeric(colnames(data4analysis)[3:(ncol(data4analysis))][words])
 
 topics_filtered = topics %>%

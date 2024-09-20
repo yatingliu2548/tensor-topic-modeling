@@ -14,7 +14,7 @@ score <- function(D, K1, K2, K3,
                   Mquantile=0.00, 
                   VHMethod = 'SP', method="HOSVD", normalization="TTM",
                   alpha=0.005, max_K=150, returnW=FALSE, estimateK=FALSE,
-                  as.sparse = FALSE){
+                  as.sparse = FALSE, estimate_core_via_svd=TRUE){
   #' This function computes the estimates for the A and W matrix based on the algorithm proposed in Ke and Wang's work: https://arxiv.org/pdf/1704.07016.pdf
   #'
   #'
@@ -76,7 +76,7 @@ score <- function(D, K1, K2, K3,
     print(sum(X[1,]))
     #### Convert counts to frequencies
     doc_length = apply(X[, active_words],1, sum)
-    x_train = t(diag(1/ doc_length) %*% X[, active_words])
+    x_train = diag(1/ doc_length) %*% X[, active_words]
   }else{
     print("Skipped Frequency processing")
     #active_words = 1:R
@@ -170,28 +170,70 @@ score <- function(D, K1, K2, K3,
   est2 <- steps_procedure( Xi=Xi2, normalize="C1", K=K2, K0=K0, VHMethod=VHMethod)
   est3 <- steps_procedure( Xi=Xi3, normalize="C2", K=K3, K0=K0, VHMethod=VHMethod)
   
-  ### Compute the core tensor
-  S_hat <- create_tensor(D, t(Xi1), t(Xi2), t(Xi3))
-  a_0 <- colSums(abs(est3$A_star))
-  check_V3 <- a_0 * est3$V
-  G <- create_tensor(S_hat, est1$V, est2$V, check_V3)
-  G3 <- matricization(G,3)
-  G3 <- pmax(G3,matrix(0, dim(G3)[1], dim(G3)[2])) ### sets negative entries to 0
-  temp <- colSums(G3)
-  G3 <- t(apply(G3,1,function(x) x/temp))
-  G3[is.na(G3)] <- 0
-  Gnew=tensorization(G3, 3, dim(G)[1], dim(G)[2], dim(G)[3])
   hatA3_new=matrix(0, dim(D@data)[3], K3)
-   if(threshold){
-      A_temp=matrix(0, R, K3)
-      A_temp[setJ, ] = est3$A_hat
-      hatA3_new[active_words,]=A_temp
-      hatA3=hatA3_new
-    }else{
-      hatA3_new[active_words,] = est3$A_hat
-      hatA3=hatA3_new
+  if(threshold){
+    A_temp=matrix(0, R, K3)
+    A_temp[setJ, ] = est3$A_hat
+    hatA3_new[active_words,]=A_temp
+    hatA3=hatA3_new
+  }else{
+    hatA3_new[active_words,] = est3$A_hat
+    hatA3=hatA3_new
+  }
+  
+  ### Compute the core tensor
+  if (estimate_core_via_svd){
+    S_hat <- create_tensor(D, t(Xi1), t(Xi2), t(Xi3))
+    a_0 <- colSums(abs(est3$A_star))
+    check_V3 <- a_0 * est3$V
+    G <- create_tensor(S_hat, est1$V, est2$V, check_V3)
+    G3 <- matricization(G,3)
+    G3 <- pmax(G3,matrix(0, dim(G3)[1], dim(G3)[2])) ### sets negative entries to 0
+    temp <- colSums(G3)
+    G3 <- t(apply(G3,1,function(x) x/temp))
+    G3[is.na(G3)] <- 0
+    Gnew=tensorization(G3, 3, dim(G)[1], dim(G)[2], dim(G)[3])
+  }else{
+    ##### Estimate the core through regression
+    # Compute the Kronecker product
+    A1A2 <- kronecker(est1$A_hat,est2$A_hat)
+    # Define the beta variable as a matrix with K1 * K2 rows and K3 columns
+    beta <- Variable(K1 * K2, K3)
+    
+    # Objective: minimize the sum of squared residuals
+    D3 = matricization(data$D, 3)
+    tA3D3 = t(hatA3) %*% D3
+    Y = t(tA3D3)
+    objective <- Minimize(sum_squares( Y- A1A2 %*% beta))
+    
+    # Constraints: non-negativity and row sums equal to 1
+    constraints <- list(beta >= 0, sum_entries(beta, axis = 2) == 1)
+    
+    # Define the problem
+    problem <- Problem(objective, constraints)
+    
+    # Solve the problem
+    result <- solve(problem)
+    
+    # Get the optimized beta
+    beta_optimized <- as.matrix(result$getValue(beta), nrow = K1 * K2, ncol = K3)
+    beta_optimized[which(beta_optimized < 1e-10)] = 0
+    
+    Gnew = array(rep(0, K1 * K2 *K3),
+                     dim=c(K1,K2,K3))
+    for (k1 in 1:K1){
+      for (k2 in 1:K2){
+        for (k3 in 1:K3){
+          Gnew[k1,k2,k3] = beta_optimized[(k1 - 1) * K2 + k2, k3]
+        }
+      }
     }
-  return(list(hatA1=est1$A_hat,hatA2=est2$A_hat,hatA3=hatA3,hatcore=Gnew))
+    
+    
+  }
+  
+  return(list(hatA1=est1$A_hat,hatA2=est2$A_hat,hatA3=hatA3,
+              hatcore=Gnew))
 }
 
 steps_procedure <- function(Xi ,K, normalize, K0, VHMethod){

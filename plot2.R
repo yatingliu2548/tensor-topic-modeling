@@ -201,7 +201,7 @@ ggplot(res_summary%>% filter( M==1000), aes(x = R, y = error_q50,
   theme_bw()
 
 
-ggplot(res_summary%>% filter( R==1000, Q1==50), aes(x = M, y = error_q50,
+ggplot(res_summary%>% filter( R==1000), aes(x = M, y = error_q50,
                                             colour = method_name)) + 
   geom_line(position = position_dodge(width = 0.2), linewidth=0.6) + 
   geom_point(position = position_dodge(width = 0.2), size=2) + 

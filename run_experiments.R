@@ -307,6 +307,8 @@ run_method <- function(data, K1, K2, K3, M, method, threshold=FALSE){
                 core = core_hat,
                 time = elapsed_timeOurs))
   }
+
+  
   
   if (method =="TTM-HOOI"){
     elapsed_timeOurs <- system.time({
@@ -644,7 +646,68 @@ run_experiment<- function(data, K1, K2, K3, M, method, threshold=FALSE){
                 time = time))
     
   } 
-    
+  if (method =="TTM-HOOI-reg"){
+    elapsed_timeOurs <- system.time({
+      tmp<-tryCatch(
+        score(data$D, normalization="TTM", method = "HOOI", 
+              K1=K1, K2=K2, K3=K3, M=M,
+              as.sparse = FALSE, estimate_core_via_svd = FALSE),
+        error = function(err) {
+          # Code to handle the error (e.g., print an error message, log the error, etc.)
+          paste0("Error occurred while running Ours ", R, " :", conditionMessage(err), "\n")
+          # Return a default value or NULL to continue with the rest of the code
+          return(NULL)}
+      )
+    })["elapsed"]
+    if (is.null(tmp)==FALSE){
+      A1_hat = tmp$hatA1
+      A2_hat = tmp$hatA2
+      A3_hat = tmp$hatA3
+      core_hat=tmp$hatcore
+    }else{
+      A1_hat = NULL
+      A2_hat = NULL
+      A3_hat = NULL
+      core_hat=NULL
+    }
+    return(list(A1 = A1_hat,
+                A2 = A2_hat,
+                A3 = A3_hat,
+                core = core_hat,
+                time = elapsed_timeOurs))
+  }
+  
+  if (method =="TTM-HOSVD-reg"){
+    elapsed_timeOurs <- system.time({
+      tmp<-tryCatch(
+        score(data$D, normalization="TTM", method = "HOSVD", 
+              K1=K1, K2=K2, K3=K3, M=M,
+              as.sparse = FALSE, estimate_core_via_svd = FALSE),
+        error = function(err) {
+          # Code to handle the error (e.g., print an error message, log the error, etc.)
+          paste0("Error occurred while running Ours ", R, " :", conditionMessage(err), "\n")
+          # Return a default value or NULL to continue with the rest of the code
+          return(NULL)}
+      )
+    })["elapsed"]
+    if (is.null(tmp)==FALSE){
+      A1_hat = tmp$hatA1
+      A2_hat = tmp$hatA2
+      A3_hat = tmp$hatA3
+      core_hat=tmp$hatcore
+    }else{
+      A1_hat = NULL
+      A2_hat = NULL
+      A3_hat = NULL
+      core_hat=NULL
+    }
+    return(list(A1 = A1_hat,
+                A2 = A2_hat,
+                A3 = A3_hat,
+                core = core_hat,
+                time = elapsed_timeOurs))
+  }
+  
    if (method =="TTM-HOSVD"){
     elapsed_timeOurs <- system.time({
       tmp<-tryCatch(
