@@ -177,7 +177,7 @@ plot_words_per_group<- function(matrix,words=10){
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +  # Rotate x-axis labels for better readability
     labs(title = "",
-         x = "Group_Category",
+         x = "Topics",
          y = "",
          size = "Probability")
 }
@@ -216,7 +216,7 @@ tlda_a=tensor_lda(tensorization(t(dtm_matrix),3,Q1=Q1,Q2=Q2,Q3=dim(dtm_matrix)[2
 heatmap_matrix(tlda_a$A1,"Groups","Subject_m")
 #plot_dirichlet(tlda_a$A2,Topic_K=K2,by="expected_status2",word="t",guide="none")
 heatmap_matrix2(tlda_a$A2,"Phases","Menstrual cycle")
-plot_slice(tlda_a$core,2,"Groups of Subject","Topics",yes=T)
+plot_slice(get_A(tlda_a$A1,tlda_a$A2,tlda_a$A3,tensorization((matricization(tlda_a$core,3)),3,K1,K2,K3))$core@data,2,"Groups","Topics",yes=T)
 tlda_A3=tlda_a$A3
 rownames(tlda_A3)<-colnames(dtm_matrix)
 plot_words_per_group(t(align_topics(t(ours_A3),t(tlda_A3),dist = "cosine")$B_permuted),words=10) #
@@ -237,24 +237,24 @@ heatmap_matrix(t(lda_W),"Topics","Modes 1 & 2: Customer i at time t",trans="iden
 #hatY=lda_A%*%lda_W
 
 heatmap_matrix(t(lda_W),"Topics","Modes 1 & 2",guide="none",trans="identity")
-W1_LDA=matrization_tensor(tensorization(lda_W,3,30,10,dim(lda_W)[1]),1)
-A1_LDA=spectral_clustering(W1_LDA %*% t(W1_LDA),K=2,mix=T)
+W1_LDA=matrization_tensor(tensorization(lda_W,3,Q1,Q2,dim(lda_W)[1]),1)
+A1_LDA=spectral_clustering(W1_LDA %*% t(W1_LDA),K=K1,mix=T)
 heatmap_matrix(A1_LDA,"Groups","Mode 1: customer ID",guide="none",trans="identity")
-W2_LDA=matrization_tensor(tensorization((lda_W),3,30,10,dim(lda_W)[1]),2)
-A2_LDA=spectral_clustering(W2_LDA %*% t(W2_LDA),K=2,mix=T)
+W2_LDA=matrization_tensor(tensorization((lda_W),3,Q1,Q2,dim(lda_W)[1]),2)
+A2_LDA=spectral_clustering(W2_LDA %*% t(W2_LDA),K=K2,mix=T)
 heatmap_matrix2(A2_LDA,"Events","Mode 2: time slice",guide="none",trans="identity")
 G_LDA=compute_G_from_WA(kronecker(A1_LDA,A2_LDA),t(lda_W))
-plot_slice(tensorization(t(G_LDA),3,2,2,dim(G_LDA)[2])@data,2,"Groups","Topics",yes=T,trans="identity")
-
+plot_slice(tensorization(t(G_LDA),3,K1,K2,dim(G_LDA)[2])@data,2,"Groups","Topics",yes=T,trans="identity")
+plot_slice(get_A(A1_LDA,A2_LDA,lda_A,tensorization(t(G_LDA),3,K1,K2,dim(G_LDA)[2]))$core@data,2,"Groups","Topics",yes=T)
 lda_A3=lda_A
 rownames(lda_A3)<-colnames(dtm_matrix)
-plot_words_per_group(t(align_topics(t(ours_A3),t(lda_A3),dist = "cosine")$B_permuted),words=10) #
+plot_words_per_group(t(align_topics(t(ours_A3),t(lda_A3),dist = 1)$B_permuted),words=10) #
 
 #saveRDS(LDA_results, "lda_arvix.rds")
 
 ######SLDA
 SLDA <- stm(documents = Matrix(as.matrix(as.data.frame(t(Y3))), sparse = TRUE),
-            K = K3, prevalence =~ classification,
+            K = K3, prevalence =~ classification+category,
             max.em.its = 5,
             data = df_with_sequence,
             init.type = "Spectral")
@@ -267,25 +267,26 @@ print(l1_error(t(A_SLDA_sim)%*%t(W_SLDA_sim),D3))
 
 slda_A3=t(A_SLDA_sim)
 rownames(slda_A3)<-colnames(dtm_matrix)
-plot_words_per_group(t(align_topics(t(ours_A3),t(slda_A3),dist = "cosine")$B_permuted),words=10) #
+plot_words_per_group(t(align_topics(t(ours_A3),t(slda_A3),dist = 1)$B_permuted),words=10) #
 saveRDS(SLDA, "slda_arvix.rds")
 
 #colnames(A_SLDA_sim)=SLDA$vocab
 
 heatmap_matrix(t(A_SLDA_sim),"Topics","Mode 3: Product ID",guide="none",trans="identity")
 heatmap_matrix(W_SLDA_sim,"Topics","Modes 1 & 2: Customer i at time t",trans="identity")
-W1_SLDA=matrization_tensor(tensorization(t(W_SLDA_sim),3,30,10,dim(W_SLDA_sim)[2]),1)
-A1_SLDA=spectral_clustering(W1_SLDA %*% t(W1_SLDA),K=2,mix=T)
+W1_SLDA=matrization_tensor(tensorization(t(W_SLDA_sim),3,Q1,Q2,dim(W_SLDA_sim)[2]),1)
+A1_SLDA=spectral_clustering(W1_SLDA %*% t(W1_SLDA),K=K1,mix=T)
+
 
 heatmap_matrix(A1_SLDA,"Groups","Mode 1: customer ID",guide="none",trans="identity")
 
-W2_SLDA=matrization_tensor(tensorization(t(W_SLDA_sim),3,30,10,dim(W_SLDA_sim)[2]),2)
-A2_SLDA=spectral_clustering(W2_SLDA %*% t(W2_SLDA),K=2,mix=T)
+W2_SLDA=matrization_tensor(tensorization(t(W_SLDA_sim),3,Q1,Q2,dim(W_SLDA_sim)[2]),2)
+A2_SLDA=spectral_clustering(W2_SLDA %*% t(W2_SLDA),K=K2,mix=T)
 
 heatmap_matrix2(A2_SLDA,"Events","Mode 2: time slice",guide="none",trans="identity")
 G_SLDA=compute_G_from_WA(kronecker(A1_SLDA,A2_SLDA),W_SLDA_sim)
 
-plot_slice(tensorization(t(G_SLDA),3,2,2,dim(G_SLDA)[2])@data,2,"Groups","Topics",yes=T,trans="identity")
+plot_slice(get_A(A1_SLDA,A2_SLDA,slda_A3,tensorization(t(G_SLDA),3,K1,K2,dim(G_SLDA)[2]))$core@data,2,"Groups","Topics",yes=T)
 
 
 
@@ -312,9 +313,9 @@ NTD_W=kronecker(NTD_A1,NTD_A2)%*%t(matrization_tensor(NTD_G,3))
 heatmap_matrix(NTD_W,"Topics","Modes 1 & 2",guide="none",trans="identity")
 NTD_G_3=matrization_tensor(NTD_G,3)
 NTD_G_3=NTD_G_3/colSums(NTD_G_3)
-NTD_G=tensorization(NTD_G_3,3,2,2,3)
-plot_slice(NTD_G@data,2,"Groups","Topics",TRUE,trans="identity")
+NTD_G=tensorization(NTD_G_3,3,K1,K2,K3)
 
+plot_slice(get_A(NTD_A1,NTD_A2,NTD_A3,NTD_G)$core@data,2,"Groups","Topics")
 
 
 

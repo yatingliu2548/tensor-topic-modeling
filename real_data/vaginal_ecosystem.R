@@ -783,7 +783,7 @@ ggplot() +
 
 # Display the plot
 
-bacteria=c("Gardnerella.vaginalis", "Atopobium.vaginae", "Lactobacillus.iners","Gardnerella.leopo..swids.","Lactobacillus.crispatus","Prevotella.timonensis","Prevotella..g.","Lactobacillus.gasseri")
+bacteria=c("Gardnerella.vaginalis", "Atopobium.vaginae","Gardnerella.leopo..swids.","Lactobacillus.crispatus","Prevotella.timonensis","Prevotella..g.","Lactobacillus.gasseri")
 
 bacteria=c("Gardnerella.vaginalis", "Atopobium.vaginae", "Fastidiosipila..g.","Gardnerella.leopo..swids.","Megasphaera..g.","Parvimonas..g.","Prevotella.timonensis","Sneathia.sanguinegens")
 beta=exp(topic_models_ours_full[[K3]]$beta)
@@ -815,7 +815,7 @@ ggplot(df_merged, aes(x = cycleday, y = Count, color = Bacteria, group = Bacteri
   geom_line(size = 1.2) +
   geom_point(size = 2) +
   scale_color_brewer(palette = "Set2") +
- # scale_y_log10(oob = scales::squish) +  # Handles zeros by squishing them to a
+  scale_y_log10(oob = scales::squish) +  # Handles zeros by squishing them to a
   labs(title ="",
        x = "Menstrual Cycle Day",
        y = "Bacterial Proportion",
