@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 library(reshape2)
 library(reshape)
 library(dplyr)
@@ -24,12 +23,6 @@ library(readr)
 
 ##clean the data
 CNN_Articles_clean <- read_csv("real_data/CNN_Articels_clean.csv")
-=======
-library(readr)
-
-##clean the data
-CNN_Articles_clean <- read_csv("C:/Users/建新/Desktop/tensor-topic-modeling/tensor-topic-modeling/real_data/CNN_Articels_clean.csv")
->>>>>>> 909d9a5458a38aec2aac841bef37f8c7c1152136
 CNN=CNN_Articles_clean
 CNN$date=as.Date(CNN$`Date published`)
 library(stringr)
@@ -42,13 +35,41 @@ covid_related <- grepl("Covid", CNN$`Article text`, ignore.case = TRUE)
 contain_COVID=CNN[covid_related, ]
 table(contain_COVID$Category)
 
-<<<<<<< HEAD
 table(contain_COVID[contain_COVID$Category=="news",]$Section)
 
+news=CNN%>%
+  filter(Category=="news")
+CNN_data=CNN
+keywords <- list(
+  sports = c("football", "basketball", "tennis", "soccer", "olympics", "athletics", "marathon", "world cup", "tournament", "league","sport","air"),
+  politics = c("election", "government", "senate", "congress", "democracy", "legislation", "policy", "president", "political party", "vote","international","war"),
+  #technology = c("technology", "AI", "artificial intelligence", "software", "hardware", "programming", "coding", "science", "machine", "cybersecurity","tech","auto","mobile"),
+  business = c("business", "economy", "market", "investment", "finance", "startup", "entrepreneur", "stock", "revenue", "profit","market","commerce","nonprofit"),
+  health = c("health", "medicine", "doctor", "hospital", "nursing", "wellness", "disease", "treatment", "surgery", "vaccine","killed","kill")
+)
+# Revised count_keywords function to work on individual texts
+count_keywords <- function(text, keywords) {
+  sum(str_count(text, paste0("\\b(", paste(keywords, collapse = "|"), ")\\b")))
+}
 
-=======
->>>>>>> 909d9a5458a38aec2aac841bef37f8c7c1152136
-after2021=CNN%>%filter(date>as.Date("2021-01-01"))
+# Iterate over each category in 'keywords' and apply the count_keywords function to each text
+for(category in names(keywords)) {
+  CNN_data[[category]] <- sapply(CNN_data$text, count_keywords, keywords = keywords[[category]])
+}
+CNN_data=as.data.frame(CNN_data)
+len=length(categories)
+CNN_data$total=rowSums(CNN_data[,(length(names(CNN_data))-(len-1)):length(names(CNN_data))])
+CNN_data=CNN_data[CNN_data$total!=0,]
+CNN_data$groups <- apply(CNN_data[,(length(names(CNN_data))-(len)):(length(names(CNN_data))-1)], 1, function(x) names(CNN_data[,(length(names(CNN_data))-len):(length(names(CNN_data))-1)])[which.max(x)])
+CNN_data$sec_cate<- paste0(CNN_data$Category,",",CNN_data$groups)
+CNN_data1=CNN_data
+CNN_data=CNN_data1
+CNN_data=CNN_data%>%
+  filter(total>10,
+         groups %in% c("sport","politics","business","health"))
+#CNN_full2 =CNN_full%>%
+
+contain_COVID2=CNN_data[CNN_data$Index %in% contain_COVID$Index, ]
 
 
 ###select country
@@ -73,7 +94,7 @@ us_china_covid=us_covid %>%
 only_us_covid=us_covid %>%
   filter(!Index %in% us_china_covid$Index)%>%
   mutate(categories=paste0(Category,",",Section))%>%
-  filter(Category %in% c("business","sport","politics","news"))%>%
+  filter(Category %in% c("business","sport","politics","europe"))%>%
   group_by(Category)%>%
   sample_n(20)%>%ungroup()%>%
   arrange(Category,Section,date)
@@ -87,23 +108,29 @@ only_china_covid=china_covid %>%
 
 
 
-us_before_covid<- contain_us %>%
+before_covid<- CNN %>%
   filter(Category %in% c("business","politics","sport","health"),
-         date <as.Date("2019-12-31"),
+        # date <as.Date("2019-12-31"),
          !Index %in% contain_COVID$Index,
          #Index %in% contain_us$Index,
-         !Index %in% contain_us_china$Index)%>%
+         #!Index %in% contain_us_china$Index
+         )%>%
   group_by(Category)%>%
   sample_n(size=40,replace = FALSE)%>%
   ungroup()%>% arrange(Category,Section,date)
 
-us_during_covid<- contain_us %>%
-  filter(Category %in% c("business","politics","sport","health"),
-         date >as.Date("2019-12-31"),
+during_covid<-contain_COVID2%>%sample_n(size=160,replace = FALSE)%>%
+  arrange(sec_cate,date)%>%
+  select(colnames(before_covid))
+
+during_covid<- CNN_data %>%
+  filter(sec_cate %in% c("business,business","news,politics","sport,sports","health,health"),
+         #date >as.Date("2019-12-31"),
          Index %in% contain_COVID$Index,
          #Index %in% contain_us$Index,
-         !Index %in% contain_us_china$Index)%>%
-  group_by(Category)%>%
+         #!Index %in% contain_us_china$Index
+         )%>%
+  group_by(Categiry)%>%
   sample_n(size=40,replace = FALSE)%>%
   ungroup()%>% arrange(Category,Section,date)
 
@@ -144,22 +171,23 @@ us_china_during_covid<- contain_us_china %>%
 
 
 
-
-during_covid<- CNN %>%
-  filter(Category %in% c("business","politics","sport","health"),
+during_covid1<- contain_COVID %>%
+  filter(Category %in% c("business","politices","sport","health"),
          date >as.Date("2019-12-31"),
          Index %in% contain_COVID$Index )%>%
   group_by(Category)%>%
-  sample_n(size=150,replace=FALSE)%>%
+  sample_n(size=25,replace=T)%>%
   ungroup()%>% arrange(Category,Section,date)
 
-
+during_covid2<-contain_COVID%>%filter(!Index %in% during_covid1$Index,!Category %in% c("sport")) %>%sample_n(size=25,replace=FALSE)
+during_covid=as.data.frame(rbind(during_covid1,during_covid2)%>% arrange(Category,Section,date))
+  
 before_covid<- CNN %>%
-  filter(Category %in% c("news"),
-         date <as.Date("2019-12-31"),
+  filter(Category %in% c("business","politics","sport","health"),
+         #date <as.Date("2019-12-31"),
          !Index %in% contain_COVID$Index )%>%
   group_by(Category)%>%
-  sample_n(size=600,replace=FALSE)%>%
+  sample_n(size=25,replace=FALSE)%>%
   ungroup()%>% arrange(Category,Section,date)
 
 
@@ -172,9 +200,9 @@ total_rows <- nrow(during_covid)#nrow(us_before_covid)  # Assuming dfA and dfB h
 
 for (i in seq(1, total_rows, by = chunk_size)) {
   # Bind 10 rows from dfA
-  CNN_selected <- rbind(CNN_selected, before_covid[i:(i + chunk_size - 1), ])
+  CNN_selected <- rbind(CNN_selected, before_covid[i:(i + 7 - 1), ])
   # Bind 10 rows from dfB
-  CNN_selected <- rbind(CNN_selected, during_covid[i:(i + chunk_size - 1), ])
+  CNN_selected <- rbind(CNN_selected, during_covid[i:(i + 3 - 1), ])
 }
 
 selected_data=CNN_selected
@@ -268,40 +296,3 @@ heatmap_matrix(t(NTF_result$A[[1]]))
 
 heatmap_matrix(t(NTF_result$A[[2]]))
 heatmap_matrix(t(NTF_result$A[[3]]))
-
-library(tidyverse)
-
-plot_words_per_group<- function(matrix,words=10){
-  #colnames(matrix) <- paste0("Group","_", colnames(matrix) )
-  gene_data <- as.data.frame(matrix) %>%
-    rownames_to_column(var = "Names") %>%
-    pivot_longer(cols = -Names, names_to = "Group", values_to = "Probability")
-
-  top_genes <- gene_data  %>%
-    group_by(Group)%>%
-    top_n(n = words, wt = Probability) %>%
-    ungroup()
-
-  # Plot
-  ggplot(top_genes, aes(x = Group, y = Names, size = Probability)) +
-    geom_point(shape = 21, fill = "skyblue",alpha = 0.6) +  # Adjust alpha for transparency, if desired
-    scale_size_continuous(range = c(0.1, 5)) +  # Adjust the size range for bubbles
-    theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +  # Rotate x-axis labels for better readability
-    labs(title = "",
-         x = "Group_Category",
-         y = "",
-         size = "Probability")
-}
-
-
-library(rdist)
-
-normalize_rows <- function(mat) {
-  row_norms <- sqrt(rowSums(mat^2))
-  return(sweep(mat, 1, row_norms, FUN="/"))
-}
-<<<<<<< HEAD
-
-=======
->>>>>>> 909d9a5458a38aec2aac841bef37f8c7c1152136

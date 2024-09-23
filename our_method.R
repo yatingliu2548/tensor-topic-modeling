@@ -183,20 +183,21 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
   est1<- steps_procedure( Xi=Xi1, normalize="C1",K=K1,K0=K0,VHMethod=VHMethod)
   est2<- steps_procedure( Xi=Xi2, normalize="C1",K=K2,K0=K0,VHMethod=VHMethod)
   est3<- steps_procedure( Xi=Xi3, normalize="C2",K=K3,K0=K0,VHMethod=VHMethod)
-
+  print(min(ranks))
   if (scatterplot & min(ranks)>2){
-    par(mar=c(1,1,1,1))
-    #print(ggplot(data.frame(est1$H), aes(x=X1, y=X2))+
-    #  geom_point( size=3.5)+
-    #  geom_point(data=data.frame(est1$V), colour="red", size=3.5))
+    print(ggplot(data.frame(est1$H), aes(x=X1, y=X2))+
+      geom_point( size=3.5)+
+     geom_point(data=data.frame(est1$V), colour="red", size=3.5))
 
-    #print(ggplot(data.frame(est2$H), aes(x=X1, y=X2))+
-    #  geom_point( size=3.5)+
-    #  geom_point(data=data.frame(est2$V), colour="red", size=3.5))
+    print(ggplot(data.frame(est2$H), aes(x=X1, y=X2))+
+      geom_point( size=3.5)+
+      geom_point(data=data.frame(est2$V), colour="red", size=3.5))
 
-    #print(ggplot(data.frame(est3$H), aes(x=X1, y=X2))+
-    #  geom_point( size=3.5)+
-    #  geom_point(data=data.frame(est3$V), colour="red", size=3.5))
+    print(ggplot(data.frame(est3$H), aes(x=X1, y=X2))+
+        geom_point( size=3.5)+
+        geom_point(data=data.frame(est3$V), colour="red", size=3.5))
+    
+    
     sv1 <-svd(matrization_tensor(D,1), K1)
     sv2=svd(matrization_tensor(D,2), K2)
     sv3=svd(matrization_tensor(D,3), K3)
@@ -207,14 +208,16 @@ score <- function(D, K1,K2,K3, scatterplot=FALSE, K0=NULL, m=NULL, M=NULL, thres
     svd_data_long <- reshape2::melt(svd_data, variable.name = "Mode", value.name = "SingularValue")
 
 # Plot using ggplot2
-    print(ggplot(svd_data_long, aes(x = 1:length(SingularValue), y = SingularValue, group = Mode, color = Mode)) +
-  geom_line() +  # Add line
-  geom_point() + # Add points
-  scale_x_log10()+
-  labs(title = "Scree Plot for Each Mode",
-       x = "Component Number",
-       y = "Singular Values") +
-      theme_minimal())
+    print(ggplot(svd_data_long, aes(x = 1:length(SingularValue), y = SingularValue)) +
+            geom_line(aes(group = Mode, color = Mode)) +  # Add line for each mode
+            geom_point(aes(color = Mode)) +  # Add points for each mode
+            facet_wrap(~ Mode) +  # Facet the plot by Mode
+            scale_x_continuous(breaks = 1:length(svd_data_long$SingularValue)) +  # Regular scale (adjust breaks as needed)
+            scale_y_log10() +  # Use log10 scale on y-axis
+            labs(title = "Scree Plot for Each Mode",
+                 x = "Component Number",
+                 y = "Singular Values") +
+            theme_minimal())
   }
 
 
@@ -368,7 +371,7 @@ run_topic_models <- function(X, train_index,K1,K2,Q1,Q2, #test_index,
   M=median(apply(X, 1, sum))
   it = 1
   for (k in list_params){
-
+    A_hat = matrix(0, ncol(X), k)
     tm <- score(tensor_data/M, K1=K1,K2=K2,K3=k,M=median(apply(X, 1, sum)), normalize=normalize)
     G=tm$hatcore
     tensordata=G@data

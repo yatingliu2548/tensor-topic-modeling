@@ -78,10 +78,20 @@ plot_slice <- function(tensor, k=1,xlab="Groups",ylab="Topics",yes=TRUE,option="
     df_long$X=as.factor(df_long$X)
     df_long$Y=as.factor(df_long$Y)
   }
+  if(trans=="sqrt"){
+    df_long$Value=sqrt(df_long$Value)
+  }
   # Plotting
   g=ggplot(df_long, aes(x = X, y =Y, fill = Value)) +
     geom_tile() +  # Create the heatmap
-    scale_fill_viridis_c(limits=limits,option=option,trans=trans,guide = guide) +  # Use a color scale that's visually appealing for heatmaps
+    scale_fill_distiller(
+      palette = "RdBu",     # Use the red-to-blue diverging palette from RColorBrewer
+      direction = -1,        # Set the direction of the palette (1 for default, -1 to reverse)
+      limits = limits,     # Set limits for the fill scale
+      oob = scales::squish, # Clamp values outside the limits
+      guide =guide   # Custom title for the color bar
+      )+  # Clamps values outside limits to nearest boundary)+
+   # scale_fill_viridis_c(limits=limits,option=option,trans=trans,guide = guide) +  # Use a color scale that's visually appealing for heatmaps
     facet_wrap(~Slice, ncol = 10) +  # Facet by slice, adjust ncol for desired layout
     labs(x = xlab, y = ylab, fill = "") +
     theme_minimal() +  # Use a minimal theme
@@ -94,7 +104,7 @@ plot_slice <- function(tensor, k=1,xlab="Groups",ylab="Topics",yes=TRUE,option="
 }
 
 
-heatmap_matrix<- function(matrix_data,xlab="Topics",ylab="Mode 3",trans="sqrt",guide="colourbar"){
+heatmap_matrix<- function(matrix_data,xlab="Topics",ylab="Mode 3",trans="sqrt",guide="colourbar",limits=c(0,1)){
   # matrix_data: The input matrix is n*K
   # xlab: Label for the x-axis (default is "Topics").
   # ylab: Label for the y-axis (default is "Mode 3").
@@ -105,11 +115,20 @@ heatmap_matrix<- function(matrix_data,xlab="Topics",ylab="Mode 3",trans="sqrt",g
     rownames_to_column("Row") %>%
     pivot_longer(cols = -Row, names_to = "Column", values_to = "Value") %>%
     mutate(Row = as.numeric(Row), Column = as.numeric(gsub("V", "", Column))) # Convert Row and Column to numeric
-
+  if(trans=="sqrt"){
+    df$Value=sqrt(df$Value)
+  }
   # Create heatmap
   g=ggplot(df, aes(x = as.factor(Column), y =( Row), fill = Value)) +
     geom_tile() +
-    scale_fill_viridis_c(limits=c(0,1),option="H",trans=trans,guide = guide) +  # Use a color scale that's visually appealing for heatmaps
+    scale_fill_distiller(
+      palette = "RdBu",     # Use the red-to-blue diverging palette from RColorBrewer
+      direction = -1,        # Set the direction of the palette (1 for default, -1 to reverse)
+      limits = limits,     # Set limits for the fill scale
+      oob = scales::squish, # Clamp values outside the limits
+      guide =guide   # Custom title for the color bar
+    )+  
+    #scale_fill_viridis_c(limits=c(0,1),option="H",trans=trans,guide = guide) +  # Use a color scale that's visually appealing for heatmaps
     # scale_fill_viridis_c() +  # Us
     labs(x = xlab, y = ylab, fill = "") +
     #scale_y_continuous(breaks=seq(0,max(as.numeric(df$Row)),by=5))+
@@ -121,7 +140,7 @@ heatmap_matrix<- function(matrix_data,xlab="Topics",ylab="Mode 3",trans="sqrt",g
 
   print(g)
 }
-heatmap_matrix2<- function(matrix_data,xlab="Topics",ylab="Mode 3",trans="sqrt",guide = "colourbar"){
+heatmap_matrix2<- function(matrix_data,xlab="Topics",ylab="Mode 3",trans="sqrt",guide = "colourbar",limits=c(0,1)){
   #use when dim of mode is not numeric.
   # matrix_data: The input matrix to be visualized as a heatmap.
   # xlab: Label for the x-axis (default is "Topics").
@@ -134,11 +153,20 @@ heatmap_matrix2<- function(matrix_data,xlab="Topics",ylab="Mode 3",trans="sqrt",
     rownames_to_column("Row") %>%
     pivot_longer(cols = -Row, names_to = "Column", values_to = "Value") %>%
     mutate(Row = as.numeric(Row), Column = as.numeric(gsub("V", "", Column))) # Convert Row and Column to numeric
-
+  if(trans=="sqrt"){
+    df$Value=sqrt(df$Value)
+  }
   # Create heatmap
   g=ggplot(df, aes(x = as.factor(Column), y =( Row), fill = Value)) +
     geom_tile() +
-    scale_fill_viridis_c(limits=c(0,1),option="H",trans=trans,guide = guide) +  # Use a color scale that's visually appealing for heatmaps
+    scale_fill_distiller(
+      palette = "RdBu",     # Use the red-to-blue diverging palette from RColorBrewer
+      direction = -1,        # Set the direction of the palette (1 for default, -1 to reverse)
+      limits = limits,     # Set limits for the fill scale
+      oob = scales::squish, # Clamp values outside the limits
+      guide =guide   # Custom title for the color bar
+    )+  
+    #scale_fill_viridis_c(limits=c(0,1),option="H",trans=trans,guide = guide) +  # Use a color scale that's visually appealing for heatmaps
     # scale_fill_viridis_c() +  # Us
     labs(x = xlab, y = ylab, fill = "") +
     scale_y_continuous(breaks=seq(0,max(as.numeric(df$Row)),by=5))+

@@ -29,6 +29,7 @@ source("tensor_lda.R")
 library(nnTensor)
 theme_set(theme_bw(base_size = 14))
 
+
 set.seed(2024)
 #Generate D
 generation<-function(p,K=3,alpha_dirichlet = 1, 
@@ -228,7 +229,7 @@ print(l1_error(hatY@data,tensorization(D3,3,30,10,dim(D3)[1])@data))
 print(matrix_lp_distance(matricization(hatY,3),D3,1)$error)
 
 ## nonnegative CP decomposition
-NTF_result=cp(Y/M,num_components=3)
+NTF_result=cp(Y/M,num_components=4)
 U1=abs(NTF_result$U[[1]])
 U2=abs(NTF_result$U[[2]])
 U3=abs(NTF_result$U[[3]])
@@ -237,7 +238,7 @@ heatmap_matrix(U1/rowSums(U1),"Topics","Mode 1: customer ID",guide="none",trans=
 
 
 heatmap_matrix2(U2/rowSums(U2),"Topics","Mode 2: time slice",guide="none",trans="identity")
-heatmap_matrix(U3/colSums(U3),"Topics","Mode 3: product ID",trans="identity",guide = "none")
+heatmap_matrix(U3/colSums(U3),"Topics","Mode 3: product ID",trans="identity")
 print(NTF_result$lambdas)
 
 A=t(NTF_result$U[[1]])
@@ -330,63 +331,87 @@ errors=c()
 D0_true_use=tensorization(D3,3,30,10,dim(D3)[1])@data
 for (i in 1:30){
   print(i)
-  NTD_result=NTD(Y/M,rank=c(2,2,3),algorithm="KL",nmf.algorithm = "KL")
-  NTD_A1=t(NTD_result$A$A1)
-  NTD_A1=NTD_A1/rowSums(NTD_A1)
-  NTD_A2=t(NTD_result$A$A2)
-  NTD_A2=NTD_A2/rowSums(NTD_A2)
-  NTD_A3=t(NTD_result$A$A3)
-  NTD_A3=NTD_A3/colSums(NTD_A3)
-  NTD_G=NTD_result$S
-  NTD_G_3=matrization_tensor(NTD_G,3)
-  NTD_G_3=NTD_G_3/colSums(NTD_G_3)
-  NTD_G=tensorization(NTD_G_3,3,2,2,3)
-  hatY_ndt=tensor_create(NTD_G,NTD_A1,NTD_A2,NTD_A3)
-  errors=rbind(errors,error_sim(D0_true_use,hatY_ndt@data,"NTD",i=i))
+  # NTD_result=NTD(Y/M,rank=c(2,2,3),algorithm="KL",nmf.algorithm = "KL")
+  # NTD_A1=t(NTD_result$A$A1)
+  # NTD_A1=NTD_A1/rowSums(NTD_A1)
+  # NTD_A2=t(NTD_result$A$A2)
+  # NTD_A2=NTD_A2/rowSums(NTD_A2)
+  # NTD_A3=t(NTD_result$A$A3)
+  # NTD_A3=NTD_A3/colSums(NTD_A3)
+  # NTD_G=NTD_result$S
+  # NTD_G_3=matrization_tensor(NTD_G,3)
+  # NTD_G_3=NTD_G_3/colSums(NTD_G_3)
+  # NTD_G=tensorization(NTD_G_3,3,2,2,3)
+  # hatY_ndt=tensor_create(NTD_G,NTD_A1,NTD_A2,NTD_A3)
+  # errors=rbind(errors,error_sim(D0_true_use,hatY_ndt@data,"NTD",i=i))
   
-  tlda <-tensor_lda(Y@data,K1=2,K2=2,K3=K3)
-  #tlda_sampling_d0=tensor_lda(D0,K1=2,K2=2,K3=4,use_vb = FALSE)
-  #tlda=tlda_vb
-  hatY_tlda=tensor_create(tensorization( matricization(tlda$core,3),3,2,2,K3),tlda$A1,tlda$A2,tlda$A3)@data
-  errors=rbind(errors,error_sim(D0_true_use,hatY_tlda,"Tensor-LDA",i=i))
+  # tlda <-tensor_lda(Y@data,K1=2,K2=2,K3=K3)
+  # #tlda_sampling_d0=tensor_lda(D0,K1=2,K2=2,K3=4,use_vb = FALSE)
+  # #tlda=tlda_vb
+  # hatY_tlda=tensor_create(tensorization( matricization(tlda$core,3),3,2,2,K3),tlda$A1,tlda$A2,tlda$A3)@data
+  # errors=rbind(errors,error_sim(D0_true_use,hatY_tlda,"Tensor-LDA",i=i))
   
-  LDA_results=LDA(t(Y3),k=3, control = list(seed=i), method = 'VEM')
-  lda_A=exp(t(LDA_results@beta))
-  lda_W=t(LDA_results@gamma)
-  #hatY=lda_A%*%lda_W
-  W1_LDA=matrization_tensor(tensorization(lda_W,3,30,10,dim(lda_W)[1]),1)
-  A1_LDA=spectral_clustering(W1_LDA %*% t(W1_LDA),K=2,mix=T)
-  #heatmap_matrix(A1_LDA,"Groups","Mode 1: customer ID",guide="none",trans="identity")
-  W2_LDA=matrization_tensor(tensorization((lda_W),3,30,10,dim(lda_W)[1]),2)
-  A2_LDA=spectral_clustering(W2_LDA %*% t(W2_LDA),K=2,mix=T)
-  #heatmap_matrix2(A2_LDA,"Events","Mode 2: time slice",guide="none",trans="identity")
-  G_LDA=compute_G_from_WA(kronecker(A1_LDA,A2_LDA),t(lda_W))
+  # LDA_results=LDA(t(Y3),k=3, control = list(seed=i), method = 'VEM')
+  # lda_A=exp(t(LDA_results@beta))
+  # lda_W=t(LDA_results@gamma)
+  # #hatY=lda_A%*%lda_W
+  # W1_LDA=matrization_tensor(tensorization(lda_W,3,30,10,dim(lda_W)[1]),1)
+  # A1_LDA=spectral_clustering(W1_LDA %*% t(W1_LDA),K=2,mix=T)
+  # #heatmap_matrix(A1_LDA,"Groups","Mode 1: customer ID",guide="none",trans="identity")
+  # W2_LDA=matrization_tensor(tensorization((lda_W),3,30,10,dim(lda_W)[1]),2)
+  # A2_LDA=spectral_clustering(W2_LDA %*% t(W2_LDA),K=2,mix=T)
+  # #heatmap_matrix2(A2_LDA,"Events","Mode 2: time slice",guide="none",trans="identity")
+  # G_LDA=compute_G_from_WA(kronecker(A1_LDA,A2_LDA),t(lda_W))
+  # # plot_slice(tensorization(t(G_LDA),3,2,2,dim(G_LDA)[2])@data,2,"Groups","Topics",yes=T,trans="identity")
+  # Y_lda=tensor_create(tensorization(t(G_LDA),3,2,2,dim(G_LDA)[2]),A1_LDA,A2_LDA,lda_A)@data
+  # #print(l1_error(tensor_create(tensorization(t(G_LDA),3,2,2,dim(G_LDA)[2]),A1_LDA,A2_LDA,lda_A)@data,tensorization(D3,3,30,10,dim(D3)[1])@data))
+  # errors=rbind(errors,error_sim(D0_true_use,Y_lda,"hybrid-LDA",i=i))
+  
+  # ours_results=score(Y/M,K1=2,K2=2,K3=3,M=M,normalize="Ours")
+  # hatY_our=tensor_create(ours_results$hatcore,ours_results$hatA1,ours_results$hatA2,ours_results$hatA3)
+  # #print(l1_error(hatY@data,tensorization(D3,3,30,10,dim(D3)[1])@data))
+  # errors=rbind(errors,error_sim(D0_true_use,hatY_our@data,"TopicSCORE-HOSVD",i=i))
+  
+  
+  
+  SLDA <- stm(documents = Matrix(as.matrix(as.data.frame(t(Y3))), sparse = TRUE),
+              K = K3, prevalence =~ race*time,
+              max.em.its = 20,
+              data = df,
+              init.type = "Spectral")
+  W_SLDA_sim=SLDA$theta
+  A_SLDA_sim=exp(SLDA$beta$logbeta[[1]])
+  W1_SLDA=matrization_tensor(tensorization(t(W_SLDA_sim),3,30,10,dim(W_SLDA_sim)[2]),1)
+  A1_SLDA=spectral_clustering(W1_SLDA %*% t(W1_SLDA),K=2,mix=T)
+  W2_SLDA=matrization_tensor(tensorization(t(W_SLDA_sim),3,30,10,dim(W_SLDA_sim)[2]),2)
+  A2_SLDA=spectral_clustering(W2_SLDA %*% t(W2_SLDA),K=2,mix=T)
+  G_SLDA=compute_G_from_WA(kronecker(A1_SLDA,A2_SLDA),W_SLDA_sim)
   # plot_slice(tensorization(t(G_LDA),3,2,2,dim(G_LDA)[2])@data,2,"Groups","Topics",yes=T,trans="identity")
-  Y_lda=tensor_create(tensorization(t(G_LDA),3,2,2,dim(G_LDA)[2]),A1_LDA,A2_LDA,lda_A)@data
+  Y_slda=tensor_create(tensorization(t(G_SLDA),3,2,2,dim(G_SLDA)[2]),A1_SLDA,A2_SLDA,t(A_SLDA_sim))@data
   #print(l1_error(tensor_create(tensorization(t(G_LDA),3,2,2,dim(G_LDA)[2]),A1_LDA,A2_LDA,lda_A)@data,tensorization(D3,3,30,10,dim(D3)[1])@data))
-  errors=rbind(errors,error_sim(D0_true_use,Y_lda,"hybrid-LDA",i=i))
+  errors=rbind(errors,error_sim(D0_true_use,Y_slda,"hybrid-SLDA",i=i))
   
-  ours_results=score(Y/M,K1=2,K2=2,K3=3,M=M,normalize="Ours")
-  hatY_our=tensor_create(ours_results$hatcore,ours_results$hatA1,ours_results$hatA2,ours_results$hatA3)
-  #print(l1_error(hatY@data,tensorization(D3,3,30,10,dim(D3)[1])@data))
-  errors=rbind(errors,error_sim(D0_true_use,hatY_our@data,"TopicSCORE-HOSVD",i=i))
 }
 
-df <- errors %>%
-  mutate(method = ifelse(method == "hybrid-LDA", "Hybrid-LDA", method)) %>%  # Update value
-  
-  rename(Method = method) 
 
-write.csv(df,file="sim1_algorithm")
+df2 <- errors %>%
+  mutate(method = ifelse(method == "hybrid-SLDA", "STM", method),
+         l1=l1+1)  # Update value
+colnames(df2)[colnames(df2)=="method"]="Method"
+df2$X=1:dim(df2)[1]
 
+#write.csv(df,file="sim1_algorithm")
+df=read.csv("sim1_algorithm")
 df <- df %>%
   mutate(Method = ifelse(Method == "TopicSCORE-HOSVD", "TTM-HOSVD", Method))   # Update value
 
+df_total=rbind(df,df2)
 #library(latex2exp)
 #tikz('plot.tex')
-ggplot(df %>% filter(Method %in% c("NTD","TTM-HOSVD","Tensor-LDA","Hybrid-LDA")),
+ggplot(df_total %>% filter(Method %in% c("NTD","TTM-HOSVD","Tensor-LDA","Hybrid-LDA")),
        aes(x = Method, y = l1, fill = Method)) +
   geom_boxplot() +
+  scale_fill_manual(values = c("black", "skyblue","orange","purple"), breaks = c("Tensor-LDA","Hybrid-LDA","NTD","TTM-HOSVD"),labels = c("Tensor-LDA","Hybrid-LDA","NTD","TTM-HOSVD"))+
   stat_summary(fun = mean, geom = "point", shape = 18, size = 3, color = "red") +
   scale_y_log10()+
   ylab(expression(paste("Reconstruction error:  ", "||", hat(scriptstyle(D)), " - ", scriptstyle(D), "||"[1])))
