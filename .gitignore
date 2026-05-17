@@ -1,0 +1,27 @@
+# Runtime logs and scheduler output
+logs/
+*.log
+*.out
+*.err
+slurm-*.out
+slurm-*.err
+
+# Generated analysis outputs
+experiments/
+results/
+
+# Local run scripts
+scripts/
+
+# Local legacy files
+legacy/
+
+# R session artifacts
+.Rhistory
+.RData
+.Ruserdata
+Rplots.pdf
+
+# Python cache files
+__pycache__/
+*.pyc
